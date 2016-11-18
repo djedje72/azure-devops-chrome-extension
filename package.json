@@ -1,0 +1,21 @@
+{
+  "name": "vsts",
+  "version": "0.0.1",
+  "description": "vsts chrome extension",
+  "scripts": {},
+  "keywords": [
+    "vsts",
+    "ose",
+    "rest",
+    "api"
+  ],
+  "author": "Rémi Fruteau de Laclos",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "jquery": "^3.1.1"
+  },
+  "devDependencies": {
+    "angular-css": "^1.0.8"
+  }
+}

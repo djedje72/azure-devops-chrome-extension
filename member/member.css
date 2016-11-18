@@ -1,0 +1,31 @@
+member {
+  float: right;
+  width: 100%;
+}
+
+.currentMember {
+    cursor: pointer;
+    height: 45px;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    margin: 8px;
+}
+
+.members .member {
+    width:30px;
+    height: 30px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.membersForm {
+    margin-top: 10px;
+}
+
+.membersForm > input {
+    height: 25px;
+    margin-bottom: 5px;
+    margin-left: 2px;
+    padding: 0 5px;
+}

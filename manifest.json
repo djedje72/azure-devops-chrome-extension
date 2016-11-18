@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "name": "VSTS Ose",
+  "description": "",
+  "version": "0.0.1",
+
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "web_accessible_resources" :[
+      "/pullRequest/pullRequest.html",
+      "/member/member.html",
+      "/spinner/spinner.html"
+  ],
+  "permissions": [
+    "webNavigation",
+    "webRequest",
+    "alarms"
+  ],
+  "background": {
+    "scripts": [
+      "node_modules/angular/angular.min.js"
+    ],
+    "persistent": true
+  }
+}
