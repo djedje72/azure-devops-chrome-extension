@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "name": "VSTS Ose",
-  "description": "",
-  "version": "0.0.1",
+  "description": "VSTS Chrome extension for pull requests in multiple repositories",
+  "version": "1.0.0",
 
   "browser_action": {
     "default_popup": "index.html"
@@ -19,9 +19,7 @@
     "alarms"
   ],
   "background": {
-    "scripts": [
-      "node_modules/angular/angular.min.js"
-    ],
+    "page": "background.html",
     "persistent": true
   }
 }

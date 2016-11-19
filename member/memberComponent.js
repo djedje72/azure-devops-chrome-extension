@@ -12,23 +12,33 @@
         css: "member/member.css"
     })
 
-    MemberController.$inject=[];
-    function MemberController() {
+    MemberController.$inject=['memberService', 'vstsService'];
+    function MemberController(memberService, vstsService) {
         var memberCtrl = this;
-        memberCtrl.showUsers = false;
-
-        memberCtrl.clickSelectUser = function() {
-            if(memberCtrl.members.length > 0) {
-                memberCtrl.showUsers = !memberCtrl.showUsers;
-                if(memberCtrl.showUsers) {
-                    memberCtrl.membersDisplay({});
-                }
-            }
-        };
-
-        memberCtrl.selectMember = function(member) {
+        memberCtrl.$onInit = function() {
             memberCtrl.showUsers = false;
-            memberCtrl.memberSelected({"member": member});
-        }
+            memberCtrl.clickSelectUser = function() {
+                if(memberCtrl.members.length > 0) {
+                    memberCtrl.showUsers = !memberCtrl.showUsers;
+                    if(memberCtrl.showUsers) {
+                        memberCtrl.membersDisplay({});
+                    }
+                }
+            };
+
+            memberCtrl.selectMember = function(member) {
+                memberCtrl.showUsers = false;
+                memberService.setCurrentMember(member);
+                memberCtrl.memberSelected({"member": member});
+            }
+
+            memberCtrl.members = [];
+        };
+        
+        memberCtrl.currentMember = memberService.getCurrentMember();
+
+        vstsService.getTeamMembers().then(function(members) {
+            memberCtrl.members = members;
+        });
     }
 })();
