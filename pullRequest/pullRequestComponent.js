@@ -7,7 +7,7 @@
     })
     var axaDomain = {name: "axafrance", basic: btoa("remi.fruteaudelaclos@axa.fr:35mxntrvieqejjzwveal5tgmd6fx6x5t55uaodflpz2mpkbr2eka")};
     var persoDomain = {name: "djedje72", basic: btoa("remi.fruteau@hotmail.fr:qlokfjlonjua6wtji6fp2cg7k3vcuh3gdfk3gunbwjqlgnawk3ma")};
-    var domainToUse = axaDomain;
+    var domainToUse = persoDomain;
 
 
     PullRequestController.$inject=['$q','$http'];
