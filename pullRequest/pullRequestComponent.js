@@ -14,9 +14,8 @@
                 prCtrl.pullRequests = prCtrl.allPullRequests;
             };
 
-            prCtrl.fillToApprovePullRequests = function(button) {
+            prCtrl.fillToApprovePullRequests = function() {
                 prCtrl.pullRequests = prCtrl.toApprovePullRequests;
-                button.disabled=true;
             };
 
             prCtrl.redirect = function(pr) {
@@ -40,7 +39,7 @@
             prCtrl.allPullRequests = pullRequests.all;
             prCtrl.toApprovePullRequests = pullRequests.toApprove;
             prCtrl.hideLoading = true;
-            prCtrl.fillPullRequests();
+            prCtrl.fillToApprovePullRequests();
         });
     }
 })();

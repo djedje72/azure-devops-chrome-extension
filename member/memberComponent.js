@@ -10,7 +10,7 @@
         controllerAs: "memberCtrl",
         templateUrl: "member/member.html",
         css: "member/member.css"
-    })
+    });
 
     MemberController.$inject=['memberService', 'vstsService'];
     function MemberController(memberService, vstsService) {

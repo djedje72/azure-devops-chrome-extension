@@ -29,3 +29,34 @@ button[disabled]:hover {
   background: #cccccc;
   cursor: default;
 }
+
+.pullRequest {
+  margin: 2px 0px;
+  border-bottom: 1px solid #cccccc;
+  padding: 3px 0;
+}
+
+.pullRequest:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+.pullRequest .details {
+  height: 33px;
+  line-height: 33px;
+}
+
+.pullRequest .details .memberIcon {
+  width:30px;
+  float: left;
+  margin-right: 5px;
+}
+
+.pullRequest .details .branchesInfo {
+  position: relative;
+  bottom: 5px;
+  line-height: 0;
+  font-size: 9px;
+  left: 45px;
+  color: #555555;
+}
