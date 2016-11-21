@@ -6,7 +6,7 @@
 
         var axaDomain = {name: "axafrance", basic: btoa("remi.fruteaudelaclos@axa.fr:35mxntrvieqejjzwveal5tgmd6fx6x5t55uaodflpz2mpkbr2eka")};
         var persoDomain = {name: "djedje72", basic: btoa("remi.fruteau@hotmail.fr:qlokfjlonjua6wtji6fp2cg7k3vcuh3gdfk3gunbwjqlgnawk3ma")};
-        var domainToUse = persoDomain;
+        var domainToUse = axaDomain;
 
         $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
 
@@ -41,29 +41,21 @@
             };
         }
 
-        function getPullRequests(currentMember) {
+        function getPullRequests() {
             var allPullRequests = [];
             var promises = [];
-            return getRepositories().then(function(repositories) {
-                repositories.forEach(function(repository) {
-                    var httpPromise = $http({
-                        method: "GET",
-                        url: vstsUrl + "/git/repositories/"+repository.id+"/pullRequests",
-                    }).then(function(httpPullRequests) {
-                        var pullRequests = httpPullRequests.data.value;
-                        allPullRequests = allPullRequests.concat(pullRequests);
-                    });
-                    promises.push(httpPromise);
-                });
-                return $q.all(promises).then(function() {
-                    return {
-                        "all": allPullRequests,
-                        "toApprove": getToApprovePullRequests(allPullRequests)
-                    };
-                });
+            return $http({
+                method: "GET",
+                url: vstsUrl + "/git/pullRequests"
+            }).then(function(httpPullRequests) {
+                var allPullRequests = httpPullRequests.data.value;
+                return {
+                    "all": allPullRequests,
+                    "toApprove": getToApprovePullRequests(allPullRequests)
+                };
             });
         }
-
+        
         function getAllProjects() {
             return $http({
                 method: "GET",
@@ -103,7 +95,7 @@
             });
         }
 
-        function getRepositories(repositories) {
+        function getRepositories() {
             return $http({
                 method: "GET",
                 url: vstsUrl + "/git/repositories",

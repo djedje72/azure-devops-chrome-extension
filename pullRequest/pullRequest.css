@@ -60,3 +60,8 @@ button[disabled]:hover {
   left: 45px;
   color: #555555;
 }
+
+.pullRequest .repository {
+  text-transform: uppercase;
+  font-weight: bold;
+}

@@ -24,8 +24,9 @@
             };
 
             prCtrl.memberSelected = function(member) {
-                getToApprovePullRequests();
-                prCtrl.fillToApprovePullRequests();
+               getPullRequests().then(function() {
+                    prCtrl.fillToApprovePullRequests();
+                })
             }
 
             prCtrl.membersDisplay = function() {
@@ -35,11 +36,17 @@
 
         prCtrl.members = vstsService.getTeamMembers();
 
-        vstsService.getPullRequests(prCtrl.currentMember).then(function(pullRequests) {
-            prCtrl.allPullRequests = pullRequests.all;
-            prCtrl.toApprovePullRequests = pullRequests.toApprove;
+        function getPullRequests() {
+            return vstsService.getPullRequests().then(function(pullRequests) {
+                prCtrl.allPullRequests = pullRequests.all;
+                prCtrl.toApprovePullRequests = pullRequests.toApprove;
+            });
+        }
+
+        getPullRequests().then(function() {
             prCtrl.hideLoading = true;
             prCtrl.fillToApprovePullRequests();
-        });
+        })
+        
     }
 })();
