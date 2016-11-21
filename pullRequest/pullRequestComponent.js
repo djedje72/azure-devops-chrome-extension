@@ -18,6 +18,10 @@
                 prCtrl.pullRequests = prCtrl.toApprovePullRequests;
             };
 
+            prCtrl.fillMinePullRequests = function() {
+                prCtrl.pullRequests = prCtrl.minePullRequests;
+            }
+
             prCtrl.redirect = function(pr) {
                 var href = vstsService.getMainProjectWebUrl() + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
                 chrome.tabs.create({url: href});
@@ -35,11 +39,12 @@
         }
 
         prCtrl.members = vstsService.getTeamMembers();
-
+        
         function getPullRequests() {
             return vstsService.getPullRequests().then(function(pullRequests) {
                 prCtrl.allPullRequests = pullRequests.all;
                 prCtrl.toApprovePullRequests = pullRequests.toApprove;
+                prCtrl.minePullRequests = pullRequests.mine;
             });
         }
 
