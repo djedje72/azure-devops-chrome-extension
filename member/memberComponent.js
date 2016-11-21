@@ -28,6 +28,7 @@
 
             memberCtrl.selectMember = function(member) {
                 memberCtrl.showUsers = false;
+                memberCtrl.currentMember = member;
                 memberService.setCurrentMember(member);
                 memberCtrl.memberSelected({"member": member});
             }
