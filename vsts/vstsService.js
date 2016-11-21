@@ -14,10 +14,10 @@
 
         var mainProject;
 
-        function getToApprovePullRequests(allPullRequests) {
+        function getToApprovePullRequests(pullRequests) {
             var currentMember = memberService.getCurrentMember();
-            if(allPullRequests.length > 0 && currentMember) {
-                var toApprovePullRequests = allPullRequests.filter(function(pullRequest) {
+            if(pullRequests.length > 0 && currentMember) {
+                var toApprovePullRequests = pullRequests.filter(function(pullRequest) {
                     var toApprovePullRequest = pullRequest.reviewers.filter(function(reviewer) {
                         return reviewer.uniqueName === currentMember.uniqueName && reviewer.vote === 0;
                     });
@@ -28,6 +28,15 @@
                 });
                 setReminder(toApprovePullRequests);
                 return toApprovePullRequests;
+            }
+        }
+
+        function getMinePullRequests(pullRequests) {
+            var currentMember = memberService.getCurrentMember();
+            if(pullRequests.length > 0 && currentMember) {
+                return pullRequests.filter(function(pullRequest) {
+                    return currentMember.uniqueName === pullRequest.createdBy.uniqueName;
+                });
             }
         }
 
@@ -51,11 +60,12 @@
                 var allPullRequests = httpPullRequests.data.value;
                 return {
                     "all": allPullRequests,
-                    "toApprove": getToApprovePullRequests(allPullRequests)
+                    "toApprove": getToApprovePullRequests(allPullRequests),
+                    "mine": getMinePullRequests(allPullRequests)
                 };
             });
         }
-        
+
         function getAllProjects() {
             return $http({
                 method: "GET",
@@ -103,16 +113,8 @@
                 return httpRepositories.data.value;
             });
         }
-        
-        function getAllUsers() {
-            return $http({
-                method: "GET",
-                url: vstsUrl + "/projects/AF.Ose/teams/AF.OSE%20Team/members",
-            });
-        }
 
         return {
-            getAllUsers: getAllUsers,
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
             getMainProjectWebUrl: getMainProjectWebUrl
