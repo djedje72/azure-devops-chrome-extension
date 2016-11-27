@@ -1,0 +1,10 @@
+<div data-ng-if="settingsCtrl.showSettings">
+    <div>
+        <span>Domain VSTS :<input type="text" name="vstsName" data-ng-model="settingsCtrl.vstsName"/>.visualstudio.com</span>
+    </div>
+    <div>
+        <input type="text" name="mail" data-ng-model="settingsCtrl.mail" placeholder="Mail address..."/>
+        <input type="password" name="accessKey" data-ng-model="settingsCtrl.accessKey" placeholder="Password..."/>
+    </div>
+    <button data-ng-show="settingsCtrl.vstsName && settingsCtrl.mail && settingsCtrl.accessKey" type="button" data-ng-click="settingsCtrl.changeCredentials();">Valider</button>
+</div>

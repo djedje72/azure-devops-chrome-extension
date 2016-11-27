@@ -6,11 +6,7 @@
 
         var axaDomain = {name: "axafrance", basic: btoa("remi.fruteaudelaclos@axa.fr:35mxntrvieqejjzwveal5tgmd6fx6x5t55uaodflpz2mpkbr2eka")};
         var persoDomain = {name: "djedje72", basic: btoa("remi.fruteau@hotmail.fr:qlokfjlonjua6wtji6fp2cg7k3vcuh3gdfk3gunbwjqlgnawk3ma")};
-        var domainToUse = axaDomain;
-
-        $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
-
-        var vstsUrl = "https://" + domainToUse.name + ".visualstudio.com/DefaultCollection/_apis";
+        var domainToUse = {};
 
         var mainProject;
 
@@ -55,7 +51,7 @@
             var promises = [];
             return $http({
                 method: "GET",
-                url: vstsUrl + "/git/pullRequests"
+                url: domainToUse.vstsUrl + "/git/pullRequests"
             }).then(function(httpPullRequests) {
                 var allPullRequests = httpPullRequests.data.value;
                 return {
@@ -69,7 +65,7 @@
         function getAllProjects() {
             return $http({
                 method: "GET",
-                url: vstsUrl + "/projects"
+                url: domainToUse.vstsUrl + "/projects"
             }).then(function(httpProjects) {
                 return httpProjects.data;
             });
@@ -108,16 +104,26 @@
         function getRepositories() {
             return $http({
                 method: "GET",
-                url: vstsUrl + "/git/repositories",
+                url: domainToUse.vstsUrl + "/git/repositories",
             }).then(function(httpRepositories) {
                 return httpRepositories.data.value;
             });
         }
 
+        function setCredentials(credentials) {
+            domainToUse = {
+                name: credentials.name,
+                basic:btoa(credentials.mail + ":" + credentials.accessKey), 
+                vstsUrl : "https://" + credentials.name + ".visualstudio.com/DefaultCollection/_apis"
+            };
+            $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
+        }
+
         return {
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
-            getMainProjectWebUrl: getMainProjectWebUrl
+            getMainProjectWebUrl: getMainProjectWebUrl,
+            setCredentials: setCredentials
         };
     }
 })();

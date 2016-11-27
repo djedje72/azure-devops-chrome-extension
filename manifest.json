@@ -16,7 +16,8 @@
   "web_accessible_resources" :[
       "/pullRequest/pullRequest.html",
       "/member/member.html",
-      "/spinner/spinner.html"
+      "/spinner/spinner.html",
+      "/settings/settings.html"
   ],
   "permissions": [
     "webNavigation",
