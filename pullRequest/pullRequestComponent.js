@@ -24,7 +24,7 @@
 
             prCtrl.redirect = function(pr) {
                 var href = vstsService.getMainProjectWebUrl() + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
-                chrome.tabs.create({url: href});
+                chrome.tabs.create({url: href, active: false});
             };
 
             prCtrl.memberSelected = function(member) {
