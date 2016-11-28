@@ -1,20 +1,22 @@
-<div class="waiting" data-ng-hide="prCtrl.hideLoading">
-    <spinner></spinner>
-</div>
-<div>
-    <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.minePullRequests"
-        data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
-    <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.toApprovePullRequests"
-        data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
-    <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.allPullRequests" 
-        data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
-    <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" members="prCtrl.members" current-member="prCtrl.currentMember"></member>
-</div>
-<div class="pullRequest" ng-repeat='pr in prCtrl.pullRequests' data-ng-click="prCtrl.redirect(pr);" >
-    <div class="details">
-        <img class="memberIcon" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"></img>
-        <span class="repository" ng-bind="::pr.repository.name">:</span>
-        <span data-ng-bind="::pr.title"></span>
-        <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --> {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
+<div data-ng-if="prCtrl.isInitialize()">
+    <div class="waiting" data-ng-hide="prCtrl.hideLoading">
+        <spinner></spinner>
+    </div>
+    <div>
+        <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.minePullRequests"
+            data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
+        <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.toApprovePullRequests"
+            data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
+        <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.allPullRequests" 
+            data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
+        <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" members="prCtrl.members" current-member="prCtrl.currentMember"></member>
+    </div>
+    <div class="pullRequest" ng-repeat='pr in prCtrl.pullRequests' data-ng-click="prCtrl.redirect(pr);" >
+        <div class="details">
+            <img class="memberIcon" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"></img>
+            <span class="repository" ng-bind="::pr.repository.name">:</span>
+            <span data-ng-bind="::pr.title"></span>
+            <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --> {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
+        </div>
     </div>
 </div>

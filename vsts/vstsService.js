@@ -1,13 +1,12 @@
 (function() {
     angular.module('vstsChrome').service("vstsService", VstsService);
 
-    VstsService.$inject=['$http', '$q', 'memberService'];
-    function VstsService($http, $q, memberService) {
+    VstsService.$inject=['$http', '$q', 'memberService', 'settingsService'];
+    function VstsService($http, $q, memberService, settingsService) {
 
-        var axaDomain = {name: "axafrance", basic: btoa("remi.fruteaudelaclos@axa.fr:35mxntrvieqejjzwveal5tgmd6fx6x5t55uaodflpz2mpkbr2eka")};
-        var persoDomain = {name: "djedje72", basic: btoa("remi.fruteau@hotmail.fr:qlokfjlonjua6wtji6fp2cg7k3vcuh3gdfk3gunbwjqlgnawk3ma")};
-        var domainToUse = {};
-
+        var domainToUse = settingsService.getCurrentDomain() || {};
+        $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
+    
         var mainProject;
 
         function getToApprovePullRequests(pullRequests) {
@@ -111,15 +110,23 @@
         }
 
         function setCredentials(credentials) {
-            domainToUse = {
-                name: credentials.name,
-                basic:btoa(credentials.mail + ":" + credentials.accessKey), 
-                vstsUrl : "https://" + credentials.name + ".visualstudio.com/DefaultCollection/_apis"
-            };
-            $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
+            if(credentials.vstsName && credentials.mail && credentials.accessKey) {
+                domainToUse = {
+                    vstsName: credentials.vstsName,
+                    basic:btoa(credentials.mail + ":" + credentials.accessKey), 
+                    vstsUrl : "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis"
+                };
+                $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
+                settingsService.setCurrentDomain(domainToUse);
+            }
+        }
+
+        function isInitialize() {
+            return domainToUse.vstsName && domainToUse.basic && domainToUse.vstsUrl;
         }
 
         return {
+            isInitialize: isInitialize,
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
             getMainProjectWebUrl: getMainProjectWebUrl,

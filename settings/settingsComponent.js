@@ -9,17 +9,20 @@
     SettingsController.$inject=['vstsService', 'settingsService'];
     function SettingsController(vstsService, settingsService) {
         var settingsCtrl = this;
+
+        settingsCtrl.canValidate = function() {
+            return settingsCtrl.vstsName && settingsCtrl.mail && settingsCtrl.accessKey;
+        };
+
         settingsCtrl.changeCredentials = function() {
             vstsService.setCredentials({
-                name: settingsCtrl.name,
+                vstsName: settingsCtrl.vstsName,
                 mail: settingsCtrl.mail,
                 accessKey: settingsCtrl.accessKey,
             });
         }
-        settingsCtrl.showSettings = true;
-        var currentDomain = settingsService.getCurrentDomain();
-        if(currentDomain) {
-            settingsCtrl.showSettings = false;
-        }
+        settingsCtrl.isInitialize = function() {
+            return vstsService.isInitialize()
+        };
     }
 })();

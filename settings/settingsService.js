@@ -16,18 +16,23 @@
             currentDomain = null;
         }
 
-        function setcurrentDomain(member) {
-            currentDomain = member;
+        function setCurrentDomain(domain) {
+            currentDomain = domain;
             localStorage.setItem("currentDomain", JSON.stringify(currentDomain));
         }
 
-        function getcurrentDomain() {
+        function getCurrentDomain() {
             return currentDomain;
         }
 
+        function removeCurrentDomain() {
+            localStorage.removeItem("currentDomain");
+        }
+
         return {
-            getcurrentDomain: getcurrentDomain,
-            setcurrentDomain: setcurrentDomain
+            getCurrentDomain: getCurrentDomain,
+            setCurrentDomain: setCurrentDomain,
+            removeCurrentDomain: removeCurrentDomain
         };
     }
 })();
