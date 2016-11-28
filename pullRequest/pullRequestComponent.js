@@ -48,6 +48,10 @@
             });
         }
 
+        prCtrl.isInitialize = function() {
+            return vstsService.isInitialize();
+        }
+
         getPullRequests().then(function() {
             prCtrl.hideLoading = true;
             prCtrl.fillToApprovePullRequests();
