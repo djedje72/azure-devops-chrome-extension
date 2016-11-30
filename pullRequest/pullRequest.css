@@ -34,6 +34,7 @@ button[disabled]:hover {
   margin: 2px 0px;
   border-bottom: 1px solid #cccccc;
   padding: 3px 0;
+  height: 33px;
 }
 
 .pullRequest:hover {
@@ -44,6 +45,8 @@ button[disabled]:hover {
 .pullRequest .details {
   height: 33px;
   line-height: 33px;
+  overflow: hidden;
+  position: absolute;
 }
 
 .pullRequest .details .memberIcon {
@@ -53,7 +56,7 @@ button[disabled]:hover {
 }
 
 .pullRequest .details .branchesInfo {
-  position: relative;
+  position: inherit;
   bottom: 5px;
   line-height: 0;
   font-size: 9px;
