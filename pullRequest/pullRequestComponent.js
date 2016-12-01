@@ -6,20 +6,23 @@
         css: "pullRequest/pullRequest.css"
     });
 
-    PullRequestController.$inject=['$q','$http', 'vstsService'];
-    function PullRequestController($q, $http, vstsService) {
+    PullRequestController.$inject=['$q','$http', 'vstsService', 'memberService'];
+    function PullRequestController($q, $http, vstsService, memberService) {
         var prCtrl = this;
         this.$onInit = function() {
             prCtrl.fillPullRequests = function() {
                 prCtrl.pullRequests = prCtrl.allPullRequests;
+                memberService.hideMembers();
             };
 
             prCtrl.fillToApprovePullRequests = function() {
                 prCtrl.pullRequests = prCtrl.toApprovePullRequests;
+                memberService.hideMembers();
             };
 
             prCtrl.fillMinePullRequests = function() {
                 prCtrl.pullRequests = prCtrl.minePullRequests;
+                memberService.hideMembers();
             }
 
             prCtrl.redirect = function(pr) {
@@ -48,13 +51,16 @@
             });
         }
 
-        prCtrl.isInitialize = function() {
-            return vstsService.isInitialize();
-        }
-
-        getPullRequests().then(function() {
-            prCtrl.hideLoading = true;
-            prCtrl.fillToApprovePullRequests();
+        prCtrl.isInitialize = false;
+        
+        vstsService.isInitialize()
+            .then(function() {
+                prCtrl.isInitialize = true;
+            })
+            .then(getPullRequests)
+            .then(function() {
+                prCtrl.hideLoading = true;
+                prCtrl.fillToApprovePullRequests();
         })
         
     }

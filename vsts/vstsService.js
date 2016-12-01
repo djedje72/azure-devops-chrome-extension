@@ -3,8 +3,13 @@
 
     VstsService.$inject=['$http', '$q', 'memberService', 'settingsService'];
     function VstsService($http, $q, memberService, settingsService) {
-
-        var domainToUse = settingsService.getCurrentDomain() || {};
+        var initialize = $q.defer();
+        var domainToUse = settingsService.getCurrentDomain();
+        if (domainToUse) {
+            initialize.resolve("init ok");
+        } else {
+            domainToUse = {};
+        }
         $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
     
         var mainProject;
@@ -117,12 +122,15 @@
                     vstsUrl : "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis"
                 };
                 $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
-                settingsService.setCurrentDomain(domainToUse);
+                getAllProjects().then(function() {
+                    settingsService.setCurrentDomain(domainToUse);
+                    initialize.resolve("init ok");
+                });
             }
         }
 
         function isInitialize() {
-            return domainToUse.vstsName && domainToUse.basic && domainToUse.vstsUrl;
+            return initialize.promise;
         }
 
         return {

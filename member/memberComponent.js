@@ -16,21 +16,24 @@
     function MemberController(memberService, vstsService) {
         var memberCtrl = this;
         memberCtrl.$onInit = function() {
-            memberCtrl.showUsers = false;
             memberCtrl.clickSelectUser = function() {
                 if(memberCtrl.members.length > 0) {
-                    memberCtrl.showUsers = !memberCtrl.showUsers;
-                    if(memberCtrl.showUsers) {
+                    memberService.toggleMembers();
+                    if(memberService.isMembersShown()) {
                         memberCtrl.membersDisplay({});
                     }
                 }
             };
 
             memberCtrl.selectMember = function(member) {
-                memberCtrl.showUsers = false;
+                memberService.hideMembers();
                 memberCtrl.currentMember = member;
                 memberService.setCurrentMember(member);
                 memberCtrl.memberSelected({"member": member});
+            }
+
+            memberCtrl.isMembersShown = function() {
+                return memberService.isMembersShown();
             }
 
             memberCtrl.members = [];

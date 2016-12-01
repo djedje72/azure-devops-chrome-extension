@@ -21,8 +21,11 @@
                 accessKey: settingsCtrl.accessKey,
             });
         }
-        settingsCtrl.isInitialize = function() {
-            return vstsService.isInitialize()
-        };
+
+        settingsCtrl.isInitialize = false;
+
+        vstsService.isInitialize().then(function() {
+            settingsCtrl.isInitialize = true;
+        });
     }
 })();

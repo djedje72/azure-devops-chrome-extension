@@ -3,6 +3,7 @@
 
     MemberService.$inject=[];
     function MemberService() {
+        var isShowMembers = false;
         var currentMember = null;
         var currentMemberStr = localStorage.getItem("currentMember");
         if(currentMemberStr !== null) {
@@ -25,9 +26,29 @@
             return currentMember;
         }
 
+        function hideMembers() {
+            isShowMembers = false;
+        }
+
+        function showMembers() {
+            isShowMembers = true;
+        }
+
+        function toggleMembers() {
+            isShowMembers = !isShowMembers;
+        }
+
+        function isMembersShown() {
+            return isShowMembers;
+        }
+
         return {
             getCurrentMember: getCurrentMember,
-            setCurrentMember: setCurrentMember
+            setCurrentMember: setCurrentMember,
+            hideMembers: hideMembers,
+            showMembers: showMembers,
+            toggleMembers: toggleMembers,
+            isMembersShown: isMembersShown
         };
     }
 })();
