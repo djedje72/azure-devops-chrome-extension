@@ -44,7 +44,7 @@ button[disabled]:hover {
 
 .pullRequest .details {
   height: 33px;
-  line-height: 33px;
+  line-height: 20px;
   overflow: hidden;
   position: absolute;
 }
@@ -57,7 +57,7 @@ button[disabled]:hover {
 
 .pullRequest .details .branchesInfo {
   position: inherit;
-  bottom: 5px;
+  bottom: 8px;
   line-height: 0;
   font-size: 9px;
   left: 45px;
