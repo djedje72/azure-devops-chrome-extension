@@ -2,8 +2,8 @@
     <div class="waiting" data-ng-hide="prCtrl.hideLoading">
         <spinner></spinner>
     </div>
-    <div>
-        <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.minePullRequests"
+    <div class="menu-buttons">
+        <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-class="{ selected: (prCtrl.pullRequests === prCtrl.minePullRequests) }"
             data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
         <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.toApprovePullRequests"
             data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>

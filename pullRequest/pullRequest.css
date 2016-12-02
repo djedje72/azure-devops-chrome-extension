@@ -68,3 +68,7 @@ button[disabled]:hover {
   text-transform: uppercase;
   font-weight: bold;
 }
+
+.menu-buttons {
+  display: table;
+}
