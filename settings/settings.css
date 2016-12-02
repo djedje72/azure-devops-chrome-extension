@@ -1,3 +1,7 @@
+.settings {
+    margin: 0 10px;
+}
+
 .settings > div {
     margin: 5px 0;
 }
@@ -9,4 +13,10 @@
 
 .settings input {
     width: 250px;
+}
+
+.settings .error {
+    color: red;
+    font-size: 20px;
+    margin-left: 10px;
 }

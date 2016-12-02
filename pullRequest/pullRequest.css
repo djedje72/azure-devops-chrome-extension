@@ -10,9 +10,14 @@ button {
   color: #ffffff;
   font-size: 20px;
   background: #004692;
-  padding: 10px 20px 10px 20px;
+  padding: 8px 20px 10px 20px;
   text-decoration: none;
   border: none;
+  height: 43px;
+}
+
+button .spinner {
+  height: inherit;
 }
 
 button:hover {
@@ -71,4 +76,30 @@ button[disabled]:hover {
 
 .menu-buttons {
   display: table;
+  background-color: #F3F3F3;
+  width: 100%;
+  height: 45px;
+  margin-bottom: 5px;
+}
+
+.menu-buttons button {
+  font-family: "-apple-system",BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Helvetica,Ubuntu,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  color: #333;
+}
+
+.menu-buttons button.selected {
+  color: #0073bf;
+  border-bottom: 2px solid #0073bf;
+}
+.menu-buttons button:focus {
+  outline:none;
+}
+
+.menu-buttons button:hover {
+    outline: none;
+    background-color: #d0d2d3;
+}
+
+.menu-buttons button {
+  background-color: inherit;
 }

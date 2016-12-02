@@ -7,5 +7,8 @@
         <input type="text" name="mail" data-ng-model="settingsCtrl.mail" placeholder="Mail address..."/>
         <input type="password" name="accessKey" data-ng-model="settingsCtrl.accessKey" placeholder="Password/Alternate credentials..."/>
     </div>
-    <button data-ng-disabled="!settingsCtrl.canValidate()" type="button" data-ng-click="settingsCtrl.changeCredentials();">Valider</button>
+    <button data-ng-disabled="!settingsCtrl.canValidate() || settingsCtrl.loading" type="button" data-ng-click="settingsCtrl.changeCredentials();">
+        <spinner data-ng-show="settingsCtrl.loading"></spinner>
+        <span data-ng-hide="settingsCtrl.loading">Valider</span></button>
+    <span class="error" data-ng-show="settingsCtrl.hasError">Bad domain URL or login/credentials</span>
 </div>

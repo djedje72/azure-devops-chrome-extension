@@ -118,14 +118,18 @@
             if(credentials.vstsName && credentials.mail && credentials.accessKey) {
                 domainToUse = {
                     vstsName: credentials.vstsName,
-                    basic:btoa(credentials.mail + ":" + credentials.accessKey), 
+                    basic:btoa(credentials.mail.toLowerCase() + ":" + credentials.accessKey), 
                     vstsUrl : "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis"
                 };
                 $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
-                getAllProjects().then(function() {
+                return getAllProjects().then(function() {
                     settingsService.setCurrentDomain(domainToUse);
                     initialize.resolve("init ok");
+                }, function(error) {
+                    return $q.reject(error);
                 });
+            } else {
+                return $q.reject("missing arguments");
             }
         }
 

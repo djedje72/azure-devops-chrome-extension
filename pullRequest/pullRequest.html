@@ -5,9 +5,9 @@
     <div class="menu-buttons">
         <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-class="{ selected: (prCtrl.pullRequests === prCtrl.minePullRequests) }"
             data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
-        <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.toApprovePullRequests"
+        <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-class="{ selected: (prCtrl.pullRequests === prCtrl.toApprovePullRequests) }"
             data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
-        <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-disabled="prCtrl.pullRequests === prCtrl.allPullRequests" 
+        <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-class="{ selected: (prCtrl.pullRequests === prCtrl.allPullRequests)}" 
             data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
         <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" members="prCtrl.members" current-member="prCtrl.currentMember"></member>
     </div>
