@@ -79,6 +79,11 @@ button[disabled]:hover {
   display: inline-block;
 }
 
+.pullRequest .actions .auto-complete {
+  height: 25px;
+  margin-top: 3px;
+}
+
 .pullRequest .actions .auto-complete.disabled{
   opacity: 0.1;
 }
@@ -111,4 +116,5 @@ button[disabled]:hover {
 
 .menu-buttons button {
   background-color: inherit;
+  height: 45px;
 }
