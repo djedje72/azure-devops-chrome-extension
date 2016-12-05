@@ -40,6 +40,7 @@ button[disabled]:hover {
   border-bottom: 1px solid #cccccc;
   padding: 3px 0;
   height: 33px;
+  width: 585px;
 }
 
 .pullRequest:hover {
@@ -72,6 +73,14 @@ button[disabled]:hover {
 .pullRequest .repository {
   text-transform: uppercase;
   font-weight: bold;
+}
+
+.pullRequest .actions {
+  display: inline-block;
+}
+
+.pullRequest .actions .auto-complete.disabled{
+  opacity: 0.1;
 }
 
 .menu-buttons {

@@ -50,19 +50,41 @@
             };
         }
 
+        function getFullPullRequest(pr) {
+            return $http({
+                method: "GET",
+                url: pr.url
+            }).then(function(httpPullRequest) {
+                return httpPullRequest.data;
+            });
+        }
+
         function getPullRequests() {
+            return getPullRequestsList().then(function(pullRequests) {
+                var promises = [];
+                pullRequests.forEach(function(pr) {
+                    promises.push(getFullPullRequest(pr).then(function(prWithAutoComplete) {
+                        angular.extend(pr, prWithAutoComplete);
+                    }));
+                })
+                return $q.all(promises).then(function() {
+                    return {
+                        "all": pullRequests,
+                        "toApprove": getToApprovePullRequests(pullRequests),
+                        "mine": getMinePullRequests(pullRequests)
+                    };
+                }) 
+            });
+        }
+
+        function getPullRequestsList() {
             var allPullRequests = [];
             var promises = [];
             return $http({
                 method: "GET",
                 url: domainToUse.vstsUrl + "/git/pullRequests"
             }).then(function(httpPullRequests) {
-                var allPullRequests = httpPullRequests.data.value;
-                return {
-                    "all": allPullRequests,
-                    "toApprove": getToApprovePullRequests(allPullRequests),
-                    "mine": getMinePullRequests(allPullRequests)
-                };
+                return httpPullRequests.data.value;
             });
         }
 

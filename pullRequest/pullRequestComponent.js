@@ -6,6 +6,18 @@
         css: "pullRequest/pullRequest.css"
     });
 
+    angular.module('vstsChrome').directive('fallbackSrc', function () {
+        var fallbackSrc = {
+            link: function postLink(scope, iElement, iAttrs) {
+            iElement.bind('error', function() {
+                angular.element(this).attr("src", iAttrs.fallbackSrc);
+            });
+            }
+        }
+        return fallbackSrc;
+    });
+
+
     PullRequestController.$inject=['$q','$http', 'vstsService', 'memberService'];
     function PullRequestController($q, $http, vstsService, memberService) {
         var prCtrl = this;
@@ -41,11 +53,14 @@
             }
         }
 
-
 //qlokfjlonjua6wtji6fp2cg7k3vcuh3gdfk3gunbwjqlgnawk3ma
 
         prCtrl.members = vstsService.getTeamMembers();
         
+        prCtrl.toggleAutoComplete = function(pr) {
+            
+        }
+
         function getPullRequests() {
             return vstsService.getPullRequests().then(function(pullRequests) {
                 prCtrl.allPullRequests = pullRequests.all;
@@ -53,7 +68,6 @@
                 prCtrl.minePullRequests = pullRequests.mine;
             });
         }
-
         prCtrl.isInitialize = false;
         
         vstsService.isInitialize()
