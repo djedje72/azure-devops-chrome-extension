@@ -43,9 +43,9 @@
             };
 
             prCtrl.memberSelected = function(member) {
-               getPullRequests().then(function() {
+                getPullRequests().then(function() {
                     prCtrl.fillToApprovePullRequests();
-                })
+                });
             }
 
             prCtrl.membersDisplay = function() {
@@ -58,7 +58,7 @@
         prCtrl.members = vstsService.getTeamMembers();
         
         prCtrl.toggleAutoComplete = function(pr) {
-            
+            vstsService.toggleAutoComplete(pr);
         }
 
         function getPullRequests() {

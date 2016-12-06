@@ -159,12 +159,20 @@
             return initialize.promise;
         }
 
+        function toggleAutoComplete(pullRequest) {
+            
+                //583fe12e-1122-4516-863f-f41cbb9a9048
+                //00000000-0000-0000-0000-000000000000
+        }
+
+
         return {
             isInitialize: isInitialize,
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
             getMainProjectWebUrl: getMainProjectWebUrl,
-            setCredentials: setCredentials
+            setCredentials: setCredentials,
+            toggleAutoComplete: toggleAutoComplete
         };
     }
 })();
