@@ -62,11 +62,26 @@
                 let fullPr = httpPullRequest.data;
                 //Async
                 getPolicyResult(fullPr).then(function(evaluations) {
-                    var hasError = evaluations.some(function(eval) {
-                        return eval.status !== "approved";
-                    })
+                    var state;
+
+                    if(evaluations.length > 0) {
+                        var successEval = evaluations.filter(function(eval) {
+                            return eval.status === "approved";
+                        });
+
+                        if(successEval.length === evaluations.length) {
+                            state = "success";
+                        } else if (successEval.length === 0) {
+                            state = "error";
+                        } else {
+                            state = "warning";
+                        }
+                    } else {
+                        state = "none";
+                    }
+                   
                     fullPr.evaluations = {
-                        hasError: hasError
+                        state: state
                     };
                 });
                 return fullPr;

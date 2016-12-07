@@ -53,6 +53,7 @@ button[disabled]:hover {
   line-height: 20px;
   overflow: hidden;
   position: absolute;
+  width: 555px;
 }
 
 .pullRequest .details .memberIcon {
@@ -86,6 +87,28 @@ button[disabled]:hover {
 
 .pullRequest .actions .auto-complete.disabled{
   opacity: 0.1;
+}
+
+.pullRequest .state {
+  float: right;
+  width: 20px;
+  height: 20px;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.pullRequest .state.state-success {
+  background-image: url("/img/policy_ok.png");
+}
+
+.pullRequest .state.state-error {
+  background-image: url("/img/policy_ko.png");
+}
+
+.pullRequest .state.state-warning {
+  background-image: url("/img/policy_warning.png");
 }
 
 .menu-buttons {
