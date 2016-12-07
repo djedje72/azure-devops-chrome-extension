@@ -10,9 +10,14 @@ button {
   color: #ffffff;
   font-size: 20px;
   background: #004692;
-  padding: 10px 20px 10px 20px;
+  padding: 8px 20px 10px 20px;
   text-decoration: none;
   border: none;
+  height: 43px;
+}
+
+button .spinner {
+  height: inherit;
 }
 
 button:hover {
@@ -28,4 +33,73 @@ button[disabled] {
 button[disabled]:hover {
   background: #cccccc;
   cursor: default;
+}
+
+.pullRequest {
+  margin: 2px 0px;
+  border-bottom: 1px solid #cccccc;
+  padding: 3px 0;
+  height: 33px;
+}
+
+.pullRequest:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+.pullRequest .details {
+  height: 33px;
+  line-height: 20px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.pullRequest .details .memberIcon {
+  width:30px;
+  float: left;
+  margin-right: 5px;
+}
+
+.pullRequest .details .branchesInfo {
+  position: inherit;
+  bottom: 8px;
+  line-height: 0;
+  font-size: 9px;
+  left: 45px;
+  color: #555555;
+}
+
+.pullRequest .repository {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.menu-buttons {
+  display: table;
+  background-color: #F3F3F3;
+  width: 100%;
+  height: 45px;
+  margin-bottom: 5px;
+}
+
+.menu-buttons button {
+  font-family: "-apple-system",BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Helvetica,Ubuntu,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  color: #333;
+}
+
+.menu-buttons button.selected {
+  color: #0073bf;
+  border-bottom: 2px solid #0073bf;
+}
+.menu-buttons button:focus {
+  outline:none;
+}
+
+.menu-buttons button:hover {
+    outline: none;
+    background-color: #d0d2d3;
+}
+
+.menu-buttons button {
+  background-color: inherit;
 }

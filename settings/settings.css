@@ -1,0 +1,22 @@
+.settings {
+    margin: 0 10px;
+}
+
+.settings > div {
+    margin: 5px 0;
+}
+
+.settings .title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.settings input {
+    width: 250px;
+}
+
+.settings .error {
+    color: red;
+    font-size: 20px;
+    margin-left: 10px;
+}
