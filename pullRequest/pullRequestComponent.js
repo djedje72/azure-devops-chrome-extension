@@ -37,9 +37,23 @@
                 memberService.hideMembers();
             }
 
+            prCtrl.isMinePullRequests = function() {
+                return prCtrl.pullRequests === prCtrl.minePullRequests;
+            }
+
+            prCtrl.isToApprovePullRequests = function() {
+                return prCtrl.pullRequests === prCtrl.toApprovePullRequests;
+            }
+
+            prCtrl.isAllPullRequests = function() {
+                return prCtrl.pullRequests === prCtrl.allPullRequests;
+            }
+
             prCtrl.redirect = function(pr) {
-                var href = vstsService.getMainProjectWebUrl() + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
-                chrome.tabs.create({url: href, active: false});
+                vstsService.getMainProjectWebUrl().then(function(mainProjectUrl) {
+                    var href = mainProjectUrl + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
+                    chrome.tabs.create({url: href, active: false});
+                });
             };
 
             prCtrl.memberSelected = function(member) {
@@ -58,7 +72,9 @@
         prCtrl.members = vstsService.getTeamMembers();
         
         prCtrl.toggleAutoComplete = function(pr) {
-            vstsService.toggleAutoComplete(pr);
+            vstsService.toggleAutoComplete(pr).then(function(refreshPr) {
+                pr.autoCompleteSetBy = refreshPr.autoCompleteSetBy;
+            });
         }
 
         function getPullRequests() {
