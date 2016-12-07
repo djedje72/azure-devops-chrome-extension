@@ -3,8 +3,10 @@
 
     VstsService.$inject=['$http', '$q', 'memberService', 'settingsService'];
     function VstsService($http, $q, memberService, settingsService) {
-        var initialize = $q.defer();
-        var domainToUse = settingsService.getCurrentDomain();
+        let resetGUID = "00000000-0000-0000-0000-000000000000";
+        
+        let initialize = $q.defer();
+        let domainToUse = settingsService.getCurrentDomain();
         if (domainToUse) {
             initialize.resolve("init ok");
         } else {
@@ -12,17 +14,19 @@
         }
         $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
     
-        var mainProject;
+        let mainProject;
 
         function getToApprovePullRequests(pullRequests) {
-            var currentMember = memberService.getCurrentMember();
+            let currentMember = memberService.getCurrentMember();
             if(pullRequests.length > 0 && currentMember) {
-                var toApprovePullRequests = pullRequests.filter(function(pullRequest) {
-                    var toApprovePullRequest = pullRequest.reviewers.filter(function(reviewer) {
-                        return reviewer.uniqueName === currentMember.uniqueName && reviewer.vote === 0;
-                    });
-                    if (toApprovePullRequest.length > 0) {
-                        return true;
+                let toApprovePullRequests = pullRequests.filter(function(pullRequest) {
+                    if(pullRequest.reviewers) {
+                        let toApprovePullRequest = pullRequest.reviewers.filter(function(reviewer) {
+                            return reviewer.uniqueName === currentMember.uniqueName && reviewer.vote === 0;
+                        });
+                        if (toApprovePullRequest.length > 0) {
+                            return true;
+                        }
                     }
                     return false;
                 });
@@ -32,7 +36,7 @@
         }
 
         function getMinePullRequests(pullRequests) {
-            var currentMember = memberService.getCurrentMember();
+            let currentMember = memberService.getCurrentMember();
             if(pullRequests.length > 0 && currentMember) {
                 return pullRequests.filter(function(pullRequest) {
                     return currentMember.uniqueName === pullRequest.createdBy.uniqueName;
@@ -41,7 +45,7 @@
         }
 
         function setReminder(toApprovePullRequests) {
-            var nbToApprovePullRequests = toApprovePullRequests.length;
+            let nbToApprovePullRequests = toApprovePullRequests.length;
             if(nbToApprovePullRequests > 0) {
                 chrome.browserAction.setBadgeText({text: nbToApprovePullRequests.toString()});
                 chrome.browserAction.setBadgeBackgroundColor({color: "#FF9999"});
@@ -50,19 +54,81 @@
             };
         }
 
+        function getFullPullRequest(pr) {
+            return $http({
+                method: "GET",
+                url: pr.url
+            }).then(function(httpPullRequest) {
+                let fullPr = httpPullRequest.data;
+                //Async
+                getPolicyResult(fullPr).then(function(evaluations) {
+                    var state;
+
+                    if(evaluations.length > 0) {
+                        var successEval = evaluations.filter(function(eval) {
+                            return eval.status === "approved";
+                        });
+
+                        if(successEval.length === evaluations.length) {
+                            state = "success";
+                        } else if (successEval.length === 0) {
+                            state = "error";
+                        } else {
+                            state = "warning";
+                        }
+                    } else {
+                        state = "none";
+                    }
+                   
+                    fullPr.evaluations = {
+                        state: state
+                    };
+                });
+                return fullPr;
+            });
+        }
+
+        function getPolicyResult(pr) {
+            return getMainProject().then(function(mainProject) {
+                return $http({
+                    method:"GET",
+                    url: domainToUse.domainUrl + "/" + mainProject.id + "/_apis/policy/Evaluations",
+                    params: {
+                        artifactId: "vstfs:///CodeReview/CodeReviewId/" + mainProject.id + "/" + pr.codeReviewId
+                    }
+                }).then(function(httpEvaluation) {
+                    return httpEvaluation.data.value;
+                });
+            });
+        }
+
         function getPullRequests() {
-            var allPullRequests = [];
-            var promises = [];
+            return getPullRequestsList().then(function(pullRequests) {
+                let promises = [];
+                let fullPullRequests = [];
+                pullRequests.forEach(function(pr) {
+                    promises.push(getFullPullRequest(pr).then(function(fullPr) {
+                        fullPullRequests.push(fullPr);
+                    }));
+                });
+                return $q.all(promises).then(function() {
+                    return {
+                        "all": fullPullRequests,
+                        "toApprove": getToApprovePullRequests(fullPullRequests),
+                        "mine": getMinePullRequests(fullPullRequests)
+                    };
+                }) 
+            });
+        }
+
+        function getPullRequestsList() {
+            let allPullRequests = [];
+            let promises = [];
             return $http({
                 method: "GET",
                 url: domainToUse.vstsUrl + "/git/pullRequests"
             }).then(function(httpPullRequests) {
-                var allPullRequests = httpPullRequests.data.value;
-                return {
-                    "all": allPullRequests,
-                    "toApprove": getToApprovePullRequests(allPullRequests),
-                    "mine": getMinePullRequests(allPullRequests)
-                };
+                return httpPullRequests.data.value;
             });
         }
 
@@ -76,12 +142,14 @@
         }
 
         function getMainProjectWebUrl() {
-            return getMainProject()._links.web.href;
+            return getMainProject().then(function(mainProject) {
+                return mainProject._links.web.href;
+            });
         }
 
         function getMainProject() {
             if(mainProject !== undefined) {
-                return mainProject;
+                return $q.resolve(mainProject);
             }
             return getAllProjects().then(function(projects) {
                 return $http({
@@ -119,7 +187,8 @@
                 domainToUse = {
                     vstsName: credentials.vstsName,
                     basic:btoa(credentials.mail.toLowerCase() + ":" + credentials.accessKey), 
-                    vstsUrl : "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis"
+                    vstsUrl: "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis",
+                    domainUrl: "https://" + credentials.vstsName + ".visualstudio.com"
                 };
                 $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
                 return getAllProjects().then(function() {
@@ -137,12 +206,42 @@
             return initialize.promise;
         }
 
+        function toggleAutoComplete(pr) {
+            return getFullPullRequest(pr).then(function(refreshPr) {
+                return getMainProjectWebUrl().then(function(mainProjectUrl) {
+                    let data = {
+                        "autoCompleteSetBy": {
+                            "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : "583fe12e-1122-4516-863f-f41cbb9a9048"
+                        }
+                    };
+                    return $http({
+                        "method": "PATCH",
+                        "url": pr.url,
+                        "params": {
+                            "api-version":"3.0"
+                        },
+                        "data": data
+                    }).then(function(httpPullRequest) {
+                        return httpPullRequest.data;
+                    }, function(error) {
+                        console.log(error);
+                        return error;
+                    });
+                    //583fe12e-1122-4516-863f-f41cbb9a9048
+                    //00000000-0000-0000-0000-000000000000
+                });
+            });
+            
+        }
+
+
         return {
             isInitialize: isInitialize,
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
             getMainProjectWebUrl: getMainProjectWebUrl,
-            setCredentials: setCredentials
+            setCredentials: setCredentials,
+            toggleAutoComplete: toggleAutoComplete
         };
     }
 })();
