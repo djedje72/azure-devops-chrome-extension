@@ -11,11 +11,6 @@
   ],
   "author": "Rémi Fruteau de Laclos",
   "license": "ISC",
-  "dependencies": {
-    "angular": "^1.5.8",
-    "jquery": "^3.1.1",
-    "angular-css": "^1.0.8"
-  },
-  "devDependencies": {
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }

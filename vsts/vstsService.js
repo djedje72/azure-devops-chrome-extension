@@ -54,6 +54,54 @@
             };
         }
 
+        function processPolicies(fullPr) {
+            return getPolicyResult(fullPr).then(function(evaluations) {
+                let state;
+                let policies = {};
+
+                if(evaluations.length > 0) {
+                    const policiesText = {
+                        build: "Build",
+                        reviewers: "Minimum number of reviewers",
+                        workItemLink: "Work item linking"
+                    }
+
+                    let nbApproved = 0;
+                    let successEval = evaluations.forEach(function(eval) {
+                        for(var key in policiesText) {
+                            if(policiesText.hasOwnProperty(key)) {
+                                var policyText = policiesText[key]; 
+                                if(eval.configuration.type.displayName === policyText) {
+                                    if(eval.status === "approved") {
+                                        nbApproved++;
+                                        policies[key] = "success";
+                                    } else {
+                                        policies[key] = "error";
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    if(nbApproved === evaluations.length) {
+                        state = "success";
+                    } else if (nbApproved === 0) {
+                        state = "error";
+                    } else {
+                        state = "warning";
+                    }
+                } else {
+                    state = "none";
+                }
+                
+                fullPr.evaluations = {
+                    policies: policies,
+                    state: state
+                };
+                return $q.resolve(fullPr);
+            });
+        }
+
         function getFullPullRequest(pr) {
             return $http({
                 method: "GET",
@@ -61,29 +109,8 @@
             }).then(function(httpPullRequest) {
                 let fullPr = httpPullRequest.data;
                 //Async
-                getPolicyResult(fullPr).then(function(evaluations) {
-                    var state;
+                processPolicies(fullPr);
 
-                    if(evaluations.length > 0) {
-                        var successEval = evaluations.filter(function(eval) {
-                            return eval.status === "approved";
-                        });
-
-                        if(successEval.length === evaluations.length) {
-                            state = "success";
-                        } else if (successEval.length === 0) {
-                            state = "error";
-                        } else {
-                            state = "warning";
-                        }
-                    } else {
-                        state = "none";
-                    }
-                   
-                    fullPr.evaluations = {
-                        state: state
-                    };
-                });
                 return fullPr;
             });
         }
@@ -207,11 +234,15 @@
         }
 
         function toggleAutoComplete(pr) {
+            let currentMember = memberService.getCurrentMember();
+            if(!currentMember) {
+                return $q.reject("no current member");
+            }
             return getFullPullRequest(pr).then(function(refreshPr) {
                 return getMainProjectWebUrl().then(function(mainProjectUrl) {
                     let data = {
                         "autoCompleteSetBy": {
-                            "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : "583fe12e-1122-4516-863f-f41cbb9a9048"
+                            "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
                         }
                     };
                     return $http({
@@ -227,8 +258,6 @@
                         console.log(error);
                         return error;
                     });
-                    //583fe12e-1122-4516-863f-f41cbb9a9048
-                    //00000000-0000-0000-0000-000000000000
                 });
             });
             
