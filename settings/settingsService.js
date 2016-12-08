@@ -8,6 +8,9 @@
         if(currentDomainStr !== null) {
             try{
                 currentDomain = JSON.parse(currentDomainStr);
+                if(!currentDomain.domainUrl) {
+                    throw "error";
+                }
             } catch(e) {
                 localStorage.removeItem("currentDomain");
                 currentDomain = null;
