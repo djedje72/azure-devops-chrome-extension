@@ -21,9 +21,7 @@
             if(pullRequests.length > 0 && currentMember) {
                 let toApprovePullRequests = pullRequests.filter(function(pullRequest) {
                     if(pullRequest.reviewers) {
-                        let toApprovePullRequest = pullRequest.reviewers.filter(function(reviewer) {
-                            return reviewer.uniqueName === currentMember.uniqueName && reviewer.vote === 0;
-                        });
+                        let toApprovePullRequest = pullRequest.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.uniqueName && reviewer.vote === 0);
                         if (toApprovePullRequest.length > 0) {
                             return true;
                         }
@@ -38,9 +36,7 @@
         function getMinePullRequests(pullRequests) {
             let currentMember = memberService.getCurrentMember();
             if(pullRequests.length > 0 && currentMember) {
-                return pullRequests.filter(function(pullRequest) {
-                    return currentMember.uniqueName === pullRequest.createdBy.uniqueName;
-                });
+                return pullRequests.filter((pullRequest) => currentMember.uniqueName === pullRequest.createdBy.uniqueName);
             }
         }
 
@@ -116,29 +112,25 @@
         }
 
         function getPolicyResult(pr) {
-            return getMainProject().then(function(mainProject) {
-                return $http({
-                    method:"GET",
-                    url: domainToUse.domainUrl + "/" + mainProject.id + "/_apis/policy/Evaluations",
-                    params: {
-                        artifactId: "vstfs:///CodeReview/CodeReviewId/" + mainProject.id + "/" + pr.codeReviewId
-                    }
-                }).then(function(httpEvaluation) {
-                    return httpEvaluation.data.value;
-                });
-            });
+            return $http({
+                method:"GET",
+                url: domainToUse.domainUrl + "/" + pr.repository.project.id + "/_apis/policy/Evaluations",
+                params: {
+                    artifactId: "vstfs:///CodeReview/CodeReviewId/" + pr.repository.project.id + "/" + pr.codeReviewId
+                }
+            }).then((httpEvaluation) => httpEvaluation.data.value);
         }
 
         function getPullRequests() {
             return getPullRequestsList().then(function(pullRequests) {
                 let promises = [];
                 let fullPullRequests = [];
-                pullRequests.forEach(function(pr) {
-                    promises.push(getFullPullRequest(pr).then(function(fullPr) {
+                pullRequests.forEach((pr) => {
+                    promises.push(getFullPullRequest(pr).then((fullPr) => {
                         fullPullRequests.push(fullPr);
                     }));
                 });
-                return $q.all(promises).then(function() {
+                return $q.all(promises).then(() => {
                     return {
                         "all": fullPullRequests,
                         "toApprove": getToApprovePullRequests(fullPullRequests),
@@ -154,48 +146,53 @@
             return $http({
                 method: "GET",
                 url: domainToUse.vstsUrl + "/git/pullRequests"
-            }).then(function(httpPullRequests) {
-                return httpPullRequests.data.value;
-            });
+            }).then((httpPullRequests) => httpPullRequests.data.value);
         }
 
         function getAllProjects() {
             return $http({
                 method: "GET",
                 url: domainToUse.vstsUrl + "/projects"
-            }).then(function(httpProjects) {
-                return httpProjects.data;
-            });
-        }
-
-        function getMainProjectWebUrl() {
-            return getMainProject().then(function(mainProject) {
-                return mainProject._links.web.href;
-            });
-        }
-
-        function getMainProject() {
-            if(mainProject !== undefined) {
-                return $q.resolve(mainProject);
-            }
-            return getAllProjects().then(function(projects) {
-                return $http({
-                    method: "GET",
-                    url: projects.value[0].url
-                }).then(function(httpMainProject) {
-                    mainProject = httpMainProject.data;
-                    return mainProject;
+            }).then((httpProjects) => {
+                let projects = httpProjects.data.value;
+                let promises = [];
+                let fullProjects = [];
+                projects.forEach(function(project) {
+                    let promise = $http({
+                        method: "GET",
+                        url: project.url
+                    }).then(function(fullProject) {
+                        fullProjects.push(fullProject.data);
+                    });
+                    promises.push(promise);
+                });
+                return $q.all(promises).then(() => {
+                    return fullProjects
                 });
             });
         }
 
         function getTeamMembers() {
-            return getMainProject().then(function(mainProject) {
-                return $http({
-                    method: "GET",
-                    url: mainProject.defaultTeam.url + "/members"
-                }).then(function(httpMembers) {
-                    return httpMembers.data.value;
+            return getAllProjects().then(function(projects) {
+                let promises = [];
+                let memberIds = new Set();
+                let uniqueMembers = [];
+                projects.forEach((project) => {
+                    let promise = $http({
+                        method: "GET",
+                        url: project.defaultTeam.url + "/members"
+                    }).then(function(httpMembers) {
+                        httpMembers.data.value.forEach((member) => {
+                            if(!memberIds.has(member.id)) {
+                                memberIds.add(member.id);
+                                uniqueMembers.push(member);
+                            }
+                        })
+                    });
+                    promises.push(promise);
+                });
+                return $q.all(promises).then(() => {
+                    return uniqueMembers;
                 });
             });
         }
@@ -218,10 +215,10 @@
                     domainUrl: "https://" + credentials.vstsName + ".visualstudio.com"
                 };
                 $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
-                return getAllProjects().then(function() {
+                return getAllProjects().then(() => {
                     settingsService.setCurrentDomain(domainToUse);
                     initialize.resolve("init ok");
-                }, function(error) {
+                }, (error) => {
                     return $q.reject(error);
                 });
             } else {
@@ -239,36 +236,29 @@
                 return $q.reject("no current member");
             }
             return getFullPullRequest(pr).then(function(refreshPr) {
-                return getMainProjectWebUrl().then(function(mainProjectUrl) {
-                    let data = {
-                        "autoCompleteSetBy": {
-                            "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
-                        }
-                    };
-                    return $http({
-                        "method": "PATCH",
-                        "url": pr.url,
-                        "params": {
-                            "api-version":"3.0"
-                        },
-                        "data": data
-                    }).then(function(httpPullRequest) {
-                        return httpPullRequest.data;
-                    }, function(error) {
-                        console.log(error);
-                        return error;
-                    });
-                });
+                let data = {
+                    "autoCompleteSetBy": {
+                        "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
+                    }
+                };
+                return $http({
+                    "method": "PATCH",
+                    "url": pr.url,
+                    "params": {
+                        "api-version":"3.0"
+                    },
+                    "data": data
+                }).then(
+                    (httpPullRequest) => httpPullRequest.data, 
+                    (error) => error
+                );
             });
-            
         }
-
 
         return {
             isInitialize: isInitialize,
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
-            getMainProjectWebUrl: getMainProjectWebUrl,
             setCredentials: setCredentials,
             toggleAutoComplete: toggleAutoComplete
         };

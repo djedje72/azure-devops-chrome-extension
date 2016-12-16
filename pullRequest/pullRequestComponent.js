@@ -18,8 +18,8 @@
     });
 
 
-    PullRequestController.$inject=['$q','$http', 'vstsService', 'memberService'];
-    function PullRequestController($q, $http, vstsService, memberService) {
+    PullRequestController.$inject=['vstsService', 'memberService'];
+    function PullRequestController(vstsService, memberService) {
         var prCtrl = this;
         this.$onInit = function() {
             prCtrl.fillPullRequests = function() {
@@ -50,10 +50,8 @@
             }
 
             prCtrl.redirect = function(pr) {
-                vstsService.getMainProjectWebUrl().then(function(mainProjectUrl) {
-                    var href = mainProjectUrl + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
-                    chrome.tabs.create({url: href, active: false});
-                });
+                var href = pr.url.split('DefaultCollection')[0] + pr.repository.project.name + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
+                chrome.tabs.create({url: href, active: false});
             };
 
             prCtrl.memberSelected = function(member) {
