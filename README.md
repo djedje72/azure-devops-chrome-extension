@@ -1,5 +1,5 @@
 # vsts-chrome-extension
-vsts pull request chrome extension
+[Install from Chrome WebStore](https://chrome.google.com/webstore/detail/vsts-pull-requests/pbjkodijnlbkbbkjmhgemlpigeaoaken)
 
 With this extension you can see :
 
