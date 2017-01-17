@@ -17,14 +17,16 @@
                         };
 
                         suggestions.forEach((suggestion) => {
-                            let sourceBranch = suggestion.properties.sourceBranch.replace('refs/heads/', "");
-                            let targetBranch = suggestion.properties.targetBranch.replace('refs/heads/', "");
-                            let options = Object.assign(notificationBody, {
-                                message: `${sourceBranch} -> ${targetBranch}`
-                            });
-                            chrome.notifications.create(suggestion.sourceBranch, options, (id) => {
-                                branches[properties.sourceBranch] = suggestion;
-                            });
+                            if(!branches[suggestion.sourceBranch]) {
+                                let sourceBranch = suggestion.properties.sourceBranch.replace('refs/heads/', "");
+                                let targetBranch = suggestion.properties.targetBranch.replace('refs/heads/', "");
+                                let options = Object.assign(notificationBody, {
+                                    message: `${sourceBranch} -> ${targetBranch}`
+                                });
+                                chrome.notifications.create(suggestion.sourceBranch, options, (id) => {
+                                    branches[id] = suggestion;
+                                });
+                            }
                         });
                     });
                 }
