@@ -17,13 +17,13 @@
                         };
 
                         suggestions.forEach((suggestion) => {
-                            if(!branches[suggestion.sourceBranch]) {
+                            if(!branches[suggestion.properties.sourceBranch]) {
                                 let sourceBranch = suggestion.properties.sourceBranch.replace('refs/heads/', "");
                                 let targetBranch = suggestion.properties.targetBranch.replace('refs/heads/', "");
                                 let options = Object.assign(notificationBody, {
                                     message: `${sourceBranch} -> ${targetBranch}`
                                 });
-                                chrome.notifications.create(suggestion.sourceBranch, options, (id) => {
+                                chrome.notifications.create(suggestion.properties.sourceBranch, options, (id) => {
                                     branches[id] = suggestion;
                                 });
                             }
