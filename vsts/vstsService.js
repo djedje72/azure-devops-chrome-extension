@@ -21,7 +21,7 @@
             if(pullRequests.length > 0 && currentMember) {
                 let toApprovePullRequests = pullRequests.filter(function(pullRequest) {
                     if(pullRequest.reviewers) {
-                        let toApprovePullRequest = pullRequest.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.uniqueName && reviewer.vote === 0);
+                        let toApprovePullRequest = pullRequest.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.uniqueName && reviewer.vote <= 0);
                         if (toApprovePullRequest.length > 0) {
                             return true;
                         }

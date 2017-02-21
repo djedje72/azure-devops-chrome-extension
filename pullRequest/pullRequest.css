@@ -142,3 +142,11 @@ button[disabled]:hover {
   background-color: inherit;
   height: 45px;
 }
+
+.review-rejected {
+  background-color: #FFDDDD;
+}
+
+.review-waiting {
+  background-color: #FFFF99;
+}

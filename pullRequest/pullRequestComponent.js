@@ -29,8 +29,25 @@
 
             prCtrl.fillToApprovePullRequests = function() {
                 prCtrl.pullRequests = prCtrl.toApprovePullRequests;
+                addCurrentMemberVote(prCtrl.pullRequests);
                 memberService.hideMembers();
             };
+
+            function addCurrentMemberVote(prs) {
+                const currentMember = memberService.getCurrentMember();
+                if(currentMember) {
+                    prs.forEach((pr) => {
+                        const currentMemberReviews = pr.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.uniqueName);
+                        if(currentMemberReviews.length > 0) {
+                            pr.currentMemberVote = currentMemberReviews[0].vote;
+                        }
+                    });
+                }
+            }
+
+            prCtrl.reviewClass = function(pr) {
+                return {'review-rejected': (pr.currentMemberVote === -10), 'review-waiting': (pr.currentMemberVote === -5)};
+            }
 
             prCtrl.fillMinePullRequests = function() {
                 prCtrl.pullRequests = prCtrl.minePullRequests;
