@@ -20,6 +20,7 @@
       "/settings/settings.html"
   ],
   "permissions": [
+    "notifications",
     "webRequest",
     "alarms"
   ],
