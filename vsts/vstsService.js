@@ -51,7 +51,7 @@
         }
 
         function processPolicies(fullPr) {
-            return getPolicyResult(fullPr).then(function(evaluations) {
+            return getPolicyResult(fullPr).then((evaluations) => {
                 let state;
                 let policies = {};
 
@@ -63,7 +63,7 @@
                     }
 
                     let nbApproved = 0;
-                    let successEval = evaluations.forEach(function(eval) {
+                    let successEval = evaluations.forEach((eval) => {
                         for(var key in policiesText) {
                             if(policiesText.hasOwnProperty(key)) {
                                 var policyText = policiesText[key]; 
@@ -161,19 +161,15 @@
                     let promise = $http({
                         method: "GET",
                         url: project.url
-                    }).then(function(fullProject) {
-                        fullProjects.push(fullProject.data);
-                    });
+                    }).then((fullProject) => fullProjects.push(fullProject.data));
                     promises.push(promise);
                 });
-                return $q.all(promises).then(() => {
-                    return fullProjects
-                });
+                return $q.all(promises).then(() => fullProjects);
             });
         }
 
         function getTeamMembers() {
-            return getAllProjects().then(function(projects) {
+            return getAllProjects().then((projects) => {
                 let promises = [];
                 let memberIds = new Set();
                 let uniqueMembers = [];
@@ -191,9 +187,7 @@
                     });
                     promises.push(promise);
                 });
-                return $q.all(promises).then(() => {
-                    return uniqueMembers;
-                });
+                return $q.all(promises).then(() => uniqueMembers);
             });
         }
 
@@ -201,9 +195,7 @@
             return $http({
                 method: "GET",
                 url: domainToUse.vstsUrl + "/git/repositories",
-            }).then(function(httpRepositories) {
-                return httpRepositories.data.value;
-            });
+            }).then((httpRepositories) => httpRepositories.data.value);
         }
 
         function setCredentials(credentials) {
@@ -215,12 +207,13 @@
                     domainUrl: "https://" + credentials.vstsName + ".visualstudio.com"
                 };
                 $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
-                return getAllProjects().then(() => {
-                    settingsService.setCurrentDomain(domainToUse);
-                    initialize.resolve("init ok");
-                }, (error) => {
-                    return $q.reject(error);
-                });
+                return getAllProjects().then(
+                    () => {
+                        settingsService.setCurrentDomain(domainToUse);
+                        initialize.resolve("init ok");
+                    }, 
+                    (error) => $q.reject(error)
+                );
             } else {
                 return $q.reject("missing arguments");
             }
@@ -235,7 +228,7 @@
             if(!currentMember) {
                 return $q.reject("no current member");
             }
-            return getFullPullRequest(pr).then(function(refreshPr) {
+            return getFullPullRequest(pr).then((refreshPr) => {
                 let data = {
                     "autoCompleteSetBy": {
                         "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
@@ -255,12 +248,59 @@
             });
         }
 
+        function getSuggestionForUser() {
+            return getAllSuggestions().then((suggestions) => {
+                let currentMember = memberService.getCurrentMember();
+                let promises = [];
+                if(currentMember) {
+                    suggestions.filter((suggestion) => suggestion.suggestion.length > 0).forEach((suggestion) => {
+                        suggestion.suggestion.filter((sug) => sug.type === "pullRequest").forEach((sug) => {
+                            let promise = $http({
+                                method: "GET",
+                                url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}`
+                            }).then((commits) => {
+                                let lastCommit = commits.data.value[0];
+                                if(lastCommit && lastCommit.committer.email === currentMember.uniqueName) {
+                                    return Object.assign({
+                                        remoteUrl: suggestion.repository.remoteUrl
+                                    }, sug);
+                                }
+                                return null;
+                            });
+                            promises.push(promise);
+                        });
+                    });
+                }
+                return $q.all(promises);
+            });
+        }
+
+        function getAllSuggestions() {
+            return getRepositories().then((respositories) => {
+                let promises = [];
+                respositories.forEach((repository) => {
+                    let promise = $http({
+                        method: "GET",
+                        url: repository.url + "/suggestions"
+                    }).then((suggestions) => {
+                        return {
+                            repository: repository,
+                            suggestion: suggestions.data.value
+                        };
+                    });
+                    promises.push(promise);
+                });
+                return $q.all(promises);
+            });
+        }
+
         return {
             isInitialize: isInitialize,
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
             setCredentials: setCredentials,
-            toggleAutoComplete: toggleAutoComplete
+            toggleAutoComplete: toggleAutoComplete,
+            getSuggestionForUser: getSuggestionForUser
         };
     }
 })();
