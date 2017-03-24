@@ -9,7 +9,7 @@
             data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
         <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-class="{ selected: prCtrl.isAllPullRequests()}" 
             data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
-        <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" members="prCtrl.members" current-member="prCtrl.currentMember"></member>
+        <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" current-member="prCtrl.currentMember"></member>
     </div>
     <div class="pullRequest" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
         <span class="actions" data-ng-show="prCtrl.isMinePullRequests()"><img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete(pr);" src="/img/auto-complete.png"/></span>

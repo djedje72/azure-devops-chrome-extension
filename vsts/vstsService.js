@@ -20,9 +20,22 @@
             let currentMember = memberService.getCurrentMember();
             if(pullRequests.length > 0 && currentMember) {
                 let toApprovePullRequests = pullRequests.filter(function(pullRequest) {
-                    if(pullRequest.reviewers) {
-                        let toApprovePullRequest = pullRequest.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.uniqueName && reviewer.vote <= 0);
-                        if (toApprovePullRequest.length > 0) {
+                    if(pullRequest.reviewers && pullRequest.createdBy.uniqueName !== currentMember.uniqueName) {
+                        let teamPullRequest = pullRequest.reviewers.filter((reviewer) => {
+                            return currentMember.teams.includes(reviewer.id);
+                        });
+                        let mineReview = pullRequest.reviewers.filter((reviewer) => {
+                            return reviewer.uniqueName === currentMember.uniqueName;
+                        });
+                        const approved = (vote) => vote > 0;
+                        let approves = mineReview.filter((reviewer) => {
+                            return approved(reviewer.vote);
+                        });
+                        let denies = mineReview.filter((reviewer) => {
+                            return !approved(reviewer.vote);
+                        });
+
+                        if (denies.length > 0 || approves.length === 0 &&  teamPullRequest.length > 0) {
                             return true;
                         }
                     }
@@ -171,23 +184,25 @@
         function getTeamMembers() {
             return getAllProjects().then((projects) => {
                 let promises = [];
-                let memberIds = new Set();
-                let uniqueMembers = [];
+                let members = new Map();
                 projects.forEach((project) => {
                     let promise = $http({
                         method: "GET",
                         url: project.defaultTeam.url + "/members"
                     }).then(function(httpMembers) {
                         httpMembers.data.value.forEach((member) => {
-                            if(!memberIds.has(member.id)) {
-                                memberIds.add(member.id);
-                                uniqueMembers.push(member);
+                            if(!members.has(member.id)) {
+                                member.teams = [project.defaultTeam.id];
+                                members.set(member.id, member);
+                            } else {
+                                tmpMember = members.get(member.id);
+                                tmpMember.teams.push(project.defaultTeam.id);
                             }
                         })
                     });
                     promises.push(promise);
                 });
-                return $q.all(promises).then(() => uniqueMembers);
+                return $q.all(promises).then(() => [...members.values()]);
             });
         }
 
