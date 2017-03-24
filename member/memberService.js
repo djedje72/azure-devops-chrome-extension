@@ -9,6 +9,9 @@
         if(currentMemberStr !== null) {
             try{
                 currentMember = JSON.parse(currentMemberStr);
+                if(!currentMember.hasOwnProperty("teams")) {
+                    throw new Error();
+                }
             } catch(e) {
                 localStorage.removeItem("currentMember");
                 currentMember = null;

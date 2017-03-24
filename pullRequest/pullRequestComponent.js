@@ -82,10 +82,6 @@
             }
         }
 
-//qlokfjlonjua6wtji6fp2cg7k3vcuh3gdfk3gunbwjqlgnawk3ma
-
-        prCtrl.members = vstsService.getTeamMembers();
-        
         prCtrl.toggleAutoComplete = function(pr) {
             vstsService.toggleAutoComplete(pr).then(function(refreshPr) {
                 pr.autoCompleteSetBy = refreshPr.autoCompleteSetBy;

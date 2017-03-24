@@ -1,7 +1,6 @@
 (function() {
     angular.module('vstsChrome').component("member", {
         bindings: {
-            members: "<",
             memberSelected: "&",
             membersDisplay: "&",
             currentMember: "<"
