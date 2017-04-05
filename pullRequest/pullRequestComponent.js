@@ -98,14 +98,14 @@
         prCtrl.isInitialize = false;
         
         vstsService.isInitialize()
-            .then(function() {
+            .then(() => {
                 prCtrl.isInitialize = true;
             })
-            .then(getPullRequests)
-            .then(function() {
+            .then(() => getPullRequests())
+            .then(() => prCtrl.fillToApprovePullRequests())
+            .finally(() => {
                 prCtrl.hideLoading = true;
-                prCtrl.fillToApprovePullRequests();
-        })
+            });
         
     }
 })();

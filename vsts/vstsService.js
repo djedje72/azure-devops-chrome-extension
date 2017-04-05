@@ -6,13 +6,35 @@
         let resetGUID = "00000000-0000-0000-0000-000000000000";
         
         let initialize = $q.defer();
+        const loginInitialize = $q.defer();
         let domainToUse = settingsService.getCurrentDomain();
         if (domainToUse) {
-            initialize.resolve("init ok");
+            $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
+            //initialize.resolve("init ok");
+            checkLogin().then(() => {
+                initialize.resolve("init ok");
+            });
         } else {
             domainToUse = {};
         }
-        $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
+
+        function checkLogin() {
+            return $http({
+                method: "GET",
+                responseType: "json",
+                url: domainToUse.vstsUrl + "/projects"
+            }).then((response) => {
+                if (response.data) {
+                    loginInitialize.resolve("init ok");
+                } else {
+                    loginInitialize.reject("login failed");
+                    return $q.reject("login failed");
+                }
+            }, () => {
+                loginInitialize.reject("login failed");
+                return $q.reject("login failed");
+            });
+        }
     
         let mainProject;
 
@@ -238,6 +260,10 @@
             return initialize.promise;
         }
 
+        function isLoginInitialize() {
+            return loginInitialize.promise;
+        }
+
         function toggleAutoComplete(pr) {
             let currentMember = memberService.getCurrentMember();
             if(!currentMember) {
@@ -311,6 +337,7 @@
 
         return {
             isInitialize: isInitialize,
+            isLoginInitialize: isLoginInitialize,
             getTeamMembers: getTeamMembers,
             getPullRequests: getPullRequests,
             setCredentials: setCredentials,
