@@ -24,6 +24,7 @@
                 mail: settingsCtrl.mail,
                 accessKey: settingsCtrl.accessKey,
             }).then(function(){
+                settingsCtrl.isInitialize = true;
                 settingsCtrl.hasError = false;
             }, function() {
                 settingsCtrl.hasError = true;
@@ -32,10 +33,10 @@
             });
         }
 
-        settingsCtrl.isInitialize = false;
+        settingsCtrl.isInitialize = true;
 
-        vstsService.isInitialize().then(function() {
-            settingsCtrl.isInitialize = true;
+        vstsService.isLoginInitialize().catch(function() {
+            settingsCtrl.isInitialize = false;
         });
     }
 })();
