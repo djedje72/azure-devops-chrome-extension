@@ -15,6 +15,7 @@
                 initialize.resolve("init ok");
             });
         } else {
+            loginInitialize.reject("login missing");
             domainToUse = {};
         }
 
