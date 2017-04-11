@@ -91,26 +91,17 @@
                 let policies = {};
 
                 if(evaluations.length > 0) {
-                    const policiesText = {
-                        build: "Build",
-                        reviewers: "Minimum number of reviewers",
-                        workItemLink: "Work item linking"
-                    }
-
                     let nbApproved = 0;
                     let successEval = evaluations.forEach((eval) => {
-                        for(var key in policiesText) {
-                            if(policiesText.hasOwnProperty(key)) {
-                                var policyText = policiesText[key]; 
-                                if(eval.configuration.type.displayName === policyText) {
-                                    if(eval.status === "approved") {
-                                        nbApproved++;
-                                        policies[key] = "success";
-                                    } else {
-                                        policies[key] = "error";
-                                    }
-                                }
+                        if(eval.configuration.isEnabled && eval.configuration.isBlocking) {
+                            if(eval.status === "approved") {
+                                nbApproved++;
+                                policies[eval.configuration.type.displayName] = true;
+                            } else {
+                                policies[eval.configuration.type.displayName] = false;
                             }
+                        } else {
+                            nbApproved++;
                         }
                     });
 

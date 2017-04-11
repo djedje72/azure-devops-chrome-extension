@@ -80,6 +80,21 @@
             prCtrl.membersDisplay = function() {
                 prCtrl.pullRequests = [];
             }
+
+            prCtrl.policiesDetails = function(policies) {
+                let result = "";
+                if(policies) {
+                    Object.keys(policies).forEach((policyKey) => {
+                        if(policies.hasOwnProperty(policyKey)) {
+                            let policy = policies[policyKey];
+                            if(!policy) {
+                                result += `${policyKey} -> ERROR \n`;
+                            }
+                        }
+                    });
+                }
+                return result;
+            }
         }
 
         prCtrl.toggleAutoComplete = function(pr) {
