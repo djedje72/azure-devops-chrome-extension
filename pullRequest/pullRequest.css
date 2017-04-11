@@ -53,7 +53,12 @@ button[disabled]:hover {
   line-height: 20px;
   overflow: hidden;
   position: absolute;
+}
+
+.pullRequest .pullRequest-details {
+  display: inline-block;
   width: 555px;
+  height: 33px;
 }
 
 .pullRequest .details .memberIcon {
