@@ -54,7 +54,6 @@ button[disabled]:hover {
   overflow: hidden;
   position: absolute;
   width: 555px;
-  padding-right: 50px;
 }
 
 .pullRequest .details .memberIcon {
