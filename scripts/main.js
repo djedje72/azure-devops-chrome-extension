@@ -86,8 +86,8 @@
                     const repositoryId = suggestion.repositoryId;
                     const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
                     const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
-                    let closedNotification;
-                    if (!notification.closed) {
+                    let closedNotification = notification.closed;
+                    if (!closedNotification) {
                         closedNotification = {};
                         notification.closed = closedNotification;
                     }
