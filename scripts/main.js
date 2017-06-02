@@ -6,6 +6,7 @@
             chrome.alarms.create("resetBranches", {"when": Date.now(), "periodInMinutes": 60});
 
             const branches = {};
+            const branchPrefix = "refs/heads/";
             
             chrome.alarms.onAlarm.addListener(function(alarm) {
                 if(alarm.name === "refresh") {
@@ -22,15 +23,36 @@
 
                             suggestions.forEach((suggestion) => {
                                 if(!branches[suggestion.properties.sourceBranch]) {
-                                    const branchPrefix = "refs/heads/";
-                                    let sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
-                                    let targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
-                                    let options = Object.assign(notificationBody, {
-                                        message: `${sourceBranch} -> ${targetBranch}`
-                                    });
-                                    chrome.notifications.create(suggestion.properties.sourceBranch, options, (id) => {
-                                        branches[id] = suggestion;
-                                    });
+                                    const repositoryId = suggestion.repositoryId;
+                                    const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
+                                    const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
+                                    let notificationStr = localStorage.getItem("notification");
+                                    let createNotification = true;
+
+                                    if (notificationStr !== null) {
+                                        const notification = JSON.parse(notificationStr);
+                                        let closedNotification = notification.closed;
+                                        if (closedNotification) {
+                                            const notificationTime = closedNotification[`${repositoryId}|${sourceBranch}|${targetBranch}`];
+                                            if (notificationTime) {
+                                                const currentDate = new Date();
+                                                const notificationDate = new Date(notificationTime);
+                                                // add a day
+                                                notificationDate.setDate(notificationDate.getDate() + 1);
+                                                if (notificationDate > currentDate) {
+                                                    createNotification = false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (createNotification) {
+                                        let options = Object.assign(notificationBody, {
+                                            message: `${sourceBranch} -> ${targetBranch}`
+                                        });
+                                        chrome.notifications.create(suggestion.properties.sourceBranch, options, (id) => {
+                                            branches[id] = suggestion;
+                                        });
+                                    }
                                 }
                             });
                         });
@@ -45,9 +67,32 @@
             chrome.notifications.onClicked.addListener((clickId) => {
                 let suggestion = branches[clickId];
                 if(suggestion) {
-                    const sourceBranch = suggestion.properties.sourceBranch.replace('refs/heads/', "");
-                    const targetBranch = suggestion.properties.targetBranch.replace('refs/heads/', "");
+                    const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
+                    const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
                     chrome.tabs.create({url: `${suggestion.remoteUrl}/pullrequestcreate?sourceRef=${sourceBranch}&targetRef=${targetBranch}`, active: false}, () => chrome.notifications.clear(clickId));
+                }
+            });
+
+            chrome.notifications.onClosed.addListener((clickId, byUser) => {
+                if (byUser) {
+                    let notificationStr = localStorage.getItem("notification");
+                    let notification;
+                    if (notificationStr !== null) {
+                        notification = JSON.parse(notificationStr);
+                    } else {
+                        notification = {};
+                    }
+                    let suggestion = branches[clickId];
+                    const repositoryId = suggestion.repositoryId;
+                    const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
+                    const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
+                    let closedNotification;
+                    if (!notification.closed) {
+                        closedNotification = {};
+                        notification.closed = closedNotification;
+                    }
+                    closedNotification[`${repositoryId}|${sourceBranch}|${targetBranch}`] = new Date().getTime();
+                    localStorage.setItem("notification", JSON.stringify(notification));
                 }
             });
         });

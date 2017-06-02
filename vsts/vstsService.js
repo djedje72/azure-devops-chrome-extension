@@ -295,7 +295,8 @@
                                 let lastCommit = commits.data.value[0];
                                 if(lastCommit && lastCommit.committer.email === currentMember.uniqueName) {
                                     return Object.assign({
-                                        remoteUrl: suggestion.repository.remoteUrl
+                                        remoteUrl: suggestion.repository.remoteUrl,
+                                        repositoryId: suggestion.repository.id
                                     }, sug);
                                 }
                                 return null;
