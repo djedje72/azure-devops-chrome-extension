@@ -41,6 +41,15 @@
         memberCtrl.currentMember = memberService.getCurrentMember();
 
         vstsService.getTeamMembers().then(function(members) {
+            const currentTeams = memberCtrl.currentMember.teams;
+            const index = members.findIndex(member => member.id === memberCtrl.currentMember.id);
+            const {teams} = members[index];
+            if (currentTeams.length !== teams.length
+                || !currentTeams.every((currentTeam) => teams.findIndex(team => team === currentTeam) !== -1)) {
+                console.log("refreshing teams...");
+                memberService.setCurrentMember({...memberCtrl.currentMember, teams});
+                window.location.reload();
+            }
             memberCtrl.members = members;
         });
     }
