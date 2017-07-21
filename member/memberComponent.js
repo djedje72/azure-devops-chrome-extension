@@ -47,7 +47,7 @@
             if (currentTeams.length !== teams.length
                 || !currentTeams.every((currentTeam) => teams.findIndex(team => team === currentTeam) !== -1)) {
                 console.log("refreshing teams...");
-                memberService.setCurrentMember({...memberCtrl.currentMember, teams});
+                memberService.setCurrentMember(Object.assign(memberCtrl.currentMember, {teams}));
                 window.location.reload();
             }
             memberCtrl.members = members;
