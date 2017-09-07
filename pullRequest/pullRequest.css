@@ -147,10 +147,31 @@ button[disabled]:hover {
   height: 45px;
 }
 
+.menu-buttons .settings-button {
+  height: 35px;
+  width: 35px;
+  right: 55px;
+  top: 13px;
+  margin: 0 5px;
+  padding: 0;
+  background: url("/pullRequest/pr-settings.png");
+  background-size: 35px;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
 .review-rejected {
   background-color: #FFDDDD;
 }
 
 .review-waiting {
   background-color: #FFFF99;
+}
+
+.pr-settings {
+  margin-top: 20px;
+}
+
+.pr-settings input[type=checkbox] {
+  float: left;
 }

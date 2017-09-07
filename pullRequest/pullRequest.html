@@ -9,9 +9,10 @@
             data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
         <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-class="{ selected: prCtrl.isAllPullRequests()}" 
             data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
+        <button data-ng-click="prCtrl.toggleSettings();" class="settings-button"></button>
         <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" current-member="prCtrl.currentMember"></member>
     </div>
-    <div class="pullRequest" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
+    <div class="pullRequest" data-ng-hide="prCtrl.showSettings" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
         <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
             <span class="actions" data-ng-show="prCtrl.isMinePullRequests()"><img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete(pr);" src="/img/auto-complete.png"/></span>
             <span class="details">
@@ -22,5 +23,9 @@
             </span>
         </div>
         <span class="state state-{{pr.evaluations.state}}" title="{{prCtrl.policiesDetails(pr.evaluations.policies)}}"></span>
+    </div>
+    <div class="pr-settings" data-ng-show="prCtrl.showSettings">
+        <label for="pr-settings-enable-notifications">Activer les notifications</label>
+        <input id="pr-settings-enable-notifications" type="checkbox" data-ng-change="prCtrl.toggleNotifications();" data-ng-model="prCtrl.enableNotifications"/>
     </div>
 </div>

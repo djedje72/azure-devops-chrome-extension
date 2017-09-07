@@ -23,11 +23,13 @@
         var prCtrl = this;
         this.$onInit = function() {
             prCtrl.fillPullRequests = function() {
+                prCtrl.showSettings = false;
                 prCtrl.pullRequests = prCtrl.allPullRequests;
                 memberService.hideMembers();
             };
 
             prCtrl.fillToApprovePullRequests = function() {
+                prCtrl.showSettings = false;
                 prCtrl.pullRequests = prCtrl.toApprovePullRequests;
                 addCurrentMemberVote(prCtrl.pullRequests);
                 memberService.hideMembers();
@@ -47,24 +49,25 @@
 
             prCtrl.reviewClass = function(pr) {
                 return {'review-rejected': (pr.currentMemberVote === -10), 'review-waiting': (pr.currentMemberVote === -5)};
-            }
+            };
 
             prCtrl.fillMinePullRequests = function() {
+                prCtrl.showSettings = false;
                 prCtrl.pullRequests = prCtrl.minePullRequests;
                 memberService.hideMembers();
-            }
+            };
 
             prCtrl.isMinePullRequests = function() {
                 return prCtrl.pullRequests === prCtrl.minePullRequests;
-            }
+            };
 
             prCtrl.isToApprovePullRequests = function() {
                 return prCtrl.pullRequests === prCtrl.toApprovePullRequests;
-            }
+            };
 
             prCtrl.isAllPullRequests = function() {
                 return prCtrl.pullRequests === prCtrl.allPullRequests;
-            }
+            };
 
             prCtrl.redirect = function(pr) {
                 var href = pr.url.split('DefaultCollection')[0] + pr.repository.project.name + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
@@ -75,11 +78,11 @@
                 getPullRequests().then(function() {
                     prCtrl.fillToApprovePullRequests();
                 });
-            }
+            };
 
             prCtrl.membersDisplay = function() {
                 prCtrl.pullRequests = [];
-            }
+            };
 
             prCtrl.policiesDetails = function(policies) {
                 let result = "";
@@ -94,7 +97,26 @@
                     });
                 }
                 return result;
-            }
+            };
+
+            prCtrl.toggleSettings = function() {
+                prCtrl.showSettings = !prCtrl.showSettings;
+            };
+
+            prCtrl.toggleNotifications = function() {
+                prCtrl.storeSetting("enableNotifications", prCtrl.enableNotifications);
+            };
+
+            prCtrl.storeSetting = function(key, value) {
+                const settings = prCtrl.getSettings();
+                settings[key] = value;
+                localStorage.setItem("settings", JSON.stringify(settings));
+            };
+
+            prCtrl.getSettings = () => JSON.parse(localStorage.getItem("settings") || {});
+
+            const {enableNotifications} = prCtrl.getSettings();
+            prCtrl.enableNotifications = enableNotifications;
         }
 
         prCtrl.toggleAutoComplete = function(pr) {

@@ -138,14 +138,31 @@
             });
         }
 
-        function getPolicyResult(pr) {
+        function getPolicyResultByPRId(pr) {
+            return getPolicies(pr, "pullRequestId");
+        }
+
+        function getPolicyResultByCRId(pr) {
+            return getPolicies(pr, "codeReviewId");
+        }
+
+        function getPolicies(pr, field) {
             return $http({
                 method:"GET",
                 url: domainToUse.domainUrl + "/" + pr.repository.project.id + "/_apis/policy/Evaluations",
                 params: {
-                    artifactId: "vstfs:///CodeReview/CodeReviewId/" + pr.repository.project.id + "/" + pr.codeReviewId
+                    artifactId: "vstfs:///CodeReview/CodeReviewId/" + pr.repository.project.id + "/" + pr[field]
                 }
-            }).then((httpEvaluation) => httpEvaluation.data.value);
+            }).then(({data}) => data.value);
+        }
+
+        function getPolicyResult(pr) {
+            return getPolicyResultByPRId(pr).then((value) => {
+                if (value.length === 0) {
+                    return getPolicyResultByCRId(pr);
+                }
+                return value;
+            });
         }
 
         function getPullRequests() {
@@ -290,9 +307,9 @@
                         suggestion.suggestion.filter((sug) => sug.type === "pullRequest").forEach((sug) => {
                             let promise = $http({
                                 method: "GET",
-                                url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}`
-                            }).then((commits) => {
-                                let lastCommit = commits.data.value[0];
+                                url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}&$top=1`
+                            }).then(({data}) => {
+                                let [lastCommit] = data.value;
                                 if(lastCommit && lastCommit.committer.email === currentMember.uniqueName) {
                                     return Object.assign({
                                         remoteUrl: suggestion.repository.remoteUrl,
@@ -316,12 +333,10 @@
                     let promise = $http({
                         method: "GET",
                         url: repository.url + "/suggestions"
-                    }).then((suggestions) => {
-                        return {
-                            repository: repository,
-                            suggestion: suggestions.data.value
-                        };
-                    });
+                    }).then(({data}) => ({
+                        repository: repository,
+                        suggestion: data.value
+                    }));
                     promises.push(promise);
                 });
                 return $q.all(promises);
