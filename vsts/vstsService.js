@@ -95,7 +95,7 @@
                     let nbApproved = 0;
                     let successEval = evaluations.forEach((eval) => {
                         if(eval.configuration.isEnabled && eval.configuration.isBlocking) {
-                            if(eval.status === "approved") {
+                            if(eval.status === "approved" && policies[eval.configuration.type.displayName] !== false) {
                                 nbApproved++;
                                 policies[eval.configuration.type.displayName] = true;
                             } else {
