@@ -3,7 +3,7 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "name": "VSTS Pull Requests",
   "description": "VSTS Manage pull requests in multiple repositories",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "icons": {
     "16": "img/icon/vsts_16px.png",
     "32": "img/icon/vsts_32px.png",
