@@ -147,17 +147,19 @@ button[disabled]:hover {
   height: 45px;
 }
 
+.menu-buttons .list-buttons {
+  width: 90%;
+}
+
 .menu-buttons .settings-button {
+  float: right;
+  margin-top: 5px;
   height: 35px;
   width: 35px;
-  right: 55px;
-  top: 13px;
-  margin: 0 5px;
   padding: 0;
   background: url("/pullRequest/pr-settings.png");
   background-size: 35px;
   background-repeat: no-repeat;
-  position: absolute;
 }
 
 .review-rejected {

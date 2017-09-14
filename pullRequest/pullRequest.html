@@ -3,13 +3,15 @@
         <spinner></spinner>
     </div>
     <div class="menu-buttons" data-ng-show="prCtrl.hideLoading">
-        <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isMinePullRequests() }"
-            data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
-        <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isToApprovePullRequests() }"
-            data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
-        <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-class="{ selected: prCtrl.isAllPullRequests()}" 
-            data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
-        <button data-ng-click="prCtrl.toggleSettings();" class="settings-button"></button>
+        <div class="list-buttons">
+            <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isMinePullRequests() }"
+                data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
+            <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isToApprovePullRequests() }"
+                data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
+            <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-class="{ selected: prCtrl.isAllPullRequests()}" 
+                data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
+            <button data-ng-click="prCtrl.toggleSettings();" class="settings-button"></button>
+        </div>
         <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" current-member="prCtrl.currentMember"></member>
     </div>
     <div class="pullRequest" data-ng-hide="prCtrl.showSettings" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">

@@ -1,5 +1,4 @@
-<button class="currentMember" data-ng-click="memberCtrl.clickSelectUser()" data-ng-show="memberCtrl.members !== undefined && memberCtrl.currentMember === null">Select user</button>
-<img class="currentMember" data-ng-click="memberCtrl.clickSelectUser()" data-ng-src="{{memberCtrl.currentMember.imageUrl}}" data-ng-show="memberCtrl.currentMember !== null"/>
+<img class="currentMember" data-ng-click="memberCtrl.clickSelectUser()" data-ng-src="{{memberCtrl.currentMember.imageUrl || 'member/member-default.png'}}"/>
 <div class="membersForm" data-ng-show="memberCtrl.isMembersShown()">
     <input type="text" data-ng-model="searchMember" placeholder="Search an user..."/>
     <div class="members">

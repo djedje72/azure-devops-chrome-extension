@@ -113,7 +113,7 @@
                 localStorage.setItem("settings", JSON.stringify(settings));
             };
 
-            prCtrl.getSettings = () => JSON.parse(localStorage.getItem("settings") || {});
+            prCtrl.getSettings = () => JSON.parse(localStorage.getItem("settings")) || {};
 
             const {enableNotifications} = prCtrl.getSettings();
             prCtrl.enableNotifications = enableNotifications;

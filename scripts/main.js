@@ -1,5 +1,11 @@
 (function() {
-    angular.module('vstsChrome', ['angularCSS']).run(function(vstsService, memberService) {
+    var app = angular.module( 'myApp', [] )
+    
+    angular.module('vstsChrome', ['angularCSS'])
+    .config(function( $compileProvider ) {   
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+    })
+    .run(function(vstsService, memberService) {
         vstsService.isInitialize().then(() => {
             chrome.alarms.create("refresh", {"when": Date.now() + 1000, "periodInMinutes": 2});
             
@@ -12,7 +18,7 @@
                 if(alarm.name === "refresh") {
                     if(memberService.getCurrentMember()) {
                         vstsService.getPullRequests();
-                        const {enableNotifications} = JSON.parse(localStorage.getItem("settings") || {});
+                        const {enableNotifications} = JSON.parse(localStorage.getItem("settings")) || {};
                         if (enableNotifications) {
                             vstsService.getSuggestionForUser().then((suggestions) => suggestions.filter((s)=> s)).then((suggestions) => {
                                 let manifest = chrome.runtime.getManifest();
