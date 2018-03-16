@@ -119,7 +119,8 @@
             prCtrl.enableNotifications = enableNotifications;
         }
 
-        prCtrl.toggleAutoComplete = function(pr) {
+        prCtrl.toggleAutoComplete = function($event, pr) {
+            $event.stopPropagation();
             vstsService.toggleAutoComplete(pr).then(function(refreshPr) {
                 pr.autoCompleteSetBy = refreshPr.autoCompleteSetBy;
             });

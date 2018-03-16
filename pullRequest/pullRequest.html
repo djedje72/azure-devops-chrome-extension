@@ -16,7 +16,7 @@
     </div>
     <div class="pullRequest" data-ng-hide="prCtrl.showSettings" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
         <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
-            <span class="actions" data-ng-show="prCtrl.isMinePullRequests()"><img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete(pr);" src="/img/auto-complete.png"/></span>
+            <span class="actions" data-ng-show="prCtrl.isMinePullRequests()"><img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/></span>
             <span class="details">
                 <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"></img>
                 <span class="repository" ng-bind="::pr.repository.name">:</span>

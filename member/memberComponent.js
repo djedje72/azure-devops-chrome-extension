@@ -46,8 +46,10 @@
                 const {basic} = settingsService.getCurrentDomain();
                 const [login] = atob(basic).split(":");
                 currentMember = members.find(({uniqueName}) => uniqueName === login);
-                memberService.setCurrentMember(currentMember);
-                window.location.reload();
+                if (currentMember) {
+                    memberService.setCurrentMember(currentMember);
+                    window.location.reload();
+                }
             }
 
             if (currentMember) {

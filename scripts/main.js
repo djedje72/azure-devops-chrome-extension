@@ -1,6 +1,15 @@
 (function() {
     var app = angular.module( 'myApp', [] )
     
+    const addCurrentNotification = (...args) => _processCurrentNotification("add", ...args);
+    const deleteCurrentNotification = (...args) => _processCurrentNotification("delete", ...args);
+    const _processCurrentNotification = (fn, notificationName) => {
+        const currentNotificationsStorage = new Set(JSON.parse(localStorage.getItem("currentNotifications")));
+        const result = currentNotificationsStorage[fn](notificationName);
+        localStorage.setItem("currentNotifications", JSON.stringify(Array.from(currentNotificationsStorage)));
+        return result;
+    }
+
     angular.module('vstsChrome', ['angularCSS'])
     .config(function( $compileProvider ) {   
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
@@ -14,6 +23,12 @@
             const branches = {};
             const branchPrefix = "refs/heads/";
             
+            function getNotificationName(suggestion) {
+                const repositoryId = suggestion.repositoryId;
+                const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
+                const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
+                return `${repositoryId}|${sourceBranch}|${targetBranch}`;
+            }
             chrome.alarms.onAlarm.addListener(function(alarm) {
                 if(alarm.name === "refresh") {
                     if(memberService.getCurrentMember()) {
@@ -29,19 +44,19 @@
                                     requireInteraction: true
                                 };
     
+                                let suggestionsToKeep = [];
                                 suggestions.forEach((suggestion) => {
                                     if(!branches[suggestion.properties.sourceBranch]) {
-                                        const repositoryId = suggestion.repositoryId;
-                                        const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
-                                        const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
                                         let notificationStr = localStorage.getItem("notification");
                                         let createNotification = true;
+                                        const notificationName = getNotificationName(suggestion);
+                                        suggestionsToKeep.push(notificationName)
     
                                         if (notificationStr !== null) {
                                             const notification = JSON.parse(notificationStr);
                                             let closedNotification = notification.closed;
                                             if (closedNotification) {
-                                                const notificationTime = closedNotification[`${repositoryId}|${sourceBranch}|${targetBranch}`];
+                                                const notificationTime = closedNotification[notificationName];
                                                 if (notificationTime) {
                                                     const currentDate = new Date();
                                                     const notificationDate = new Date(notificationTime);
@@ -54,15 +69,33 @@
                                             }
                                         }
                                         if (createNotification) {
+                                            const sourceRepositoryName = suggestion.properties.sourceRepository.name;
+                                            const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
+                                            const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
                                             let options = Object.assign(notificationBody, {
-                                                message: `${sourceBranch} -> ${targetBranch}`
+                                                message: 
+                                                    `${sourceRepositoryName.toUpperCase()}\n${sourceBranch} -> ${targetBranch}`
                                             });
-                                            chrome.notifications.create(suggestion.properties.sourceBranch, options, (id) => {
-                                                branches[id] = suggestion;
-                                            });
+                                            if (addCurrentNotification(getNotificationName(suggestion))) {
+                                                chrome.notifications.create(getNotificationName(suggestion), options, (id) => {
+                                                    branches[id] = suggestion;
+                                                });
+                                            }
                                         }
                                     }
                                 });
+
+                                
+                                let notificationStr = localStorage.getItem("notification");
+                                if (notificationStr) {
+                                    const notification = JSON.parse(notificationStr);
+                                    Object.keys(notification.closed).forEach((key) => {
+                                        if (!suggestionsToKeep.includes(key)) {
+                                            delete notification.closed[key];
+                                        }
+                                    });
+                                    localStorage.setItem("notification", JSON.stringify(notification));
+                                }
                             });
                         }
                     }
@@ -78,7 +111,10 @@
                 if(suggestion) {
                     const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
                     const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
-                    chrome.tabs.create({url: `${suggestion.remoteUrl}/pullrequestcreate?sourceRef=${sourceBranch}&targetRef=${targetBranch}`, active: false}, () => chrome.notifications.clear(clickId));
+                    const notificationName = getNotificationName(suggestion);
+                    if (deleteCurrentNotification(notificationName)) {
+                        chrome.tabs.create({url: `${suggestion.remoteUrl}/pullrequestcreate?sourceRef=${sourceBranch}&targetRef=${targetBranch}`, active: false}, () => chrome.notifications.clear(clickId));
+                    }
                 }
             });
 
@@ -92,15 +128,16 @@
                         notification = {};
                     }
                     let suggestion = branches[clickId];
-                    const repositoryId = suggestion.repositoryId;
-                    const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
-                    const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
+
+                    const notificationName = getNotificationName(suggestion);
+                    deleteCurrentNotification(notificationName);
+
                     let closedNotification = notification.closed;
                     if (!closedNotification) {
                         closedNotification = {};
                         notification.closed = closedNotification;
                     }
-                    closedNotification[`${repositoryId}|${sourceBranch}|${targetBranch}`] = new Date().getTime();
+                    closedNotification[notificationName] = new Date().getTime();
                     localStorage.setItem("notification", JSON.stringify(notification));
                 }
             });

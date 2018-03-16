@@ -69,11 +69,17 @@
             }
         }
 
-        function getMinePullRequests(pullRequests) {
+        function getMinePullRequests() {
             let currentMember = memberService.getCurrentMember();
-            if(pullRequests.length > 0 && currentMember) {
-                return pullRequests.filter((pullRequest) => currentMember.uniqueName === pullRequest.createdBy.uniqueName);
+            if(currentMember) {
+                return $http({
+                    method: "GET",
+                    url: `${domainToUse.vstsUrl}/git/pullRequests?creatorId=${currentMember.id}`
+                }).then(
+                    (httpPullRequests) => httpPullRequests.data.value
+                ).then((minePullRequests) => $q.all(minePullRequests.map((minePullRequest) => getFullPullRequest(minePullRequest))));
             }
+            return $q.resolve([]);
         }
 
         function setReminder(toApprovePullRequests) {
@@ -174,13 +180,13 @@
                         fullPullRequests.push(fullPr);
                     }));
                 });
-                return $q.all(promises).then(() => {
-                    return {
+                return $q.all(promises).then(() => 
+                    getMinePullRequests().then((minePullRequests) => ({
                         "all": fullPullRequests,
                         "toApprove": getToApprovePullRequests(fullPullRequests),
-                        "mine": getMinePullRequests(fullPullRequests)
-                    };
-                }) 
+                        "mine": minePullRequests
+                    }))
+                );
             });
         }
 
