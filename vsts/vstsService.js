@@ -227,12 +227,12 @@
                         method: "GET",
                         url: project.defaultTeam.url + "/members"
                     }).then(function(httpMembers) {
-                        httpMembers.data.value.forEach((member) => {
-                            if(!members.has(member.id)) {
-                                member.teams = [project.defaultTeam.id];
-                                members.set(member.id, member);
+                        httpMembers.data.value.forEach(({identity}) => {
+                            if(!members.has(identity.id)) {
+                                identity.teams = [project.defaultTeam.id];
+                                members.set(identity.id, identity);
                             } else {
-                                tmpMember = members.get(member.id);
+                                tmpMember = members.get(identity.id);
                                 tmpMember.teams.push(project.defaultTeam.id);
                             }
                         })
