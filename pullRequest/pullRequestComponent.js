@@ -70,7 +70,7 @@
             };
 
             prCtrl.redirect = function(pr) {
-                var href = pr.url.split('DefaultCollection')[0] + pr.repository.project.name + "/_git/" + pr.repository.id + "/pullrequest/" + pr.pullRequestId; 
+                var href = `${pr.repository.remoteUrl}/pullrequest/${pr.pullRequestId}`; 
                 chrome.tabs.create({url: href, active: false});
             };
 

@@ -119,7 +119,7 @@
             });
 
             chrome.notifications.onClosed.addListener((clickId, byUser) => {
-                if (byUser) {
+                if (branches[clickId] && byUser) {
                     let notificationStr = localStorage.getItem("notification");
                     let notification;
                     if (notificationStr !== null) {
