@@ -18,7 +18,7 @@
         <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
             <span class="actions" data-ng-show="prCtrl.isMinePullRequests()"><img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/></span>
             <span class="details">
-                <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="https://axafrance.visualstudio.com/_apis/GraphProfile/MemberAvatars/{{pr.createdBy.descriptor}}" title="{{pr.createdBy.displayName}}"></img>
+                <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
                 <span class="repository" ng-bind="::pr.repository.name">:</span>
                 <span data-ng-bind="::pr.title"></span>
                 <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
