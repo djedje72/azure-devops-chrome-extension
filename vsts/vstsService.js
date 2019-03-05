@@ -162,6 +162,23 @@
             }).then(({data}) => data.value);
         }
 
+        function getVisits(pr, field) {
+            return $http({
+                method:"POST",
+                url: `${domainToUse.domainUrl}/_apis/visits/artifactStatsBatch`,
+                params: {
+                    "api-version": "5.0-preview.1",
+                    "includeUpdatesSinceLastVisit": "true"
+                },
+                data: [
+                    {
+                        "discussionArtifactId": `vstfs:///CodeReview/ReviewId/${pr.repository.project.id}%2F${pr["codeReviewId"]}`,
+                        "artifactId": pr.artifactId.replace("%2f", "%2F")
+                    }
+                ]
+            }).then(({data}) => data.value); 
+        }
+
         function getPolicyResult(pr) {
             return getPolicyResultByPRId(pr).then((value) => {
                 if (value.length === 0) {
@@ -177,6 +194,7 @@
                 let fullPullRequests = [];
                 pullRequests.forEach((pr) => {
                     promises.push(getFullPullRequest(pr).then((fullPr) => {
+                        //getVisits(fullPr).then(({newCommentsCount}) => console.log(newCommentsCount));
                         fullPullRequests.push(fullPr);
                     }));
                 });
@@ -218,30 +236,57 @@
             });
         }
 
-        function getTeamMembers() {
-            return getAllProjects().then((projects) => {
-                let promises = [];
-                let members = new Map();
-                projects.forEach((project) => {
-                    let promise = $http({
-                        method: "GET",
-                        url: project.defaultTeam.url + "/members"
-                    }).then(function(httpMembers) {
-                        httpMembers.data.value.forEach(({identity}) => {
-                            if(!members.has(identity.id)) {
-                                identity.teams = [project.defaultTeam.id];
-                                members.set(identity.id, identity);
-                            } else {
-                                tmpMember = members.get(identity.id);
-                                tmpMember.teams.push(project.defaultTeam.id);
-                            }
-                        })
-                    });
-                    promises.push(promise);
+        const getTeamMembers = async() => {
+            let membersResult = new Map();
+
+            const {"value": teams, ...t} = await $http({
+                method: "GET",
+                url: `${domainToUse.vstsUrl}/teams`
+            }).then(({data}) => data);
+
+            await Promise.all(teams.flatMap(async({url, id}) => {
+                const {"value": members} = await $http({
+                    method: "GET",
+                    url: `${url}/members`
+                }).then(({data}) => data);
+                members.forEach(({identity}) => {
+                    if(!membersResult.has(identity.id)) {
+                        identity.teams = [id];
+                        membersResult.set(identity.id, identity);
+                    } else {
+                        tmpMember = membersResult.get(identity.id);
+                        tmpMember.teams.push(id);
+                    }
                 });
-                return $q.all(promises).then(() => [...members.values()]);
-            });
-        }
+            }));
+
+            return [...membersResult.values()];
+        };
+
+        // function getTeamMembers() {
+        //     return getAllProjects().then((projects) => {
+        //         let promises = [];
+        //         let members = new Map();
+        //         projects.forEach((project) => {
+        //             let promise = $http({
+        //                 method: "GET",
+        //                 url: project.defaultTeam.url + "/members"
+        //             }).then(function(httpMembers) {
+        //                 httpMembers.data.value.forEach(({identity}) => {
+        //                     if(!members.has(identity.id)) {
+        //                         identity.teams = [project.defaultTeam.id];
+        //                         members.set(identity.id, identity);
+        //                     } else {
+        //                         tmpMember = members.get(identity.id);
+        //                         tmpMember.teams.push(project.defaultTeam.id);
+        //                     }
+        //                 })
+        //             });
+        //             promises.push(promise);
+        //         });
+        //         return $q.all(promises).then(() => [...members.values()]);
+        //     });
+        // }
 
         function getRepositories() {
             return $http({
@@ -352,7 +397,7 @@
         return {
             isInitialize: isInitialize,
             isLoginInitialize: isLoginInitialize,
-            getTeamMembers: getTeamMembers,
+            getTeamMembers,
             getPullRequests: getPullRequests,
             setCredentials: setCredentials,
             toggleAutoComplete: toggleAutoComplete,
