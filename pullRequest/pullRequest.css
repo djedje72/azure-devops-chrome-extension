@@ -39,8 +39,7 @@ button[disabled]:hover {
   margin: 2px 0px;
   border-bottom: 1px solid #cccccc;
   padding: 3px 0;
-  height: 33px;
-  width: 585px;
+  display: flex;
 }
 
 .pullRequest:hover {
@@ -49,30 +48,23 @@ button[disabled]:hover {
 }
 
 .pullRequest .details {
-  height: 33px;
-  line-height: 20px;
-  overflow: hidden;
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .pullRequest .pullRequest-details {
-  display: inline-block;
-  width: 555px;
-  height: 33px;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
-.pullRequest .details .memberIcon {
-  width:30px;
-  float: left;
+.pullRequest .memberIcon {
   margin-right: 5px;
 }
 
 .pullRequest .details .branchesInfo {
-  position: inherit;
-  bottom: 8px;
-  line-height: 0;
   font-size: 9px;
-  left: 45px;
   color: #555555;
 }
 
@@ -82,7 +74,7 @@ button[disabled]:hover {
 }
 
 .pullRequest .actions {
-  display: inline-block;
+  display: flex;
 }
 
 .pullRequest .actions .auto-complete {
@@ -148,7 +140,9 @@ button[disabled]:hover {
 }
 
 .menu-buttons .list-buttons {
-  width: 90%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .menu-buttons .settings-button {
@@ -157,7 +151,7 @@ button[disabled]:hover {
   height: 35px;
   width: 35px;
   padding: 0;
-  background: url("/pullRequest/pr-settings.png");
+  background: url("./pullRequest/pr-settings.png");
   background-size: 35px;
   background-repeat: no-repeat;
 }
@@ -176,4 +170,8 @@ button[disabled]:hover {
 
 .pr-settings input[type=checkbox] {
   float: left;
+}
+
+.list-buttons__button {
+  display: flex;
 }

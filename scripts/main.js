@@ -1,4 +1,34 @@
 (function() {
+    if (!chrome.alarms) {
+        chrome.alarms = {
+            "create": () => {},
+            "onAlarm": {
+                "addListener": () => {}
+            },
+            "onClicked": {
+                "addListener": () => {}
+            },
+            "onDeleted": {
+                "addListener": () => {}
+            }
+        };
+    }
+    if (!chrome.browserAction) {
+        chrome.browserAction = {
+            "setBadgeText": () => {},
+            "setBadgeBackgroundColor": () => {}
+        };
+    }
+    if (!chrome.notifications) {
+        chrome.notifications = {
+            "onClicked": {
+                "addListener": () => {}
+            },
+            "onClosed": {
+                "addListener": () => {}
+            }
+        }
+    }
     var app = angular.module( 'myApp', [] )
     
     const addCurrentNotification = (...args) => _processCurrentNotification("add", ...args);
