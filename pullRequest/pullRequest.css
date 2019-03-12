@@ -151,7 +151,7 @@ button[disabled]:hover {
   height: 35px;
   width: 35px;
   padding: 0;
-  background: url("./pullRequest/pr-settings.png");
+  background: url("/pullRequest/pr-settings.png");
   background-size: 35px;
   background-repeat: no-repeat;
 }
