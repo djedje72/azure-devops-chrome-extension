@@ -18,19 +18,21 @@
             </div>
         </div>
     </div>
-    <div class="pullRequest" data-ng-hide="prCtrl.showSettings" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
-        <div class="actions" data-ng-show="prCtrl.isMinePullRequests()">
-            <img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/>
-        </div>
-        <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
-            <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
-            <div class="details">
-                <span class="repository" ng-bind="::pr.repository.name">:</span>
-                <span data-ng-bind="::pr.title"></span>
-                <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
+    <div>
+        <div class="pullRequest" data-ng-hide="prCtrl.showSettings" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
+            <div class="actions" data-ng-show="prCtrl.isMinePullRequests()">
+                <img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/>
             </div>
+            <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
+                <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
+                <div class="details">
+                    <span class="repository" ng-bind="::pr.repository.name">:</span>
+                    <span data-ng-bind="::pr.title"></span>
+                    <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
+                </div>
+            </div>
+            <span class="state state-{{pr.evaluations.state}}" title="{{prCtrl.policiesDetails(pr.evaluations.policies)}}"></span>
         </div>
-        <span class="state state-{{pr.evaluations.state}}" title="{{prCtrl.policiesDetails(pr.evaluations.policies)}}"></span>
     </div>
     <div class="pr-settings" data-ng-show="prCtrl.showSettings">
         <label for="pr-settings-enable-notifications">Activer les notifications</label>

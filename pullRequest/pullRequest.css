@@ -40,6 +40,11 @@ button[disabled]:hover {
   border-bottom: 1px solid #cccccc;
   padding: 3px 0;
   display: flex;
+  align-items: center;
+}
+
+.pullRequest:last-child {
+  border-bottom: none;
 }
 
 .pullRequest:hover {
@@ -61,16 +66,18 @@ button[disabled]:hover {
 
 .pullRequest .memberIcon {
   margin-right: 5px;
+  width: 50px;
 }
 
 .pullRequest .details .branchesInfo {
   font-size: 9px;
-  color: #555555;
+  color: #888888;
 }
 
 .pullRequest .repository {
   text-transform: uppercase;
   font-weight: bold;
+  font-size: 13px;
 }
 
 .pullRequest .actions {
@@ -87,13 +94,12 @@ button[disabled]:hover {
 }
 
 .pullRequest .state {
-  float: right;
   width: 20px;
   height: 20px;
   background-size: 20px 20px;
   background-repeat: no-repeat;
-  margin-top: 5px;
-  margin-right: 5px;
+  background-position-x: center;
+  padding: 0 10px;
 }
 
 .pullRequest .state.state-success {
@@ -146,14 +152,13 @@ button[disabled]:hover {
 }
 
 .menu-buttons .settings-button {
-  float: right;
-  margin-top: 5px;
+  margin: 5px;
   height: 35px;
   width: 35px;
-  padding: 0;
   background: url("/pullRequest/pr-settings.png");
-  background-size: 35px;
+  background-size: 35px 35px;
   background-repeat: no-repeat;
+  background-position: center;
 }
 
 .review-rejected {
