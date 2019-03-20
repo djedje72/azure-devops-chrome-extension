@@ -26,7 +26,10 @@
             <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
                 <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
                 <div class="details">
-                    <span class="repository" ng-bind="::pr.repository.name">:</span>
+                    <div>
+                        <span class="repository" ng-bind="::pr.repository.name">:</span>
+                        <span class="draft" data-ng-class="::{'draft--visible': pr.isDraft}">DRAFT</span>
+                    </div>
                     <span data-ng-bind="::pr.title"></span>
                     <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
                 </div>

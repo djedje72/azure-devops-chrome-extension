@@ -80,17 +80,14 @@ button[disabled]:hover {
   font-size: 13px;
 }
 
-.pullRequest .actions {
-  display: flex;
-}
+.pullRequest .actions {display: flex;}
 
 .pullRequest .actions .auto-complete {
-  height: 25px;
-  margin-top: 3px;
+  height: 28px;
 }
 
 .pullRequest .actions .auto-complete.disabled{
-  opacity: 0.1;
+  opacity: 0.3;
 }
 
 .pullRequest .state {
@@ -112,6 +109,22 @@ button[disabled]:hover {
 
 .pullRequest .state.state-warning {
   background-image: url("/img/policy_warning.png");
+}
+
+.draft {
+  display: none;
+  color: rgba(16,110,190,1);
+  color: rgba(var(--palette-primary-shade-10,16, 110, 190),1);
+  border: 1px solid;
+  border-color: rgba(16,110,190,1);
+  border-color: rgba(var(--palette-primary-shade-10,16, 110, 190),1);
+  background-color: inherit;
+  padding: 2px 5px;
+  margin-left: 5px;
+}
+
+.draft--visible {
+  display: inline-block;
 }
 
 .menu-buttons {
