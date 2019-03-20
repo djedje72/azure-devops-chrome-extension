@@ -1,15 +1,10 @@
 member {
-  float: right;
-  width: 100%;
+    font-size: 0;
 }
 
 .currentMember {
     cursor: pointer;
     height: 45px;
-    position: absolute;
-    right: 0;
-    top: 0px;
-    margin: 8px;
 }
 
 .members .member {

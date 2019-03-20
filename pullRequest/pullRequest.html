@@ -4,27 +4,38 @@
     </div>
     <div class="menu-buttons" data-ng-show="prCtrl.hideLoading">
         <div class="list-buttons">
-            <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isMinePullRequests() }"
-                data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
-            <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isToApprovePullRequests() }"
-                data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
-            <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-class="{ selected: prCtrl.isAllPullRequests()}" 
-                data-ng-click="prCtrl.fillPullRequests();">All Active ({{prCtrl.allPullRequests.length}})</button>
-            <button data-ng-click="prCtrl.toggleSettings();" class="settings-button"></button>
+            <div class="list-buttons__button">
+                <button data-ng-show="prCtrl.minePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isMinePullRequests() }"
+                    data-ng-click="prCtrl.fillMinePullRequests();">Mine ({{prCtrl.minePullRequests.length}})</button>
+                <button data-ng-show="prCtrl.toApprovePullRequests.length > 0" data-ng-class="{ selected: prCtrl.isToApprovePullRequests() }"
+                    data-ng-click="prCtrl.fillToApprovePullRequests();">To Approve ({{prCtrl.toApprovePullRequests.length}})</button>
+                <button data-ng-show="prCtrl.allPullRequests.length > 0" data-ng-class="{ selected: prCtrl.isAllPullRequests()}" 
+                    data-ng-click="prCtrl.fillPullRequests();">All ({{prCtrl.allPullRequests.length}})</button>
+            </div>
+            <div class="list-buttons__button">
+                <button data-ng-click="prCtrl.toggleSettings();" class="settings-button"></button>
+                <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" current-member="prCtrl.currentMember"></member>
+            </div>
         </div>
-        <member member-selected="prCtrl.memberSelected(member)" members-display="prCtrl.membersDisplay()" current-member="prCtrl.currentMember"></member>
     </div>
-    <div class="pullRequest" data-ng-hide="prCtrl.showSettings" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
-        <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
-            <span class="actions" data-ng-show="prCtrl.isMinePullRequests()"><img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/></span>
-            <span class="details">
+    <div>
+        <div class="pullRequest" data-ng-hide="prCtrl.showSettings" data-ng-class="prCtrl.reviewClass(pr)" data-ng-repeat="pr in prCtrl.pullRequests | orderBy:'+repository.name'">
+            <div class="actions" data-ng-show="prCtrl.isMinePullRequests()">
+                <img class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="prCtrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/>
+            </div>
+            <div class="pullRequest-details" data-ng-click="prCtrl.redirect(pr);">
                 <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
-                <span class="repository" ng-bind="::pr.repository.name">:</span>
-                <span data-ng-bind="::pr.title"></span>
-                <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
-            </span>
+                <div class="details">
+                    <div>
+                        <span class="repository" ng-bind="::pr.repository.name">:</span>
+                        <span class="draft" data-ng-class="::{'draft--visible': pr.isDraft}">DRAFT</span>
+                    </div>
+                    <span data-ng-bind="::pr.title"></span>
+                    <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
+                </div>
+            </div>
+            <span class="state state-{{pr.evaluations.state}}" title="{{prCtrl.policiesDetails(pr.evaluations.policies)}}"></span>
         </div>
-        <span class="state state-{{pr.evaluations.state}}" title="{{prCtrl.policiesDetails(pr.evaluations.policies)}}"></span>
     </div>
     <div class="pr-settings" data-ng-show="prCtrl.showSettings">
         <label for="pr-settings-enable-notifications">Activer les notifications</label>

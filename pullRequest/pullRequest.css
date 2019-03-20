@@ -39,8 +39,12 @@ button[disabled]:hover {
   margin: 2px 0px;
   border-bottom: 1px solid #cccccc;
   padding: 3px 0;
-  height: 33px;
-  width: 585px;
+  display: flex;
+  align-items: center;
+}
+
+.pullRequest:last-child {
+  border-bottom: none;
 }
 
 .pullRequest:hover {
@@ -49,59 +53,50 @@ button[disabled]:hover {
 }
 
 .pullRequest .details {
-  height: 33px;
-  line-height: 20px;
-  overflow: hidden;
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .pullRequest .pullRequest-details {
-  display: inline-block;
-  width: 555px;
-  height: 33px;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
-.pullRequest .details .memberIcon {
-  width:30px;
-  float: left;
+.pullRequest .memberIcon {
   margin-right: 5px;
+  width: 50px;
 }
 
 .pullRequest .details .branchesInfo {
-  position: inherit;
-  bottom: 8px;
-  line-height: 0;
   font-size: 9px;
-  left: 45px;
-  color: #555555;
+  color: #888888;
 }
 
 .pullRequest .repository {
   text-transform: uppercase;
   font-weight: bold;
+  font-size: 13px;
 }
 
-.pullRequest .actions {
-  display: inline-block;
-}
+.pullRequest .actions {display: flex;}
 
 .pullRequest .actions .auto-complete {
-  height: 25px;
-  margin-top: 3px;
+  height: 28px;
 }
 
 .pullRequest .actions .auto-complete.disabled{
-  opacity: 0.1;
+  opacity: 0.3;
 }
 
 .pullRequest .state {
-  float: right;
   width: 20px;
   height: 20px;
   background-size: 20px 20px;
   background-repeat: no-repeat;
-  margin-top: 5px;
-  margin-right: 5px;
+  background-position-x: center;
+  padding: 0 10px;
 }
 
 .pullRequest .state.state-success {
@@ -114,6 +109,22 @@ button[disabled]:hover {
 
 .pullRequest .state.state-warning {
   background-image: url("/img/policy_warning.png");
+}
+
+.draft {
+  display: none;
+  color: rgba(16,110,190,1);
+  color: rgba(var(--palette-primary-shade-10,16, 110, 190),1);
+  border: 1px solid;
+  border-color: rgba(16,110,190,1);
+  border-color: rgba(var(--palette-primary-shade-10,16, 110, 190),1);
+  background-color: inherit;
+  padding: 2px 5px;
+  margin-left: 5px;
+}
+
+.draft--visible {
+  display: inline-block;
 }
 
 .menu-buttons {
@@ -148,18 +159,19 @@ button[disabled]:hover {
 }
 
 .menu-buttons .list-buttons {
-  width: 90%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .menu-buttons .settings-button {
-  float: right;
-  margin-top: 5px;
+  margin: 5px;
   height: 35px;
   width: 35px;
-  padding: 0;
   background: url("/pullRequest/pr-settings.png");
-  background-size: 35px;
+  background-size: 35px 35px;
   background-repeat: no-repeat;
+  background-position: center;
 }
 
 .review-rejected {
@@ -176,4 +188,8 @@ button[disabled]:hover {
 
 .pr-settings input[type=checkbox] {
   float: left;
+}
+
+.list-buttons__button {
+  display: flex;
 }
