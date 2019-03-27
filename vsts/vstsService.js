@@ -124,8 +124,8 @@ function VstsService($http, $q, memberService, settingsService) {
             url: pr.url
         });
 
-        await processPolicies(fullPr);
-        await processComments(fullPr);
+        try { await processPolicies(fullPr); } catch (e) {}
+        try { await processComments(fullPr); } catch (e) {}
         return fullPr;
     }
 
