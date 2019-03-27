@@ -111,6 +111,20 @@ button[disabled]:hover {
   background-image: url("/img/policy_warning.png");
 }
 
+.comments {
+  display: flex;
+  margin-top: 5px;
+}
+
+.pullRequest .comments__image {
+  background: url("/pullRequest/comments.png");
+  background-size: 16px 16px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-left: 3px;
+}
+
 .draft {
   display: none;
   color: rgba(16,110,190,1);

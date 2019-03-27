@@ -34,6 +34,7 @@
                     <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
                 </div>
             </div>
+            <span data-ng-if="::pr.comments.length" class="comments"><span data-ng-bind="::pr.comments.length"></span><div class="comments__image"></div></span>
             <span class="state state-{{pr.evaluations.state}}" title="{{prCtrl.policiesDetails(pr.evaluations.policies)}}"></span>
         </div>
     </div>

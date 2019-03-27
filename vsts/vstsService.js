@@ -5,7 +5,6 @@ angular.module('vstsChrome').service("vstsService", VstsService);
 VstsService.$inject=['$http', '$q', 'memberService', 'settingsService'];
 function VstsService($http, $q, memberService, settingsService) {
     let resetGUID = "00000000-0000-0000-0000-000000000000";
-    
     let initialize = $q.defer();
     const loginInitialize = $q.defer();
     let domainToUse = settingsService.getCurrentDomain();
@@ -38,13 +37,19 @@ function VstsService($http, $q, memberService, settingsService) {
         });
     }
 
-    let mainProject;
-
     const getToApprovePullRequests = (pullRequests) => {
         let currentMember = memberService.getCurrentMember();
         const prs = pureService.getToApprovePullRequests(currentMember, pullRequests);
         setReminder(prs);
         return prs;
+    };
+
+    const getActiveComments = async({url}) => {
+        const {data} = await $http({
+            method: "GET",
+            url: `${url}/threads`
+        });
+        return data.value.filter(({status}) => status === "active");
     };
 
     function getMinePullRequests() {
@@ -69,6 +74,10 @@ function VstsService($http, $q, memberService, settingsService) {
             chrome.browserAction.setBadgeText({text: ""});
         };
     }
+
+    const processComments = async(fullPr) => {
+        fullPr.comments = await getActiveComments(fullPr);
+    };
 
     function processPolicies(fullPr) {
         return getPolicyResult(fullPr).then((evaluations) => {
@@ -109,17 +118,15 @@ function VstsService($http, $q, memberService, settingsService) {
         });
     }
 
-    function getFullPullRequest(pr) {
-        return $http({
+    const getFullPullRequest = async(pr) => {
+        const {"data": fullPr} = await $http({
             method: "GET",
             url: pr.url
-        }).then(function(httpPullRequest) {
-            let fullPr = httpPullRequest.data;
-            //Async
-            processPolicies(fullPr);
-
-            return fullPr;
         });
+
+        await processPolicies(fullPr);
+        await processComments(fullPr);
+        return fullPr;
     }
 
     function getPolicyResultByPRId(pr) {
