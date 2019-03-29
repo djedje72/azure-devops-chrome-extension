@@ -127,7 +127,12 @@
             vstsService.toggleAutoComplete(pr).then(function(refreshPr) {
                 pr.autoCompleteSetBy = refreshPr.autoCompleteSetBy;
             });
-        }
+        };
+
+        prCtrl.getImageWithTodayStr = (imageUrl) => {
+            const today = new Date().toLocaleDateString("fr-FR");
+            return `${imageUrl}${imageUrl.includes("?") ? "&" : "?"}todayTimestamp=${encodeURIComponent(today)}`;
+        };
 
         function getPullRequests() {
             return vstsService.getPullRequests().then(function(pullRequests) {

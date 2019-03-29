@@ -36,7 +36,7 @@
                         <div
                             data-ng-repeat="reviewer in ::pr.reviewers | filter:prCtrl.isReviewerToDisplay | orderBy: '+reviewer.vote'"
                         >
-                            <img class="reviewer__image" data-ng-class="{'reviewer__image--voted': reviewer.vote > 0}" title="{{::reviewer.displayName}}" data-ng-src="{{::reviewer.imageUrl}}" data-fallback-src="/member/member-default.png" />
+                            <img class="reviewer__image" data-ng-class="{'reviewer__image--voted': reviewer.vote > 0}" title="{{::reviewer.displayName}}" data-ng-src="{{::prCtrl.getImageWithTodayStr(reviewer.imageUrl)}}" data-fallback-src="/member/member-default.png" />
                         </div>
                     </div>
                 </div>
