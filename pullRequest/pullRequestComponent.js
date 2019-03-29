@@ -21,6 +21,7 @@
     PullRequestController.$inject=['vstsService', 'memberService'];
     function PullRequestController(vstsService, memberService) {
         var prCtrl = this;
+        console.log(this);
         this.$onInit = function() {
             prCtrl.fillPullRequests = function() {
                 prCtrl.showSettings = false;
@@ -118,6 +119,8 @@
             const {enableNotifications} = prCtrl.getSettings();
             prCtrl.enableNotifications = enableNotifications;
         }
+
+        prCtrl.isReviewerToDisplay = (reviewer) => reviewer.isRequired || reviewer.vote > 0;
 
         prCtrl.toggleAutoComplete = function($event, pr) {
             $event.stopPropagation();

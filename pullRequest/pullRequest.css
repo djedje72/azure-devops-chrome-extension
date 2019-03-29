@@ -116,6 +116,21 @@ button[disabled]:hover {
   margin-top: 5px;
 }
 
+.reviewer-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.reviewer__image {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+.reviewer__image--voted {
+  display: none;
+}
+
 .pullRequest .comments__image {
   background: url("/pullRequest/comments.png");
   background-size: 16px 16px;
