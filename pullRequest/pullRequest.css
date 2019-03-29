@@ -123,9 +123,10 @@ button[disabled]:hover {
 }
 
 .reviewer__image {
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  margin-left: 3px;
 }
 .reviewer__image--voted {
   display: none;

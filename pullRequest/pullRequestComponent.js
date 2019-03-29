@@ -130,7 +130,7 @@
         };
 
         prCtrl.getImageWithTodayStr = (imageUrl) => {
-            const today = new Date().toLocaleDateString("fr-FR");
+            const today = new Date().toLocaleDateString("en-US");
             return `${imageUrl}${imageUrl.includes("?") ? "&" : "?"}todayTimestamp=${encodeURIComponent(today)}`;
         };
 
