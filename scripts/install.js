@@ -55,7 +55,7 @@ const migrateToDevAzureDomain = () => {
             Object.entries(item)
                 .filter(([k]) => fields.includes(k))
                 .forEach(([k, v]) => {
-                    item[k] = v.replace(/(:\/\/)(.*)\.visualstudio.com/, "$1dev.azure.com/$2");
+                    item[k] = v.replace(/(:\/\/)(.*)\.visualstudio.com(\/DefaultCollection)?/, "$1dev.azure.com/$2");
                 });
             localStorage.setItem(itemKey, JSON.stringify(item));
         }
