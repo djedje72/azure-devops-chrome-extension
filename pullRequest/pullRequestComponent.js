@@ -1,7 +1,6 @@
 (function() {
     angular.module('vstsChrome').component("pullRequest", {
         controller: PullRequestController,
-        controllerAs: "prCtrl",
         templateUrl: "pullRequest/pullRequest.html",
         css: "pullRequest/pullRequest.css"
     });
@@ -21,7 +20,6 @@
     PullRequestController.$inject=['vstsService', 'memberService'];
     function PullRequestController(vstsService, memberService) {
         var prCtrl = this;
-        console.log(this);
         this.$onInit = function() {
             prCtrl.fillPullRequests = function() {
                 prCtrl.showSettings = false;
@@ -71,7 +69,7 @@
             };
 
             prCtrl.redirect = function(pr) {
-                var href = `${pr.repository.remoteUrl}/pullrequest/${pr.pullRequestId}`; 
+                var href = `${pr.repository.remoteUrl.replace(/(:\/\/)([^/]*@)/, "$1")}/pullrequest/${pr.pullRequestId}`;
                 chrome.tabs.create({url: href, active: false});
             };
 
@@ -120,6 +118,8 @@
             prCtrl.enableNotifications = enableNotifications;
         }
 
+        prCtrl.durationToDisplay = ({creationDate}) => moment(creationDate).fromNow();
+        prCtrl.valueOfDate = ({creationDate}) => moment(creationDate).valueOf();
         prCtrl.isReviewerToDisplay = (reviewer) => reviewer.isRequired || reviewer.vote > 0;
 
         prCtrl.toggleAutoComplete = function($event, pr) {
@@ -142,7 +142,11 @@
             });
         }
         prCtrl.isInitialize = false;
-        
+
+        vstsService.getProjects().then((projects) => {
+            prCtrl.projects = projects.map(({name}) => name);
+        });
+
         vstsService.isInitialize()
             .then(() => {
                 prCtrl.isInitialize = true;
@@ -152,6 +156,6 @@
             .finally(() => {
                 prCtrl.hideLoading = true;
             });
-        
+
     }
 })();

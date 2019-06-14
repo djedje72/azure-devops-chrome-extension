@@ -19,22 +19,23 @@ function VstsService($http, $q, memberService, settingsService) {
         domainToUse = {};
     }
 
-    function checkLogin() {
-        return $http({
+    async function getProjects() {
+        const {data} = await $http({
             method: "GET",
             responseType: "json",
             url: domainToUse.vstsUrl + "/projects"
-        }).then((response) => {
-            if (response.data) {
-                loginInitialize.resolve("init ok");
-            } else {
-                loginInitialize.reject("login failed");
-                return $q.reject("login failed");
-            }
-        }, () => {
-            loginInitialize.reject("login failed");
-            return $q.reject("login failed");
         });
+        return data.value;
+    }
+
+    async function checkLogin() {
+        try {
+            await getProjects();
+            loginInitialize.resolve("init ok");
+        } catch (err) {
+            loginInitialize.reject("login failed");
+            throw "login failed";
+        }
     }
 
     const getToApprovePullRequests = (pullRequests) => {
@@ -109,7 +110,7 @@ function VstsService($http, $q, memberService, settingsService) {
             } else {
                 state = "none";
             }
-            
+
             fullPr.evaluations = {
                 policies: policies,
                 state: state
@@ -161,7 +162,7 @@ function VstsService($http, $q, memberService, settingsService) {
                     "artifactId": pr.artifactId.replace("%2f", "%2F")
                 }
             ]
-        }).then(({data}) => data.value); 
+        }).then(({data}) => data.value);
     }
 
     function getPolicyResult(pr) {
@@ -183,7 +184,7 @@ function VstsService($http, $q, memberService, settingsService) {
                     fullPullRequests.push(fullPr);
                 }));
             });
-            return $q.all(promises).then(() => 
+            return $q.all(promises).then(() =>
                 getMinePullRequests().then((minePullRequests) => ({
                     "all": fullPullRequests,
                     "toApprove": getToApprovePullRequests(fullPullRequests),
@@ -198,8 +199,15 @@ function VstsService($http, $q, memberService, settingsService) {
         let promises = [];
         return $http({
             method: "GET",
-            url: domainToUse.vstsUrl + "/git/pullRequests"
-        }).then((httpPullRequests) => httpPullRequests.data.value);
+            url: domainToUse.vstsUrl + "/git/pullRequests",
+            "params": {
+                "$top": 250
+            }
+        }).then(
+            (httpPullRequests) => httpPullRequests.data.value
+        ).then(
+            (httpPullRequests) => httpPullRequests.filter(({creationDate}) => moment(creationDate).isAfter(moment().subtract(3, 'months')))
+        );
     }
 
     function getAllProjects() {
@@ -284,16 +292,18 @@ function VstsService($http, $q, memberService, settingsService) {
         if(credentials.vstsName && credentials.mail && credentials.accessKey) {
             domainToUse = {
                 vstsName: credentials.vstsName,
-                basic:btoa(credentials.mail.toLowerCase() + ":" + credentials.accessKey), 
-                vstsUrl: "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis",
-                domainUrl: "https://" + credentials.vstsName + ".visualstudio.com"
+                basic:btoa(credentials.mail.toLowerCase() + ":" + credentials.accessKey),
+                // vstsUrl: "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis",
+                // domainUrl: "https://" + credentials.vstsName + ".visualstudio.com",
+                vstsUrl: `https://dev.azure.com/${credentials.vstsName}/_apis`,
+                domainUrl: `https://dev.azure.com/${credentials.vstsName}`
             };
             $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
             return getAllProjects().then(
                 () => {
                     settingsService.setCurrentDomain(domainToUse);
                     initialize.resolve("init ok");
-                }, 
+                },
                 (error) => $q.reject(error)
             );
         } else {
@@ -328,7 +338,7 @@ function VstsService($http, $q, memberService, settingsService) {
                 },
                 "data": data
             }).then(
-                (httpPullRequest) => httpPullRequest.data, 
+                (httpPullRequest) => httpPullRequest.data,
                 (error) => error
             );
         });
@@ -386,6 +396,7 @@ function VstsService($http, $q, memberService, settingsService) {
         getPullRequests: getPullRequests,
         setCredentials: setCredentials,
         toggleAutoComplete: toggleAutoComplete,
-        getSuggestionForUser: getSuggestionForUser
+        getSuggestionForUser: getSuggestionForUser,
+        getProjects: getProjects
     };
 }

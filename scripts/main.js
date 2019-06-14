@@ -40,28 +40,27 @@ const _processCurrentNotification = (fn, notificationName) => {
 }
 
 angular.module('vstsChrome', ['angularCSS'])
-.config(function( $compileProvider ) {   
+.config(function( $compileProvider ) {
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
 })
 .run(function(vstsService, memberService) {
     vstsService.isInitialize().then(() => {
         chrome.alarms.create("refresh", {"when": Date.now() + 1000, "periodInMinutes": 2});
-        
+
         chrome.alarms.create("resetBranches", {"when": Date.now(), "periodInMinutes": 60});
 
         const branches = {};
         const branchPrefix = "refs/heads/";
-        
-        function getNotificationName(suggestion) {
+
+        const getNotificationName = (suggestion) => {
             const repositoryId = suggestion.repositoryId;
             const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
             const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
             return `${repositoryId}|${sourceBranch}|${targetBranch}`;
-        }
+        };
         chrome.alarms.onAlarm.addListener(function(alarm) {
             if(alarm.name === "refresh") {
                 if(memberService.getCurrentMember()) {
-                    vstsService.getPullRequests();
                     const {enableNotifications} = JSON.parse(localStorage.getItem("settings")) || {};
                     if (enableNotifications) {
                         vstsService.getSuggestionForUser().then((suggestions) => suggestions.filter((s)=> s)).then((suggestions) => {
@@ -102,7 +101,7 @@ angular.module('vstsChrome', ['angularCSS'])
                                         const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
                                         const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
                                         let options = Object.assign(notificationBody, {
-                                            message: 
+                                            message:
                                                 `${sourceRepositoryName.toUpperCase()}\n${sourceBranch} -> ${targetBranch}`
                                         });
                                         if (addCurrentNotification(getNotificationName(suggestion))) {
@@ -114,7 +113,7 @@ angular.module('vstsChrome', ['angularCSS'])
                                 }
                             });
 
-                            
+
                             let notificationStr = localStorage.getItem("notification");
                             if (notificationStr) {
                                 const notification = JSON.parse(notificationStr);
