@@ -344,32 +344,42 @@ function VstsService($http, $q, memberService, settingsService) {
         });
     }
 
+    const fixAzureDevUrls = (item)  => {
+        const rp = v => v.replace(/(:\/\/)(.*)@dev.azure.com\//, "$1dev.azure.com/");
+        if (item && item.repository) {
+            item.repository.remoteUrl = rp(item.repository.remoteUrl);
+        }
+        return item;
+    };
+
     function getSuggestionForUser() {
-        return getAllSuggestions().then((suggestions) => {
-            let currentMember = memberService.getCurrentMember();
-            let promises = [];
-            if(currentMember) {
-                suggestions.filter((suggestion) => suggestion.suggestion.length > 0).forEach((suggestion) => {
-                    suggestion.suggestion.filter((sug) => sug.type === "pullRequest").forEach((sug) => {
-                        let promise = $http({
-                            method: "GET",
-                            url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}&$top=1`
-                        }).then(({data}) => {
-                            let [lastCommit] = data.value;
-                            if(lastCommit && lastCommit.committer.email === currentMember.uniqueName) {
-                                return Object.assign({
-                                    remoteUrl: suggestion.repository.remoteUrl,
-                                    repositoryId: suggestion.repository.id
-                                }, sug);
-                            }
-                            return null;
+        return getAllSuggestions()
+            .then(suggestions => suggestions.map(suggestion => fixAzureDevUrls(suggestion)))
+            .then(suggestions => {
+                let currentMember = memberService.getCurrentMember();
+                let promises = [];
+                if(currentMember) {
+                    suggestions.filter((suggestion) => suggestion.suggestion.length > 0).forEach((suggestion) => {
+                        suggestion.suggestion.filter((sug) => sug.type === "pullRequest").forEach((sug) => {
+                            let promise = $http({
+                                method: "GET",
+                                url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}&$top=1`
+                            }).then(({data}) => {
+                                let [lastCommit] = data.value;
+                                if(lastCommit && lastCommit.committer.email === currentMember.uniqueName) {
+                                    return Object.assign({
+                                        remoteUrl: suggestion.repository.remoteUrl,
+                                        repositoryId: suggestion.repository.id
+                                    }, sug);
+                                }
+                                return null;
+                            });
+                            promises.push(promise);
                         });
-                        promises.push(promise);
                     });
-                });
-            }
-            return $q.all(promises);
-        });
+                }
+                return $q.all(promises);
+            });
     }
 
     function getAllSuggestions() {

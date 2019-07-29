@@ -37,6 +37,7 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
                     "- Add PullRequest duration"
                 ].join("\n")
             });
+            break;
         }
         default: break;
     }
