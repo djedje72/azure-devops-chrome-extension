@@ -1,26 +1,16 @@
 import * as pureService from "./vsts.pure.js";
-import token from "../oauth/index.js";
-import {getCurrentDomain, setCurrentDomain} from "../settings/settingsService.js";
-
+import {getCurrentDomain, setCurrentDomain, getUrl, getDomainUrl} from "../settings/settingsService.js";
+import {getCurrentMember} from "../member/memberService.js";
+import defer from "../defer.js";
+import oauthFetch from "../oauth/oauthFetch.js";
 angular.module('vstsChrome').service("vstsService", VstsService);
 
 
-VstsService.$inject=['$q', 'memberService'];
-function VstsService($q, memberService) {
+VstsService.$inject=['$q'];
+function VstsService($q) {
     let resetGUID = "00000000-0000-0000-0000-000000000000";
-    let initialize = $q.defer();
-    const loginInitialize = $q.defer();
-
-    const oauthFetch = async({url, params, ...obj}) => {
-        const headers = new Headers();
-        headers.append("Authorization", `Bearer ${(await token()).access_token}`);
-        const urlToUse = `${url}${params ? `?${Object.entries(params).map(([k,v]) => `${k}=${v}`).join("&")}`:""}`
-        const result = await (await fetch(urlToUse, {
-            ...obj,
-            headers
-        })).json();
-        return result;
-    };
+    let initialize = defer();
+    const loginInitialize = defer();
 
     getCurrentDomain().then((domainToUse) => {
         if (domainToUse) {
@@ -32,8 +22,6 @@ function VstsService($q, memberService) {
             domainToUse = {};
         }
     });
-
-    const getUrl = async() => (await getCurrentDomain()).vstsUrl;
 
     async function getProjects() {
         const {value} = await oauthFetch({
@@ -53,8 +41,8 @@ function VstsService($q, memberService) {
         }
     }
 
-    const getToApprovePullRequests = (pullRequests) => {
-        let currentMember = memberService.getCurrentMember();
+    const getToApprovePullRequests = async(pullRequests) => {
+        let currentMember = await getCurrentMember();
         const prs = pureService.getToApprovePullRequests(currentMember, pullRequests);
         setReminder(prs);
         return prs;
@@ -68,17 +56,12 @@ function VstsService($q, memberService) {
         return value.filter(({status}) => status === "active");
     };
 
-    async function getMinePullRequests() {
-        let currentMember = memberService.getCurrentMember();
+    async function getMinePullRequests(prs) {
+        let currentMember = await getCurrentMember();
         if(currentMember) {
-            return oauthFetch({
-                method: "GET",
-                url: `${(await getUrl())}/git/pullRequests?creatorId=${currentMember.id}`
-            }).then(
-                (httpPullRequests) => httpPullRequests.value
-            ).then((minePullRequests) => $q.all(minePullRequests.map((minePullRequest) => getFullPullRequest(minePullRequest))));
+            return prs.filter(({createdBy}) => createdBy.uniqueName === currentMember.emailAddress);
         }
-        return $q.resolve([]);
+        return [];
     }
 
     function setReminder(toApprovePullRequests) {
@@ -156,7 +139,7 @@ function VstsService($q, memberService) {
     async function getPolicies(pr, field) {
         return oauthFetch({
             method:"GET",
-            url: `${(await getUrl()).replace("/_apis", "")}/${pr.repository.project.id}/_apis/policy/evaluations`,
+            url: `${await getDomainUrl()}/${pr.repository.project.id}/_apis/policy/evaluations`,
             params: {
                 artifactId: "vstfs:///CodeReview/CodeReviewId/" + pr.repository.project.id + "/" + pr[field],
                 "api-version":"5.0-preview.1"
@@ -167,7 +150,7 @@ function VstsService($q, memberService) {
     async function getVisits(pr, field) {
         return oauthFetch({
             method:"POST",
-            url: `${(await getUrl()).replace("/_apis", "")}/_apis/visits/artifactStatsBatch`,
+            url: `${await getDomainUrl()}/_apis/visits/artifactStatsBatch`,
             params: {
                 "api-version": "5.0-preview.1",
                 "includeUpdatesSinceLastVisit": "true"
@@ -200,13 +183,11 @@ function VstsService($q, memberService) {
                     fullPullRequests.push(fullPr);
                 }));
             });
-            return $q.all(promises).then(() =>
-                getMinePullRequests().then((minePullRequests) => ({
-                    "all": fullPullRequests,
-                    "toApprove": getToApprovePullRequests(fullPullRequests),
-                    "mine": minePullRequests
-                }))
-            );
+            return $q.all(promises).then(async() => ({
+                "all": fullPullRequests,
+                "toApprove": await getToApprovePullRequests(fullPullRequests),
+                "mine": await getMinePullRequests(fullPullRequests)
+            }));
         });
     }
 
@@ -243,32 +224,32 @@ function VstsService($q, memberService) {
     //     });
     // }
 
-    const getTeamMembers = async() => {
-        let membersResult = new Map();
+    // const getTeamMembers = async() => {
+    //     let membersResult = new Map();
 
-        const {"value": teams, ...t} = await oauthFetch({
-            method: "GET",
-            url: `${(await getUrl())}/teams`
-        });
+    //     const {"value": teams} = await oauthFetch({
+    //         method: "GET",
+    //         url: `${(await getUrl())}/teams`
+    //     });
 
-        await Promise.all(teams.flatMap(async({url, id}) => {
-            const {"value": members} = await oauthFetch({
-                method: "GET",
-                url: `${url}/members`
-            });
-            members.forEach(({identity}) => {
-                if(!membersResult.has(identity.id)) {
-                    identity.teams = [id];
-                    membersResult.set(identity.id, identity);
-                } else {
-                    const tmpMember = membersResult.get(identity.id);
-                    tmpMember.teams.push(id);
-                }
-            });
-        }));
+    //     await Promise.all(teams.flatMap(async({url, id}) => {
+    //         const {"value": members} = await oauthFetch({
+    //             method: "GET",
+    //             url: `${url}/members`
+    //         });
+    //         members.forEach(({identity}) => {
+    //             if(!membersResult.has(identity.id)) {
+    //                 identity.teams = [id];
+    //                 membersResult.set(identity.id, identity);
+    //             } else {
+    //                 const tmpMember = membersResult.get(identity.id);
+    //                 tmpMember.teams.push(id);
+    //             }
+    //         });
+    //     }));
 
-        return [...membersResult.values()];
-    };
+    //     return [...membersResult.values()];
+    // };
 
     // function getTeamMembers() {
     //     return getAllProjects().then((projects) => {
@@ -306,7 +287,7 @@ function VstsService($q, memberService) {
         if(credentials.name) {
             const domainToUse = {
                 name: credentials.name,
-                vstsUrl: `https://dev.azure.com/${credentials.name}/_apis`,
+                url: `https://dev.azure.com/${credentials.name}/_apis`,
                 domainUrl: `https://dev.azure.com/${credentials.name}`
             };
             setCurrentDomain(domainToUse);
@@ -324,8 +305,8 @@ function VstsService($q, memberService) {
         return loginInitialize.promise;
     }
 
-    function toggleAutoComplete(pr) {
-        let currentMember = memberService.getCurrentMember();
+    async function toggleAutoComplete(pr) {
+        let currentMember = await getCurrentMember();
         if(!currentMember) {
             return $q.reject("no current member");
         }
@@ -359,8 +340,8 @@ function VstsService($q, memberService) {
     function getSuggestionForUser() {
         return getAllSuggestions()
             .then(suggestions => suggestions.map(suggestion => fixAzureDevUrls(suggestion)))
-            .then(suggestions => {
-                let currentMember = memberService.getCurrentMember();
+            .then(async suggestions => {
+                let currentMember = await getCurrentMember();
                 let promises = [];
                 if(currentMember) {
                     suggestions.filter((suggestion) => suggestion.suggestion.length > 0).forEach((suggestion) => {
@@ -406,7 +387,7 @@ function VstsService($q, memberService) {
     return {
         isInitialize: isInitialize,
         isLoginInitialize: isLoginInitialize,
-        getTeamMembers,
+        // getTeamMembers,
         getPullRequests: getPullRequests,
         setCredentials: setCredentials,
         toggleAutoComplete: toggleAutoComplete,

@@ -3,10 +3,6 @@
         <div class="title">Domain VSTS</div>
         <span>http(s)://dev.azure.com/</span><input type="text" name="name" data-ng-model="settingsCtrl.name" placeholder="my domain"/><span></span>
     </div>
-    <div>
-        <input type="text" name="mail" data-ng-model="settingsCtrl.mail" placeholder="Mail address..."/>
-        <input type="password" name="accessKey" data-ng-model="settingsCtrl.accessKey" placeholder="Password/Alternate credentials..."/>
-    </div>
     <button data-ng-disabled="!settingsCtrl.canValidate() || settingsCtrl.loading" type="button" data-ng-click="settingsCtrl.changeCredentials();">
         <spinner data-ng-show="settingsCtrl.loading"></spinner>
         <span data-ng-hide="settingsCtrl.loading">Valider</span></button>

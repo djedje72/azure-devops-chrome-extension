@@ -3,7 +3,7 @@ export const getToApprovePullRequests = (currentMember, pullRequests) => {
         let toApprovePullRequests = pullRequests.filter((pullRequest) => {
             if(pullRequest.reviewers && pullRequest.createdBy.uniqueName !== currentMember.uniqueName) {
                 let teamPullRequest = pullRequest.reviewers.filter((reviewer) => {
-                    return currentMember.teams.includes(reviewer.id);
+                    return currentMember.teams.some(({id}) => id === reviewer.id);
                 });
                 let mineReview = pullRequest.reviewers.filter((reviewer) => {
                     return reviewer.uniqueName === currentMember.uniqueName;

@@ -28,18 +28,6 @@ const initFlow = async() => {
     return initFlowDeffered.promise;
 };
 
-export default async() => {
-    let token = await getToken();
-    if (!token || token.Error || !(token.access_token && token.refresh_token)) {
-        return await initFlow();
-    }
-
-    if (moment(token.expires_date).isBefore(moment())) {
-        return await refreshAccessToken();
-    }
-    return token;
-};
-
 const getAccessToken = async (code) => {
     const body = `\
 client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\
@@ -98,4 +86,16 @@ const storeToken = ({access_token, refresh_token, expires_in}) => {
         "expires_date": moment().add(expires_in - 60, "seconds").format()
     }
     chrome.storage.local.set({oauthToken});
+};
+
+export default async() => {
+    let token = await getToken();
+    if (!token || token.Error || !(token.access_token && token.refresh_token)) {
+        return await initFlow();
+    }
+
+    if (moment(token.expires_date).isBefore(moment())) {
+        return await refreshAccessToken();
+    }
+    return token;
 };

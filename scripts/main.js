@@ -1,3 +1,5 @@
+import {getCurrentMember} from "../member/memberService.js";
+
 if (!chrome.alarms) {
     chrome.alarms = {
         "create": () => {},
@@ -41,10 +43,10 @@ const _processCurrentNotification = (fn, notificationName) => {
 
 angular.module('vstsChrome', ['angularCSS'])
 .config(function( $compileProvider ) {
-    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):|data:image\//);
 })
-.run(function(vstsService, memberService) {
-    vstsService.isInitialize().then(() => {
+.run(function(vstsService) {
+    vstsService.isInitialize().then(async() => {
         chrome.alarms.create("refresh", {"when": Date.now() + 1000, "periodInMinutes": 2});
 
         chrome.alarms.create("resetBranches", {"when": Date.now(), "periodInMinutes": 60});
@@ -58,9 +60,9 @@ angular.module('vstsChrome', ['angularCSS'])
             const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
             return `${repositoryId}|${sourceBranch}|${targetBranch}`;
         };
-        chrome.alarms.onAlarm.addListener(function(alarm) {
+        chrome.alarms.onAlarm.addListener(async function(alarm) {
             if(alarm.name === "refresh") {
-                if(memberService.getCurrentMember()) {
+                if(await getCurrentMember()) {
                     const {enableNotifications} = JSON.parse(localStorage.getItem("settings")) || {};
                     if (enableNotifications) {
                         vstsService.getSuggestionForUser().then((suggestions) => suggestions.filter((s)=> s)).then((suggestions) => {

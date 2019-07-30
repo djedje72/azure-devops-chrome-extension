@@ -1,3 +1,5 @@
+import {getCurrentMember} from "./memberService.js";
+
 angular.module('vstsChrome').component("member", {
     bindings: {
         memberSelected: "&",
@@ -10,11 +12,15 @@ angular.module('vstsChrome').component("member", {
     css: "member/member.css"
 });
 
-MemberController.$inject=['memberService'];
-function MemberController(memberService) {
+MemberController.$inject=['$rootScope'];
+function MemberController($rootScope) {
     var memberCtrl = this;
     memberCtrl.$onInit = function() {
     };
 
-    memberCtrl.currentMember = memberService.getCurrentMember();
+    (async() => {
+        memberCtrl.currentMember = await getCurrentMember();
+        memberCtrl.avatar = memberCtrl.currentMember.coreAttributes.Avatar.value;
+        $rootScope.$digest();
+    })();
 }

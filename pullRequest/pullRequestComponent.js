@@ -1,3 +1,5 @@
+import {getCurrentMember} from "../member/memberService.js";
+
 angular.module('vstsChrome').component("pullRequest", {
     controller: PullRequestController,
     templateUrl: "pullRequest/pullRequest.html",
@@ -16,25 +18,23 @@ angular.module('vstsChrome').directive('fallbackSrc', function () {
 });
 
 
-PullRequestController.$inject=['vstsService', 'memberService'];
-function PullRequestController(vstsService, memberService) {
+PullRequestController.$inject=['vstsService', '$rootScope'];
+function PullRequestController(vstsService, $rootScope) {
     var prCtrl = this;
     this.$onInit = function() {
         prCtrl.fillPullRequests = function() {
             prCtrl.showSettings = false;
             prCtrl.pullRequests = prCtrl.allPullRequests;
-            memberService.hideMembers();
         };
 
         prCtrl.fillToApprovePullRequests = function() {
             prCtrl.showSettings = false;
             prCtrl.pullRequests = prCtrl.toApprovePullRequests;
             addCurrentMemberVote(prCtrl.pullRequests);
-            memberService.hideMembers();
         };
 
-        function addCurrentMemberVote(prs) {
-            const currentMember = memberService.getCurrentMember();
+        async function addCurrentMemberVote(prs) {
+            const currentMember = await getCurrentMember();
             if(currentMember) {
                 prs.forEach((pr) => {
                     const currentMemberReviews = pr.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.uniqueName);
@@ -52,7 +52,6 @@ function PullRequestController(vstsService, memberService) {
         prCtrl.fillMinePullRequests = function() {
             prCtrl.showSettings = false;
             prCtrl.pullRequests = prCtrl.minePullRequests;
-            memberService.hideMembers();
         };
 
         prCtrl.isMinePullRequests = function() {
@@ -155,6 +154,7 @@ function PullRequestController(vstsService, memberService) {
         .then(() => prCtrl.fillToApprovePullRequests())
         .finally(() => {
             prCtrl.hideLoading = true;
+            $rootScope.$digest();
         });
 
 }
