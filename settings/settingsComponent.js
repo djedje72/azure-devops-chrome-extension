@@ -6,13 +6,13 @@
         css: "settings/settings.css"
     });
 
-    SettingsController.$inject=['vstsService', 'settingsService'];
-    function SettingsController(vstsService, settingsService) {
+    SettingsController.$inject=['vstsService'];
+    function SettingsController(vstsService) {
         var settingsCtrl = this;
         settingsCtrl.hasError = false;
 
         settingsCtrl.canValidate = function() {
-            return settingsCtrl.vstsName && settingsCtrl.mail && settingsCtrl.accessKey;
+            return settingsCtrl.name;
         };
 
         settingsCtrl.loading = false;
@@ -20,9 +20,7 @@
         settingsCtrl.changeCredentials = function() {
             settingsCtrl.loading = true;
             vstsService.setCredentials({
-                vstsName: settingsCtrl.vstsName,
-                mail: settingsCtrl.mail,
-                accessKey: settingsCtrl.accessKey,
+                name: settingsCtrl.name,
             }).then(function(){
                 settingsCtrl.isInitialize = true;
                 settingsCtrl.hasError = false;

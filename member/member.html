@@ -1,9 +1,1 @@
-<img class="currentMember" data-ng-click="memberCtrl.clickSelectUser()" data-ng-src="{{memberCtrl.currentMember.imageUrl || 'member/member-default.png'}}"/>
-<div class="membersForm" data-ng-show="memberCtrl.isMembersShown()">
-    <input type="text" data-ng-model="searchMember" placeholder="Search an user..."/>
-    <div class="members">
-        <span data-ng-repeat="member in memberCtrl.members | filter:searchMember:false track by member.id">
-            <img class="member" data-ng-click="memberCtrl.selectMember(member);" data-ng-src="{{member.imageUrl}}" title="{{member.displayName}}"/>
-        </span>
-    </div>
-</div>
+<img class="currentMember" alt="me" data-ng-src="{{memberCtrl.currentMember.imageUrl || 'member/member-default.png'}}"/>

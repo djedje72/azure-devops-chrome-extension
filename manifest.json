@@ -1,4 +1,5 @@
 {
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt/jiDPZpMYfkwQONLbU4BCgSQNjJIjlYwKzZr+ja2ZVlOQDZJ0JLppinm+qvHYm9B9sx48AKR/Onxu2MS/4T4I7YBJKshj4gaSCWByD+HDhej8zyTaPq9ObgNGrgU/AaSq0LfTGm1dCk+rDBzCQFK6CFbISjDzosGGj0Rp1bghGjFli6zwQR6DUReoZJYkXcL4v0CYLRxxzBqe43l0LwJeUv+cia+ClqmXcJfb2C2yhc2g+BXQBKQ6Jhdf562i9k6T+Gsz7lgNoJr7jmde6uyLe1qyzDhbnz8k8aAVY0Kr3OYMJWz2Nk6s0qD4oLAvWAweJCN9XTpXzTZlszcK1iRwIDAQAB",
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "name": "VSTS Pull Requests",
@@ -20,9 +21,12 @@
       "/settings/settings.html"
   ],
   "permissions": [
+    "identity",
+    "storage",
     "notifications",
     "webRequest",
-    "alarms"
+    "alarms",
+    "https://app.vssps.visualstudio.com/oauth2/*"
   ],
   "background": {
     "page": "background.html",

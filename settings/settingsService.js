@@ -1,41 +1,11 @@
-(function() {
-    angular.module('vstsChrome').service("settingsService", SettingsService);
+export const setCurrentDomain = (domain) => {
+    chrome.storage.local.set({domain})
+};
 
-    SettingsService.$inject=[];
-    function SettingsService() {
-        var currentDomain = null;
-        var currentDomainStr = localStorage.getItem("currentDomain");
-        if(currentDomainStr !== null) {
-            try{
-                currentDomain = JSON.parse(currentDomainStr);
-                if(!currentDomain.domainUrl) {
-                    throw "error";
-                }
-            } catch(e) {
-                localStorage.removeItem("currentDomain");
-                currentDomain = null;
-            }
-        } else {
-            currentDomain = null;
-        }
+export const getCurrentDomain = async() => new Promise(resolve => {
+    chrome.storage.local.get("domain", ({domain}) => resolve(domain));
+});
 
-        function setCurrentDomain(domain) {
-            currentDomain = domain;
-            localStorage.setItem("currentDomain", JSON.stringify(currentDomain));
-        }
-
-        function getCurrentDomain() {
-            return currentDomain;
-        }
-
-        function removeCurrentDomain() {
-            localStorage.removeItem("currentDomain");
-        }
-
-        return {
-            getCurrentDomain: getCurrentDomain,
-            setCurrentDomain: setCurrentDomain,
-            removeCurrentDomain: removeCurrentDomain
-        };
-    }
-})();
+export const  removeCurrentDomain = () => {
+    chrome.storage.local.remove("domain");
+};
