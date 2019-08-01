@@ -1,8 +1,5 @@
-<div data-ng-if="$ctrl.isInitialize">
-    <div class="waiting" data-ng-hide="$ctrl.hideLoading">
-        <spinner></spinner>
-    </div>
-    <div class="menu-buttons" data-ng-show="$ctrl.hideLoading">
+<div data-ng-if="$ctrl.isInitialized">
+    <div class="menu-buttons">
         <div class="list-buttons">
             <div class="list-buttons__button">
                 <button data-ng-show="$ctrl.minePullRequests.length > 0" data-ng-class="{ selected: $ctrl.isMinePullRequests() }"
@@ -14,7 +11,7 @@
             </div>
             <div class="list-buttons__button">
                 <button data-ng-click="$ctrl.toggleSettings();" class="settings-button"></button>
-                <member member-selected="$ctrl.memberSelected(member)" members-display="$ctrl.membersDisplay()" current-member="$ctrl.currentMember"></member>
+                <member></member>
             </div>
         </div>
     </div>

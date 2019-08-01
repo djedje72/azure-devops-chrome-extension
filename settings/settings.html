@@ -1,10 +1,10 @@
-<div data-ng-if="!settingsCtrl.isInitialize" class="settings">
+<div data-ng-if="!$ctrl.isInitialize" class="settings">
     <div>
         <div class="title">Domain VSTS</div>
-        <span>http(s)://dev.azure.com/</span><input type="text" name="name" data-ng-model="settingsCtrl.name" placeholder="my domain"/><span></span>
+        <span>http(s)://dev.azure.com/</span><input type="text" name="name" data-ng-model="$ctrl.name" placeholder="my domain"/><span></span>
     </div>
-    <button data-ng-disabled="!settingsCtrl.canValidate() || settingsCtrl.loading" type="button" data-ng-click="settingsCtrl.changeCredentials();">
-        <spinner data-ng-show="settingsCtrl.loading"></spinner>
-        <span data-ng-hide="settingsCtrl.loading">Valider</span></button>
-    <span class="error" data-ng-show="settingsCtrl.hasError">Bad domain URL or login/credentials</span>
+    <button data-ng-disabled="!$ctrl.canValidate()" type="button" data-ng-click="$ctrl.changeCredentials();">
+        <span>Valider</span>
+    </button>
+    <span class="error" data-ng-show="$ctrl.hasError">Bad domain URL</span>
 </div>

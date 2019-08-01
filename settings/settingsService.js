@@ -9,6 +9,6 @@ export const getCurrentDomain = async() => new Promise(resolve => {
 export const getUrl = async() => (await getCurrentDomain()).url;
 export const getDomainUrl = async() => (await getCurrentDomain()).domainUrl;
 
-export const  removeCurrentDomain = () => {
+export const removeCurrentDomain = () => {
     chrome.storage.local.remove("domain");
 };

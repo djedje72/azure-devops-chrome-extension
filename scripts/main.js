@@ -47,6 +47,7 @@ angular.module('vstsChrome', ['angularCSS'])
 })
 .run(function(vstsService) {
     vstsService.isInitialize().then(async() => {
+        await getCurrentMember();
         chrome.alarms.create("refresh", {"when": Date.now() + 1000, "periodInMinutes": 2});
 
         chrome.alarms.create("resetBranches", {"when": Date.now(), "periodInMinutes": 60});

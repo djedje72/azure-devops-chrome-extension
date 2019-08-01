@@ -2,9 +2,6 @@ import {getCurrentMember} from "./memberService.js";
 
 angular.module('vstsChrome').component("member", {
     bindings: {
-        memberSelected: "&",
-        membersDisplay: "&",
-        currentMember: "<"
     },
     controller: MemberController,
     controllerAs: "memberCtrl",

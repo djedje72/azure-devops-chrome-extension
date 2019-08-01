@@ -58,12 +58,8 @@ client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\
     return refreshAccessTokenDeferred.promise;
 };
 
-
-const getToken = async() => new Promise((resolve) => {
-    chrome.storage.local.get("oauthToken", ({oauthToken}) => {
-        resolve(oauthToken);
-    });
-});
+let getTokenDeferred;
+const getToken = async() => getTokenDeferred && getTokenDeferred.promise;
 
 const retrieveToken = async(body) => {
     const url = "https://app.vssps.visualstudio.com/oauth2/token";
@@ -83,9 +79,12 @@ const storeToken = ({access_token, refresh_token, expires_in}) => {
     const oauthToken = {
         access_token,
         refresh_token,
-        "expires_date": moment().add(expires_in - 60, "seconds").format()
+        "expires_date": moment().add(/*expires_in - 60*/10, "seconds").format()
     }
-    chrome.storage.local.set({oauthToken});
+    if (!getTokenDeferred) {
+        getTokenDeferred = defer();
+    }
+    getTokenDeferred.resolve(oauthToken);
 };
 
 export default async() => {
