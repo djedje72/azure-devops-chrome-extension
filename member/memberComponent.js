@@ -1,6 +1,20 @@
 import {getCurrentMember} from "./memberService.js";
+import {mainModule} from "../index.js";
 
-angular.module('vstsChrome').component("member", {
+class MemberController {
+    static $inject = ['$rootScope'];
+    constructor($rootScope) {
+        this.$rootScope = $rootScope;
+    }
+
+    $onInit = async() => {
+        this.currentMember = await getCurrentMember();
+        this.avatar = this.currentMember.coreAttributes.Avatar.value;
+        this.$rootScope.$digest();
+    };
+}
+
+mainModule.component("member", {
     bindings: {
     },
     controller: MemberController,
@@ -8,16 +22,3 @@ angular.module('vstsChrome').component("member", {
     templateUrl: "member/member.html",
     css: "member/member.css"
 });
-
-MemberController.$inject=['$rootScope'];
-function MemberController($rootScope) {
-    var memberCtrl = this;
-    memberCtrl.$onInit = function() {
-    };
-
-    (async() => {
-        memberCtrl.currentMember = await getCurrentMember();
-        memberCtrl.avatar = memberCtrl.currentMember.coreAttributes.Avatar.value;
-        $rootScope.$digest();
-    })();
-}

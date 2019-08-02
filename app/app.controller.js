@@ -1,6 +1,6 @@
 import "../settings/settingsComponent.js";
 import "../pullRequest/pullRequestComponent.js";
-
+import {mainModule} from "../index.js";
 class AppController{
     constructor($rootScope) {
         this.$rootScope = $rootScope;
@@ -24,7 +24,7 @@ class AppController{
     isLoading = () => !this.shouldInitSettings && !(this.settingsOk && this.prOk);
 }
 
-angular.module('vstsChrome').component("app", {
+mainModule.component("app", {
     controller: AppController,
     templateUrl: "app/app.html",
     css: "app/app.css"

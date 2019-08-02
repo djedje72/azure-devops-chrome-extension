@@ -30,8 +30,6 @@ if (!chrome.notifications) {
         }
     }
 }
-var app = angular.module( 'myApp', [] )
-
 const addCurrentNotification = (...args) => _processCurrentNotification("add", ...args);
 const deleteCurrentNotification = (...args) => _processCurrentNotification("delete", ...args);
 const _processCurrentNotification = (fn, notificationName) => {
@@ -40,12 +38,10 @@ const _processCurrentNotification = (fn, notificationName) => {
     localStorage.setItem("currentNotifications", JSON.stringify(Array.from(currentNotificationsStorage)));
     return result;
 }
-
-angular.module('vstsChrome', ['angularCSS'])
-.config(function( $compileProvider ) {
+export const mainModule = angular.module('vstsChrome', ['angularCSS']);
+mainModule.config(( $compileProvider ) => {
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):|data:image\//);
-})
-.run(function(vstsService) {
+}).run((vstsService) => {
     vstsService.isInitialize().then(async() => {
         await getCurrentMember();
         chrome.alarms.create("refresh", {"when": Date.now() + 1000, "periodInMinutes": 2});

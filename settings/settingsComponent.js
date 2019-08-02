@@ -1,4 +1,5 @@
 import {removeCurrentDomain} from "./settingsService.js";
+import {mainModule} from "../index.js";
 
 class SettingsController{
     static $inject=['vstsService', '$rootScope'];
@@ -49,7 +50,7 @@ class SettingsController{
     }
 }
 
-angular.module('vstsChrome').component("settings", {
+mainModule.component("settings", {
     controller: SettingsController,
     bindings: {
         "initialized": "&",

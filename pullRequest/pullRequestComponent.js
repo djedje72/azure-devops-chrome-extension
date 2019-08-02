@@ -1,6 +1,7 @@
 import {getCurrentMember} from "../member/memberService.js";
+import {mainModule} from "../index.js";
 
-angular.module('vstsChrome').directive('fallbackSrc', function () {
+mainModule.directive('fallbackSrc', function () {
     var fallbackSrc = {
         link: function postLink(scope, iElement, iAttrs) {
         iElement.bind('error', function() {
@@ -123,7 +124,7 @@ class PullRequestController{
     });
 }
 
-angular.module('vstsChrome').component("pullRequest", {
+mainModule.component("pullRequest", {
     controller: PullRequestController,
     bindings: {
         "initialized": "&"

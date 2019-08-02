@@ -16,15 +16,24 @@ const initFlow = async() => {
         &scope=${config.scopes.join(" ")}
         &redirect_uri=${redirectUri}`;
 
-    chrome.identity.launchWebAuthFlow({
-        url,
-        "interactive": true
-    }, (url) => {
-        if (url) {
-            const [,code] = /.+code=([^&].*)/g.exec(url);
-            initFlowDeffered.resolve(getAccessToken(code));
-        }
+    const webAuthFlow = async(interactive) => new Promise((resolve, reject) => {
+        chrome.identity.launchWebAuthFlow({
+            url,
+            interactive
+        }, (url) => {
+            if (url) {
+                const [,code] = /.+code=([^&].*)/g.exec(url);
+                resolve(getAccessToken(code));
+            } else {
+                reject("web flow error");
+            }
+        });
     });
+    try {
+        initFlowDeffered.resolve(await webAuthFlow());
+    } catch (e) {
+        initFlowDeffered.resolve(await webAuthFlow(true));
+    }
     return initFlowDeffered.promise;
 };
 
@@ -58,8 +67,9 @@ client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\
     return refreshAccessTokenDeferred.promise;
 };
 
-let getTokenDeferred;
-const getToken = async() => getTokenDeferred && getTokenDeferred.promise;
+const getToken = async() => new Promise(resolve => {
+    chrome.storage.local.get("oauthToken", ({oauthToken}) => resolve(oauthToken));
+});
 
 const retrieveToken = async(body) => {
     const url = "https://app.vssps.visualstudio.com/oauth2/token";
@@ -79,12 +89,9 @@ const storeToken = ({access_token, refresh_token, expires_in}) => {
     const oauthToken = {
         access_token,
         refresh_token,
-        "expires_date": moment().add(/*expires_in - 60*/10, "seconds").format()
+        "expires_date": moment().add(expires_in - 60, "seconds").format()
     }
-    if (!getTokenDeferred) {
-        getTokenDeferred = defer();
-    }
-    getTokenDeferred.resolve(oauthToken);
+    chrome.storage.local.set({oauthToken});
 };
 
 export default async() => {

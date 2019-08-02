@@ -3,8 +3,9 @@ import {getCurrentDomain, setCurrentDomain, getUrl, getDomainUrl} from "../setti
 import {getCurrentMember} from "../member/memberService.js";
 import defer from "../defer.js";
 import oauthFetch from "../oauth/oauthFetch.js";
-angular.module('vstsChrome').service("vstsService", VstsService);
+import {mainModule} from "../index.js";
 
+mainModule.service("vstsService", VstsService);
 
 VstsService.$inject=['$q'];
 function VstsService($q) {
@@ -205,76 +206,6 @@ function VstsService($q) {
         );
     }
 
-    // async function getAllProjects() {
-    //     return oauthFetch({
-    //         method: "GET",
-    //         url: (await getUrl()) + "/projects"
-    //     }).then(({value}) => {
-    //         let projects = value;
-    //         let promises = [];
-    //         let fullProjects = [];
-    //         projects.forEach(function(project) {
-    //             let promise = oauthFetch({
-    //                 method: "GET",
-    //                 url: project.url
-    //             }).then((fullProject) => fullProjects.push(fullProject));
-    //             promises.push(promise);
-    //         });
-    //         return $q.all(promises).then(() => fullProjects);
-    //     });
-    // }
-
-    // const getTeamMembers = async() => {
-    //     let membersResult = new Map();
-
-    //     const {"value": teams} = await oauthFetch({
-    //         method: "GET",
-    //         url: `${(await getUrl())}/teams`
-    //     });
-
-    //     await Promise.all(teams.flatMap(async({url, id}) => {
-    //         const {"value": members} = await oauthFetch({
-    //             method: "GET",
-    //             url: `${url}/members`
-    //         });
-    //         members.forEach(({identity}) => {
-    //             if(!membersResult.has(identity.id)) {
-    //                 identity.teams = [id];
-    //                 membersResult.set(identity.id, identity);
-    //             } else {
-    //                 const tmpMember = membersResult.get(identity.id);
-    //                 tmpMember.teams.push(id);
-    //             }
-    //         });
-    //     }));
-
-    //     return [...membersResult.values()];
-    // };
-
-    // function getTeamMembers() {
-    //     return getAllProjects().then((projects) => {
-    //         let promises = [];
-    //         let members = new Map();
-    //         projects.forEach((project) => {
-    //             let promise = oauthFetch({
-    //                 method: "GET",
-    //                 url: project.defaultTeam.url + "/members"
-    //             }).then(function(httpMembers) {
-    //                 httpMembers.data.value.forEach(({identity}) => {
-    //                     if(!members.has(identity.id)) {
-    //                         identity.teams = [project.defaultTeam.id];
-    //                         members.set(identity.id, identity);
-    //                     } else {
-    //                         tmpMember = members.get(identity.id);
-    //                         tmpMember.teams.push(project.defaultTeam.id);
-    //                     }
-    //                 })
-    //             });
-    //             promises.push(promise);
-    //         });
-    //         return $q.all(promises).then(() => [...members.values()]);
-    //     });
-    // }
 
     async function getRepositories() {
         return oauthFetch({
@@ -387,7 +318,6 @@ function VstsService($q) {
     return {
         isInitialize: isInitialize,
         isLoginInitialize: isLoginInitialize,
-        // getTeamMembers,
         getPullRequests: getPullRequests,
         setCredentials: setCredentials,
         toggleAutoComplete: toggleAutoComplete,
