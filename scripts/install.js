@@ -39,6 +39,15 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
             });
             break;
         }
+        case "2.0.0": {
+            chrome.notifications.create({
+                ...notificationBody,
+                message: [
+                    "Use OAuth2 flow instead of Basic Auth"
+                ].join("\n")
+            });
+            break;
+        }
         default: break;
     }
 });
