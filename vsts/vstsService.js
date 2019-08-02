@@ -9,7 +9,6 @@ mainModule.service("vstsService", VstsService);
 
 VstsService.$inject=['$q'];
 function VstsService($q) {
-    let resetGUID = "00000000-0000-0000-0000-000000000000";
     let initialize = defer();
     const loginInitialize = defer();
 
@@ -236,29 +235,30 @@ function VstsService($q) {
         return loginInitialize.promise;
     }
 
-    async function toggleAutoComplete(pr) {
-        let currentMember = await getCurrentMember();
-        if(!currentMember) {
-            return $q.reject("no current member");
-        }
-        return getFullPullRequest(pr).then((refreshPr) => {
-            let data = {
-                "autoCompleteSetBy": {
-                    "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
-                }
-            };
-            return oauthFetch({
-                "method": "PATCH",
-                "url": pr.url,
-                "params": {
-                    "api-version":"3.0"
-                },
-                "data": data
-            }).catch(
-                (error) => error
-            );
-        });
-    }
+    // let resetGUID = "00000000-0000-0000-0000-000000000000";
+    // async function toggleAutoComplete(pr) {
+    //     let currentMember = await getCurrentMember();
+    //     if(!currentMember) {
+    //         return $q.reject("no current member");
+    //     }
+    //     return getFullPullRequest(pr).then((refreshPr) => {
+    //         let data = {
+    //             "autoCompleteSetBy": {
+    //                 "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
+    //             }
+    //         };
+    //         return oauthFetch({
+    //             "method": "PATCH",
+    //             "url": pr.url,
+    //             "params": {
+    //                 "api-version":"3.0"
+    //             },
+    //             "data": data
+    //         }).catch(
+    //             (error) => error
+    //         );
+    //     });
+    // }
 
     const fixAzureDevUrls = (item)  => {
         const rp = v => v.replace(/(:\/\/)(.*)@dev.azure.com\//, "$1dev.azure.com/");
@@ -282,7 +282,7 @@ function VstsService($q) {
                                 url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}&$top=1`
                             }).then(({value}) => {
                                 let [lastCommit] = value;
-                                if(lastCommit && lastCommit.committer.email === currentMember.uniqueName) {
+                                if(lastCommit && lastCommit.committer.email === currentMember.emailAddress) {
                                     return Object.assign({
                                         remoteUrl: suggestion.repository.remoteUrl,
                                         repositoryId: suggestion.repository.id
@@ -320,7 +320,7 @@ function VstsService($q) {
         isLoginInitialize: isLoginInitialize,
         getPullRequests: getPullRequests,
         setCredentials: setCredentials,
-        toggleAutoComplete: toggleAutoComplete,
+        // toggleAutoComplete: toggleAutoComplete,
         getSuggestionForUser: getSuggestionForUser,
         getProjects: getProjects
     };

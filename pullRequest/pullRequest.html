@@ -18,10 +18,10 @@
     <div>
         <div class="pullRequest" data-ng-hide="$ctrl.showSettings" data-ng-class="$ctrl.reviewClass(pr)" data-ng-repeat="pr in $ctrl.pullRequests | orderBy:$ctrl.valueOfDate">
             <div class="actions">
-                <img data-ng-show="$ctrl.isMinePullRequests()" class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="$ctrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/>
+                <!-- <img data-ng-show="$ctrl.isMinePullRequests()" class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="$ctrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/> -->
             </div>
             <div class="pullRequest-details" data-ng-click="$ctrl.redirect(pr);">
-                <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
+                <img class="memberIcon" alt="user" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
                 <div class="details">
                     <div>
                         <span class="repository" ng-bind="::pr.repository.name">:</span>

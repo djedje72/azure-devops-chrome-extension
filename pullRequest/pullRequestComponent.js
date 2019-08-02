@@ -48,7 +48,7 @@ class PullRequestController{
         const currentMember = await getCurrentMember();
         if(currentMember) {
             this.pullRequests.forEach((pr) => {
-                const currentMemberReviews = pr.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.uniqueName);
+                const currentMemberReviews = pr.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.emailAddress);
                 if(currentMemberReviews.length > 0) {
                     pr.currentMemberVote = currentMemberReviews[0].vote;
                 }
@@ -105,12 +105,12 @@ class PullRequestController{
     valueOfDate = ({creationDate}) => moment(creationDate).valueOf();
     isReviewerToDisplay = (reviewer) => reviewer.isRequired || reviewer.vote > 0;
 
-    toggleAutoComplete = ($event, pr) => {
-        $event.stopPropagation();
-        this.vstsService.toggleAutoComplete(pr).then(function(refreshPr) {
-            pr.autoCompleteSetBy = refreshPr.autoCompleteSetBy;
-        });
-    };
+    // toggleAutoComplete = ($event, pr) => {
+    //     $event.stopPropagation();
+    //     this.vstsService.toggleAutoComplete(pr).then(function(refreshPr) {
+    //         pr.autoCompleteSetBy = refreshPr.autoCompleteSetBy;
+    //     });
+    // };
 
     getImageWithTodayStr = (imageUrl) => {
         const today = new Date().toLocaleDateString("en-US");
