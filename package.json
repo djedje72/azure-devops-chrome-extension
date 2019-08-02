@@ -1,13 +1,16 @@
 {
   "name": "vsts",
-  "version": "1.10.2",
+  "version": "2.0.0",
   "description": "vsts chrome extension",
   "scripts": {},
   "keywords": [
+    "azure",
+    "devops",
     "vsts",
     "rest",
     "api",
-    "pullRequest"
+    "pullRequest",
+    "pr"
   ],
   "author": "Rémi Fruteau de Laclos",
   "license": "ISC",
