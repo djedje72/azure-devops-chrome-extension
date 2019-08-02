@@ -1,12 +1,12 @@
 export const getToApprovePullRequests = (currentMember, pullRequests) => {
     if(pullRequests.length > 0 && currentMember) {
         let toApprovePullRequests = pullRequests.filter((pullRequest) => {
-            if(pullRequest.reviewers && pullRequest.createdBy.uniqueName !== currentMember.uniqueName) {
+            if(pullRequest.reviewers && pullRequest.createdBy.uniqueName !== currentMember.emailAddress) {
                 let teamPullRequest = pullRequest.reviewers.filter((reviewer) => {
-                    return currentMember.teams.includes(reviewer.id);
+                    return currentMember.teams.some(({id}) => id === reviewer.id);
                 });
                 let mineReview = pullRequest.reviewers.filter((reviewer) => {
-                    return reviewer.uniqueName === currentMember.uniqueName;
+                    return reviewer.uniqueName === currentMember.emailAddress;
                 });
                 const approved = (vote) => vote > 0;
                 let approves = mineReview.filter((reviewer) => {

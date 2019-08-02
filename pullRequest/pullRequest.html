@@ -1,8 +1,5 @@
-<div data-ng-if="$ctrl.isInitialize">
-    <div class="waiting" data-ng-hide="$ctrl.hideLoading">
-        <spinner></spinner>
-    </div>
-    <div class="menu-buttons" data-ng-show="$ctrl.hideLoading">
+<div data-ng-if="$ctrl.isInitialized">
+    <div class="menu-buttons">
         <div class="list-buttons">
             <div class="list-buttons__button">
                 <button data-ng-show="$ctrl.minePullRequests.length > 0" data-ng-class="{ selected: $ctrl.isMinePullRequests() }"
@@ -14,17 +11,17 @@
             </div>
             <div class="list-buttons__button">
                 <button data-ng-click="$ctrl.toggleSettings();" class="settings-button"></button>
-                <member member-selected="$ctrl.memberSelected(member)" members-display="$ctrl.membersDisplay()" current-member="$ctrl.currentMember"></member>
+                <member></member>
             </div>
         </div>
     </div>
     <div>
         <div class="pullRequest" data-ng-hide="$ctrl.showSettings" data-ng-class="$ctrl.reviewClass(pr)" data-ng-repeat="pr in $ctrl.pullRequests | orderBy:$ctrl.valueOfDate">
             <div class="actions">
-                <img data-ng-show="$ctrl.isMinePullRequests()" class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="$ctrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/>
+                <!-- <img data-ng-show="$ctrl.isMinePullRequests()" class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="$ctrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/> -->
             </div>
             <div class="pullRequest-details" data-ng-click="$ctrl.redirect(pr);">
-                <img class="memberIcon" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
+                <img class="memberIcon" alt="user" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
                 <div class="details">
                     <div>
                         <span class="repository" ng-bind="::pr.repository.name">:</span>
@@ -47,7 +44,12 @@
         </div>
     </div>
     <div class="pr-settings" data-ng-show="$ctrl.showSettings">
-        <label for="pr-settings-enable-notifications">Activer les notifications</label>
-        <input id="pr-settings-enable-notifications" type="checkbox" data-ng-change="$ctrl.toggleNotifications();" data-ng-model="$ctrl.enableNotifications"/>
+        <div>
+            <label for="pr-settings-enable-notifications">Activer les notifications</label>
+            <input id="pr-settings-enable-notifications" type="checkbox" data-ng-change="::$ctrl.toggleNotifications();" data-ng-model="$ctrl.enableNotifications"/>
+        </div>
+        <div>
+            <button class="button--red" data-ng-click="::$ctrl.logout()">Logout</button>
+        </div>
     </div>
 </div>

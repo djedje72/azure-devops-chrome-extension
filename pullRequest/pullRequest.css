@@ -1,7 +1,3 @@
-.waiting {
-  width: 100%;
-}
-
 button {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -217,6 +213,8 @@ button[disabled]:hover {
 
 .pr-settings {
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .pr-settings input[type=checkbox] {
@@ -246,4 +244,11 @@ button[disabled]:hover {
   background-size: 35px 35px;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.button--red {
+  background-color: red;
+}
+.button--red:hover {
+  background-color: lightcoral;
 }

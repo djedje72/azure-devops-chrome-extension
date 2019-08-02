@@ -1,0 +1,9 @@
+export default {
+    "clientId": "99B1EB60-083C-48A8-A8C0-5F7DFE100573",
+    "clientSecret": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJjaWQiOiI5OWIxZWI2MC0wODNjLTQ4YTgtYThjMC01ZjdkZmUxMDA1NzMiLCJjc2kiOiJkNGQ4YWZkZS1hMGZjLTQ0NzgtOWNmMi0zYWY3OTU5OTVhZjQiLCJuYW1laWQiOiIxYjIyZGIxNS0wYTllLTQyNjItOTM4Yy1jNDBmZDdiOTQ1MTgiLCJpc3MiOiJhcHAudnN0b2tlbi52aXN1YWxzdHVkaW8uY29tIiwiYXVkIjoiYXBwLnZzdG9rZW4udmlzdWFsc3R1ZGlvLmNvbSIsIm5iZiI6MTU2NDQ4MTc1NywiZXhwIjoxNzIyMzM0NTU3fQ.F5gdOjkaDhdpf_ei3MaIs6oz_DsxNfjuCgpIYPiWY0G-SK0NlGMrbyvSmtkQOF_sQUQ1GCCg-UhrVlTvUn4Yo24WbxqCYkq4KJmwHVNEcYJbba4NSYNOY3_oJYzGYsmUJCgi03nvDK9YY4eU-jeO44uwjBHOoXWhCeTpUpeupuoMk69yZMo4riaslMF7X90V81ZJYKcj-IwAWNyeDrfd1nildYc44fI32AsGwQH7b5F16hwJH1oKZ1euD0gPzxT31hgMWI21ilM95J8VSUwfVDFD5kkh7-emtHj_cGF10-gsmNs5zQpKjUil6F9wFdOsofa7xf_PnwyHfKV2oaCvyA",
+    "scopes": [
+        "vso.code",
+        "vso.identity",
+        "vso.project"
+    ]
+};

@@ -1,31 +1,34 @@
 import * as pureService from "./vsts.pure.js";
+import {getCurrentDomain, setCurrentDomain, getUrl, getDomainUrl} from "../settings/settingsService.js";
+import {getCurrentMember} from "../member/memberService.js";
+import defer from "../defer.js";
+import oauthFetch from "../oauth/oauthFetch.js";
+import {mainModule} from "../index.js";
 
-angular.module('vstsChrome').service("vstsService", VstsService);
+mainModule.service("vstsService", VstsService);
 
-VstsService.$inject=['$http', '$q', 'memberService', 'settingsService'];
-function VstsService($http, $q, memberService, settingsService) {
-    let resetGUID = "00000000-0000-0000-0000-000000000000";
-    let initialize = $q.defer();
-    const loginInitialize = $q.defer();
-    let domainToUse = settingsService.getCurrentDomain();
-    if (domainToUse) {
-        $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
-        //initialize.resolve("init ok");
-        checkLogin().then(() => {
-            initialize.resolve("init ok");
-        });
-    } else {
-        loginInitialize.reject("login missing");
-        domainToUse = {};
-    }
+VstsService.$inject=['$q'];
+function VstsService($q) {
+    let initialize = defer();
+    const loginInitialize = defer();
+
+    getCurrentDomain().then((domainToUse) => {
+        if (domainToUse) {
+            checkLogin().then(() => {
+                initialize.resolve("init ok");
+            });
+        } else {
+            loginInitialize.reject("login missing");
+            domainToUse = {};
+        }
+    });
 
     async function getProjects() {
-        const {data} = await $http({
+        const {value} = await oauthFetch({
             method: "GET",
-            responseType: "json",
-            url: domainToUse.vstsUrl + "/projects"
+            url: (await getUrl()) + "/projects"
         });
-        return data.value;
+        return value;
     }
 
     async function checkLogin() {
@@ -38,32 +41,27 @@ function VstsService($http, $q, memberService, settingsService) {
         }
     }
 
-    const getToApprovePullRequests = (pullRequests) => {
-        let currentMember = memberService.getCurrentMember();
+    const getToApprovePullRequests = async(pullRequests) => {
+        let currentMember = await getCurrentMember();
         const prs = pureService.getToApprovePullRequests(currentMember, pullRequests);
         setReminder(prs);
         return prs;
     };
 
     const getActiveComments = async({url}) => {
-        const {data} = await $http({
+        const {value} = await oauthFetch({
             method: "GET",
             url: `${url}/threads`
         });
-        return data.value.filter(({status}) => status === "active");
+        return value.filter(({status}) => status === "active");
     };
 
-    function getMinePullRequests() {
-        let currentMember = memberService.getCurrentMember();
+    async function getMinePullRequests(prs) {
+        let currentMember = await getCurrentMember();
         if(currentMember) {
-            return $http({
-                method: "GET",
-                url: `${domainToUse.vstsUrl}/git/pullRequests?creatorId=${currentMember.id}`
-            }).then(
-                (httpPullRequests) => httpPullRequests.data.value
-            ).then((minePullRequests) => $q.all(minePullRequests.map((minePullRequest) => getFullPullRequest(minePullRequest))));
+            return prs.filter(({createdBy}) => createdBy.uniqueName === currentMember.emailAddress);
         }
-        return $q.resolve([]);
+        return [];
     }
 
     function setReminder(toApprovePullRequests) {
@@ -87,7 +85,7 @@ function VstsService($http, $q, memberService, settingsService) {
 
             if(evaluations.length > 0) {
                 let nbApproved = 0;
-                let successEval = evaluations.forEach((evaluation) => {
+                evaluations.forEach((evaluation) => {
                     if(evaluation.configuration.isEnabled && evaluation.configuration.isBlocking) {
                         if(evaluation.status === "approved" && policies[evaluation.configuration.type.displayName] !== false) {
                             nbApproved++;
@@ -120,7 +118,7 @@ function VstsService($http, $q, memberService, settingsService) {
     }
 
     const getFullPullRequest = async(pr) => {
-        const {"data": fullPr} = await $http({
+        const fullPr = await oauthFetch({
             method: "GET",
             url: pr.url
         });
@@ -138,20 +136,21 @@ function VstsService($http, $q, memberService, settingsService) {
         return getPolicies(pr, "codeReviewId");
     }
 
-    function getPolicies(pr, field) {
-        return $http({
+    async function getPolicies(pr, field) {
+        return oauthFetch({
             method:"GET",
-            url: domainToUse.domainUrl + "/" + pr.repository.project.id + "/_apis/policy/Evaluations",
+            url: `${await getDomainUrl()}/${pr.repository.project.id}/_apis/policy/evaluations`,
             params: {
-                artifactId: "vstfs:///CodeReview/CodeReviewId/" + pr.repository.project.id + "/" + pr[field]
+                artifactId: "vstfs:///CodeReview/CodeReviewId/" + pr.repository.project.id + "/" + pr[field],
+                "api-version":"5.0-preview.1"
             }
-        }).then(({data}) => data.value);
+        });
     }
 
-    function getVisits(pr, field) {
-        return $http({
+    async function getVisits(pr, field) {
+        return oauthFetch({
             method:"POST",
-            url: `${domainToUse.domainUrl}/_apis/visits/artifactStatsBatch`,
+            url: `${await getDomainUrl()}/_apis/visits/artifactStatsBatch`,
             params: {
                 "api-version": "5.0-preview.1",
                 "includeUpdatesSinceLastVisit": "true"
@@ -162,11 +161,11 @@ function VstsService($http, $q, memberService, settingsService) {
                     "artifactId": pr.artifactId.replace("%2f", "%2F")
                 }
             ]
-        }).then(({data}) => data.value);
+        });
     }
 
     function getPolicyResult(pr) {
-        return getPolicyResultByPRId(pr).then((value) => {
+        return getPolicyResultByPRId(pr).then(({value}) => {
             if (value.length === 0) {
                 return getPolicyResultByCRId(pr);
             }
@@ -184,128 +183,45 @@ function VstsService($http, $q, memberService, settingsService) {
                     fullPullRequests.push(fullPr);
                 }));
             });
-            return $q.all(promises).then(() =>
-                getMinePullRequests().then((minePullRequests) => ({
-                    "all": fullPullRequests,
-                    "toApprove": getToApprovePullRequests(fullPullRequests),
-                    "mine": minePullRequests
-                }))
-            );
+            return $q.all(promises).then(async() => ({
+                "all": fullPullRequests,
+                "toApprove": await getToApprovePullRequests(fullPullRequests),
+                "mine": await getMinePullRequests(fullPullRequests)
+            }));
         });
     }
 
-    function getPullRequestsList() {
-        let allPullRequests = [];
-        let promises = [];
-        return $http({
+    async function getPullRequestsList() {
+        return oauthFetch({
             method: "GET",
-            url: domainToUse.vstsUrl + "/git/pullRequests",
+            url: (await getUrl()) + "/git/pullRequests",
             "params": {
                 "$top": 250
             }
         }).then(
-            (httpPullRequests) => httpPullRequests.data.value
+            (httpPullRequests) => httpPullRequests.value
         ).then(
             (httpPullRequests) => httpPullRequests.filter(({creationDate}) => moment(creationDate).isAfter(moment().subtract(3, 'months')))
         );
     }
 
-    function getAllProjects() {
-        return $http({
+
+    async function getRepositories() {
+        return oauthFetch({
             method: "GET",
-            url: domainToUse.vstsUrl + "/projects"
-        }).then((httpProjects) => {
-            let projects = httpProjects.data.value;
-            let promises = [];
-            let fullProjects = [];
-            projects.forEach(function(project) {
-                let promise = $http({
-                    method: "GET",
-                    url: project.url
-                }).then((fullProject) => fullProjects.push(fullProject.data));
-                promises.push(promise);
-            });
-            return $q.all(promises).then(() => fullProjects);
-        });
+            url: (await getUrl()) + "/git/repositories",
+        }).then((httpRepositories) => httpRepositories.value);
     }
 
-    const getTeamMembers = async() => {
-        let membersResult = new Map();
-
-        const {"value": teams, ...t} = await $http({
-            method: "GET",
-            url: `${domainToUse.vstsUrl}/teams`
-        }).then(({data}) => data);
-
-        await Promise.all(teams.flatMap(async({url, id}) => {
-            const {"value": members} = await $http({
-                method: "GET",
-                url: `${url}/members`
-            }).then(({data}) => data);
-            members.forEach(({identity}) => {
-                if(!membersResult.has(identity.id)) {
-                    identity.teams = [id];
-                    membersResult.set(identity.id, identity);
-                } else {
-                    const tmpMember = membersResult.get(identity.id);
-                    tmpMember.teams.push(id);
-                }
-            });
-        }));
-
-        return [...membersResult.values()];
-    };
-
-    // function getTeamMembers() {
-    //     return getAllProjects().then((projects) => {
-    //         let promises = [];
-    //         let members = new Map();
-    //         projects.forEach((project) => {
-    //             let promise = $http({
-    //                 method: "GET",
-    //                 url: project.defaultTeam.url + "/members"
-    //             }).then(function(httpMembers) {
-    //                 httpMembers.data.value.forEach(({identity}) => {
-    //                     if(!members.has(identity.id)) {
-    //                         identity.teams = [project.defaultTeam.id];
-    //                         members.set(identity.id, identity);
-    //                     } else {
-    //                         tmpMember = members.get(identity.id);
-    //                         tmpMember.teams.push(project.defaultTeam.id);
-    //                     }
-    //                 })
-    //             });
-    //             promises.push(promise);
-    //         });
-    //         return $q.all(promises).then(() => [...members.values()]);
-    //     });
-    // }
-
-    function getRepositories() {
-        return $http({
-            method: "GET",
-            url: domainToUse.vstsUrl + "/git/repositories",
-        }).then((httpRepositories) => httpRepositories.data.value);
-    }
-
-    function setCredentials(credentials) {
-        if(credentials.vstsName && credentials.mail && credentials.accessKey) {
-            domainToUse = {
-                vstsName: credentials.vstsName,
-                basic:btoa(credentials.mail.toLowerCase() + ":" + credentials.accessKey),
-                // vstsUrl: "https://" + credentials.vstsName + ".visualstudio.com/DefaultCollection/_apis",
-                // domainUrl: "https://" + credentials.vstsName + ".visualstudio.com",
-                vstsUrl: `https://dev.azure.com/${credentials.vstsName}/_apis`,
-                domainUrl: `https://dev.azure.com/${credentials.vstsName}`
+    async function setCredentials(credentials) {
+        if(credentials.name) {
+            const domainToUse = {
+                name: credentials.name,
+                url: `https://dev.azure.com/${credentials.name}/_apis`,
+                domainUrl: `https://dev.azure.com/${credentials.name}`
             };
-            $http.defaults.headers.common.Authorization = "Basic " + domainToUse.basic;
-            return getAllProjects().then(
-                () => {
-                    settingsService.setCurrentDomain(domainToUse);
-                    initialize.resolve("init ok");
-                },
-                (error) => $q.reject(error)
-            );
+            setCurrentDomain(domainToUse);
+            initialize.resolve("init ok");
         } else {
             return $q.reject("missing arguments");
         }
@@ -319,30 +235,30 @@ function VstsService($http, $q, memberService, settingsService) {
         return loginInitialize.promise;
     }
 
-    function toggleAutoComplete(pr) {
-        let currentMember = memberService.getCurrentMember();
-        if(!currentMember) {
-            return $q.reject("no current member");
-        }
-        return getFullPullRequest(pr).then((refreshPr) => {
-            let data = {
-                "autoCompleteSetBy": {
-                    "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
-                }
-            };
-            return $http({
-                "method": "PATCH",
-                "url": pr.url,
-                "params": {
-                    "api-version":"3.0"
-                },
-                "data": data
-            }).then(
-                (httpPullRequest) => httpPullRequest.data,
-                (error) => error
-            );
-        });
-    }
+    // let resetGUID = "00000000-0000-0000-0000-000000000000";
+    // async function toggleAutoComplete(pr) {
+    //     let currentMember = await getCurrentMember();
+    //     if(!currentMember) {
+    //         return $q.reject("no current member");
+    //     }
+    //     return getFullPullRequest(pr).then((refreshPr) => {
+    //         let data = {
+    //             "autoCompleteSetBy": {
+    //                 "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
+    //             }
+    //         };
+    //         return oauthFetch({
+    //             "method": "PATCH",
+    //             "url": pr.url,
+    //             "params": {
+    //                 "api-version":"3.0"
+    //             },
+    //             "data": data
+    //         }).catch(
+    //             (error) => error
+    //         );
+    //     });
+    // }
 
     const fixAzureDevUrls = (item)  => {
         const rp = v => v.replace(/(:\/\/)(.*)@dev.azure.com\//, "$1dev.azure.com/");
@@ -355,18 +271,18 @@ function VstsService($http, $q, memberService, settingsService) {
     function getSuggestionForUser() {
         return getAllSuggestions()
             .then(suggestions => suggestions.map(suggestion => fixAzureDevUrls(suggestion)))
-            .then(suggestions => {
-                let currentMember = memberService.getCurrentMember();
+            .then(async suggestions => {
+                let currentMember = await getCurrentMember();
                 let promises = [];
                 if(currentMember) {
                     suggestions.filter((suggestion) => suggestion.suggestion.length > 0).forEach((suggestion) => {
                         suggestion.suggestion.filter((sug) => sug.type === "pullRequest").forEach((sug) => {
-                            let promise = $http({
+                            let promise = oauthFetch({
                                 method: "GET",
                                 url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}&$top=1`
-                            }).then(({data}) => {
-                                let [lastCommit] = data.value;
-                                if(lastCommit && lastCommit.committer.email === currentMember.uniqueName) {
+                            }).then(({value}) => {
+                                let [lastCommit] = value;
+                                if(lastCommit && lastCommit.committer.email === currentMember.emailAddress) {
                                     return Object.assign({
                                         remoteUrl: suggestion.repository.remoteUrl,
                                         repositoryId: suggestion.repository.id
@@ -386,12 +302,12 @@ function VstsService($http, $q, memberService, settingsService) {
         return getRepositories().then((respositories) => {
             let promises = [];
             respositories.forEach((repository) => {
-                let promise = $http({
+                let promise = oauthFetch({
                     method: "GET",
                     url: repository.url + "/suggestions"
-                }).then(({data}) => ({
+                }).then(({value}) => ({
                     repository: repository,
-                    suggestion: data.value
+                    suggestion: value
                 }));
                 promises.push(promise);
             });
@@ -402,10 +318,9 @@ function VstsService($http, $q, memberService, settingsService) {
     return {
         isInitialize: isInitialize,
         isLoginInitialize: isLoginInitialize,
-        getTeamMembers,
         getPullRequests: getPullRequests,
         setCredentials: setCredentials,
-        toggleAutoComplete: toggleAutoComplete,
+        // toggleAutoComplete: toggleAutoComplete,
         getSuggestionForUser: getSuggestionForUser,
         getProjects: getProjects
     };

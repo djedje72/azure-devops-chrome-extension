@@ -1,57 +1,23 @@
-(function() {
-    angular.module('vstsChrome').service("memberService", MemberService);
+import oauthFetch from "../oauth/oauthFetch.js";
+import {getUrl} from "../settings/settingsService.js";
 
-    MemberService.$inject=[];
-    function MemberService() {
-        var isShowMembers = false;
-        var currentMember = null;
-        var currentMemberStr = localStorage.getItem("currentMember");
-        if(currentMemberStr !== null) {
-            try{
-                currentMember = JSON.parse(currentMemberStr);
-                if(!currentMember.hasOwnProperty("teams")) {
-                    throw new Error();
-                }
-            } catch(e) {
-                localStorage.removeItem("currentMember");
-                currentMember = null;
-            }
-        } else {
-            currentMember = null;
+export const getCurrentMember = async() => {
+    const member = await oauthFetch({
+        "url": "https://app.vssps.visualstudio.com/_apis/profile/profiles/me",
+        params: {
+            "api-version":"5.0",
+            "details": true
         }
+    });
 
-        function setCurrentMember(member) {
-            currentMember = member;
-            localStorage.setItem("currentMember", JSON.stringify(currentMember));
-        }
+    member.teams = await getMemberTeams();
+    return member;
+};
 
-        function getCurrentMember() {
-            return currentMember;
-        }
-
-        function hideMembers() {
-            isShowMembers = false;
-        }
-
-        function showMembers() {
-            isShowMembers = true;
-        }
-
-        function toggleMembers() {
-            isShowMembers = !isShowMembers;
-        }
-
-        function isMembersShown() {
-            return isShowMembers;
-        }
-
-        return {
-            getCurrentMember: getCurrentMember,
-            setCurrentMember: setCurrentMember,
-            hideMembers: hideMembers,
-            showMembers: showMembers,
-            toggleMembers: toggleMembers,
-            isMembersShown: isMembersShown
-        };
+const getMemberTeams = async() => (await oauthFetch({
+    "url": `${await getUrl()}/teams`,
+    "params": {
+        "api-version": "5.0-preview.2",
+        "$mine": true
     }
-})();
+})).value;
