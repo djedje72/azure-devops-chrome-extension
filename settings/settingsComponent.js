@@ -24,6 +24,19 @@ class SettingsController{
         }
     };
 
+    _keys = {
+        "enter": 13
+    };
+    keyPress = event => {
+        switch (event.which) {
+            case this._keys.enter: {
+                this.canValidate() && this.changeCredentials();
+                break;
+            }
+            default: break;
+        }
+    };
+
     canValidate = () => this.name;
 
     changeCredentials = async() => {

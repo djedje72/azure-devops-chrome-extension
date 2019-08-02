@@ -1,4 +1,5 @@
 import {getCurrentMember} from "../member/memberService.js";
+import {removeCurrentDomain} from "../settings/settingsService.js";
 import {mainModule} from "../index.js";
 
 mainModule.directive('fallbackSrc', function () {
@@ -11,7 +12,6 @@ mainModule.directive('fallbackSrc', function () {
     }
     return fallbackSrc;
 });
-
 
 class PullRequestController{
     static $inject=['vstsService', '$rootScope'];
@@ -122,6 +122,11 @@ class PullRequestController{
         this.toApprovePullRequests = pullRequests.toApprove;
         this.minePullRequests = pullRequests.mine;
     });
+
+    logout = async() => {
+        await removeCurrentDomain()
+        window.location.reload();
+    };
 }
 
 mainModule.component("pullRequest", {

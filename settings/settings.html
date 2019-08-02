@@ -1,7 +1,8 @@
 <div data-ng-if="!$ctrl.isInitialize" class="settings">
     <div>
         <div class="title">Domain VSTS</div>
-        <span>http(s)://dev.azure.com/</span><input type="text" name="name" data-ng-model="$ctrl.name" placeholder="my domain"/><span></span>
+        <span>http(s)://dev.azure.com/</span>
+        <input type="text" data-ng-keypress="$ctrl.keyPress($event)" name="name" data-ng-model="$ctrl.name" placeholder="my domain"/>
     </div>
     <button data-ng-disabled="!$ctrl.canValidate()" type="button" data-ng-click="$ctrl.changeCredentials();">
         <span>Valider</span>
