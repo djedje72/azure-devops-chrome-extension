@@ -53,7 +53,7 @@ function VstsService($q) {
             method: "GET",
             url: `${url}/threads`
         });
-        return value.filter(({status}) => status === "active");
+        return value.filter(({status, isDeleted}) => !isDeleted && status === "active");
     };
 
     async function getMinePullRequests(prs) {
