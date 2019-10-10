@@ -1,9 +1,9 @@
 import oauthFetch from "../oauth/oauthFetch.js";
-import {getUrl} from "../settings/settingsService.js";
+import {getUrl, getDomainName} from "../settings/settingsService.js";
 
 export const getCurrentMember = async() => {
     const member = await oauthFetch({
-        "url": "https://app.vssps.visualstudio.com/_apis/profile/profiles/me",
+        "url": `https://vssps.dev.azure.com/${await getDomainName()}/_apis/profile/profiles/me`,
         params: {
             "api-version":"5.0",
             "details": true
