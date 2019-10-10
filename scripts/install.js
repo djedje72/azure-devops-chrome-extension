@@ -48,6 +48,15 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
             });
             break;
         }
+        case "2.1.0": {
+            chrome.notifications.create({
+                ...notificationBody,
+                message: [
+                    "Add fast card for auto-complete"
+                ].join("\n")
+            });
+            break;
+        }
         default: break;
     }
 });
