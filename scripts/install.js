@@ -57,6 +57,15 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
             });
             break;
         }
+        case "2.1.1": {
+            chrome.notifications.create({
+                ...notificationBody,
+                message: [
+                    "Use domain profile instead of global profile"
+                ].join("\n")
+            });
+            break;
+        }
         default: break;
     }
 });
