@@ -41,19 +41,20 @@ class PullRequestController{
     fillToApprovePullRequests = () => {
         this.showSettings = false;
         this.pullRequests = this.toApprovePullRequests;
-        this.addCurrentMemberVote();
     };
 
-    addCurrentMemberVote = async() => {
+    withCurrentMemberVote = async(prs) => {
         const currentMember = await getCurrentMember();
         if(currentMember) {
-            this.pullRequests.forEach((pr) => {
+            return prs.map(pr => {
                 const currentMemberReviews = pr.reviewers.filter((reviewer) => reviewer.uniqueName === currentMember.emailAddress);
                 if(currentMemberReviews.length > 0) {
                     pr.currentMemberVote = currentMemberReviews[0].vote;
                 }
+                return pr;
             });
         }
+        return prs;
     };
 
     reviewClass = ({currentMemberVote}) => ({
@@ -117,11 +118,12 @@ class PullRequestController{
         return `${imageUrl}${imageUrl.includes("?") ? "&" : "?"}todayTimestamp=${encodeURIComponent(today)}`;
     };
 
-    getPullRequests = () => this.vstsService.getPullRequests().then((pullRequests) => {
-        this.allPullRequests = pullRequests.all;
-        this.toApprovePullRequests = pullRequests.toApprove;
-        this.minePullRequests = pullRequests.mine;
-    });
+    getPullRequests = async() => {
+        const {all, toApprove, mine} = await this.vstsService.getPullRequests();
+        this.allPullRequests = await this.withCurrentMemberVote(all);
+        this.toApprovePullRequests = await this.withCurrentMemberVote(toApprove);
+        this.minePullRequests = await this.withCurrentMemberVote(mine);
+    };
 
     logout = async() => {
         await removeCurrentDomain()

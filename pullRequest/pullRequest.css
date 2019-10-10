@@ -79,14 +79,6 @@ button[disabled]:hover {
   display: flex;
 }
 
-.pullRequest .actions .auto-complete {
-  height: 28px;
-}
-
-.pullRequest .actions .auto-complete.disabled {
-  opacity: 0.3;
-}
-
 .pullRequest .state {
   width: 20px;
   height: 20px;
@@ -139,20 +131,38 @@ button[disabled]:hover {
   margin-left: 3px;
 }
 
-.draft {
+.card {
   display: none;
-  color: rgba(16, 110, 190, 1);
-  color: rgba(var(--palette-primary-shade-10, 16, 110, 190), 1);
-  border: 1px solid;
-  border-color: rgba(16, 110, 190, 1);
-  border-color: rgba(var(--palette-primary-shade-10, 16, 110, 190), 1);
+  align-items: center;
+  font-weight: bold;
   background-color: inherit;
   padding: 2px 5px;
   margin-left: 5px;
+  height: 23px;
 }
 
 .draft--visible {
+  display: flex;
+  color: #ffffff;
+  background-color: rgba(16, 110, 190, 1);
+}
+
+.fast--visible {
+  display: flex;
+  color: #333333;
+  background-color: rgba(248,168,0,1);
+}
+
+.auto-complete {
   display: inline-block;
+  height: 23px;
+  width: 26px;
+  background-image: url("/img/auto-complete.png");
+}
+
+.details-content {
+  display: flex;
+  align-items: center;
 }
 
 .menu-buttons {
