@@ -1,15 +1,9 @@
-export const setCurrentDomain = (domain) => {
-    chrome.storage.local.set({domain})
-};
+export const setCurrentDomain = (domain) => void localStorage.setItem("domain", JSON.stringify(domain));
 
-export const getCurrentDomain = async() => new Promise(resolve => {
-    chrome.storage.local.get("domain", ({domain}) => resolve(domain));
-});
+export const getCurrentDomain = () => JSON.parse(localStorage.getItem("domain"));
 
-export const getUrl = async() => (await getCurrentDomain()).url;
-export const getDomainUrl = async() => (await getCurrentDomain()).domainUrl;
-export const getDomainName = async() => (await getCurrentDomain()).name;
+export const getUrl = async() => getCurrentDomain().url;
+export const getDomainUrl = async() => getCurrentDomain().domainUrl;
+export const getDomainName = async() => getCurrentDomain().name;
 
-export const removeCurrentDomain = () => new Promise(resolve => {
-    chrome.storage.local.remove("domain", () => resolve());
-});
+export const removeCurrentDomain = () => void localStorage.removeItem("domain");

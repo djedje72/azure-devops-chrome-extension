@@ -55,7 +55,7 @@ const refreshAccessToken = async() => {
     }
     refreshAccessTokenDeferred = defer();
 
-    const {refresh_token} = await getToken();
+    const {refresh_token} = getToken();
     const body = `\
 client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\
 &client_assertion=${config.clientSecret}\
@@ -67,9 +67,7 @@ client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\
     return refreshAccessTokenDeferred.promise;
 };
 
-const getToken = async() => new Promise(resolve => {
-    chrome.storage.local.get("oauthToken", ({oauthToken}) => resolve(oauthToken));
-});
+const getToken = () => JSON.parse(localStorage.getItem("oauthToken"));
 
 const retrieveToken = async(body) => {
     const url = "https://app.vssps.visualstudio.com/oauth2/token";
@@ -91,11 +89,13 @@ const storeToken = ({access_token, refresh_token, expires_in}) => {
         refresh_token,
         "expires_date": moment().add(expires_in - 60, "seconds").format()
     }
-    chrome.storage.local.set({oauthToken});
+    localStorage.setItem("oauthToken", JSON.stringify(oauthToken));
 };
 
+export const removeOAuthToken = () => void localStorage.removeItem("oauthToken");
+
 export default async() => {
-    let token = await getToken();
+    let token = getToken();
     if (!token || token.Error || !(token.access_token && token.refresh_token)) {
         return await initFlow();
     }

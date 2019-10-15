@@ -12,16 +12,15 @@ function VstsService($q) {
     let initialize = defer();
     const loginInitialize = defer();
 
-    getCurrentDomain().then((domainToUse) => {
-        if (domainToUse) {
-            checkLogin().then(() => {
-                initialize.resolve("init ok");
-            });
-        } else {
-            loginInitialize.reject("login missing")
-            domainToUse = {};
-        }
-    });
+    let domainToUse = getCurrentDomain();
+    if (domainToUse) {
+        checkLogin().then(() => {
+            initialize.resolve("init ok");
+        });
+    } else {
+        loginInitialize.reject("login missing")
+        domainToUse = {};
+    }
 
     async function getProjects() {
         const {value} = await oauthFetch({

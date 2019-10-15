@@ -1,5 +1,6 @@
 import {getCurrentMember} from "../member/memberService.js";
 import {removeCurrentDomain} from "../settings/settingsService.js";
+import {removeOAuthToken} from "../oauth/index.js";
 import {mainModule} from "../index.js";
 
 mainModule.directive('fallbackSrc', function () {
@@ -125,8 +126,9 @@ class PullRequestController{
         this.minePullRequests = await this.withCurrentMemberVote(mine);
     };
 
-    logout = async() => {
-        await removeCurrentDomain()
+    logout = () => {
+        removeCurrentDomain();
+        removeOAuthToken();
         window.location.reload();
     };
 }
