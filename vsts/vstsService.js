@@ -18,7 +18,7 @@ function VstsService($q) {
                 initialize.resolve("init ok");
             });
         } else {
-            loginInitialize.reject("login missing");
+            loginInitialize.reject("login missing")
             domainToUse = {};
         }
     });
