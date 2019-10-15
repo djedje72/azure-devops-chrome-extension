@@ -21,52 +21,51 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
         }
     }
 
+    let message;
     switch(newVersion) {
-        case "1.4.3": {
-            chrome.notifications.create({
-                ...notificationBody,
-                message: "- Fix 404 issues"
-            });
-            break;
-        }
-        case "1.10.0": {
-            chrome.notifications.create({
-                ...notificationBody,
-                message: [
-                    "- Sort PullRequests by creation date descending",
-                    "- Add PullRequest duration"
-                ].join("\n")
-            });
-            break;
-        }
-        case "2.0.0": {
-            chrome.notifications.create({
-                ...notificationBody,
-                message: [
-                    "Use OAuth2 flow instead of Basic Auth"
-                ].join("\n")
-            });
-            break;
-        }
-        case "2.1.0": {
-            chrome.notifications.create({
-                ...notificationBody,
-                message: [
-                    "Add fast card for auto-complete"
-                ].join("\n")
-            });
+        case "2.1.2": {
+            message = [
+                "Handle people with multiple email addresses"
+            ];
             break;
         }
         case "2.1.1": {
-            chrome.notifications.create({
-                ...notificationBody,
-                message: [
-                    "Use domain profile instead of global profile"
-                ].join("\n")
-            });
+            message = [
+                "Use domain profile instead of global profile"
+            ];
+            break;
+        }
+        case "2.1.0": {
+            message = [
+                "Add fast card for auto-complete"
+            ];
+            break;
+        }
+        case "2.0.0": {
+            message = [
+                "Use OAuth2 flow instead of Basic Auth"
+            ];
+            break;
+        }
+        case "1.10.0": {
+            message = [
+                "- Sort PullRequests by creation date descending",
+                "- Add PullRequest duration"
+            ];
+            break;
+        }
+        case "1.4.3": {
+            message = ["- Fix 404 issues"];
             break;
         }
         default: break;
+    }
+
+    if (message) {
+        chrome.notifications.create({
+            ...notificationBody,
+            "message": message.join("\n")
+        });
     }
 });
 
