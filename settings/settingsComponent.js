@@ -9,7 +9,6 @@ class SettingsController{
     }
 
     hasError = false;
-    loading = false;
     isInitialize = true;
 
     $onInit = async() => {
@@ -40,14 +39,12 @@ class SettingsController{
     canValidate = () => this.name;
 
     changeCredentials = async() => {
-        this.loading = true;
         await this.vstsService.setCredentials({
             name: this.name,
         });
         try {
             await this.vstsService.getProjects();
             this.hasError = false;
-            this.loading = false;
             this.setInitialized();
         } catch (e) {
             this.hasError = true;
