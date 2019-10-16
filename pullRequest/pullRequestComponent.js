@@ -5,6 +5,7 @@ import {removeOAuthToken} from "../oauth/index.js";
 
 import {mainModule} from "../index.js";
 import "./pullRequest-reviewers/pullRequestReviewersComponent.js";
+import "./pullRequest-creator/pullRequestCreatorComponent.js";
 
 mainModule.directive('fallbackSrc', function () {
     var fallbackSrc = {
@@ -23,8 +24,12 @@ class PullRequestController{
         this.vstsService = vstsService;
         this.$rootScope = $rootScope;
     }
+    _mine = "mine";
+    _toApprove = "toApprove";
+    _all = "all";
 
     $onInit = () => {
+        this.currentButton = this._toApprove;
         const {enableNotifications} = this.getSettings();
         this.enableNotifications = enableNotifications;
         this.vstsService.isInitialize()
@@ -38,13 +43,20 @@ class PullRequestController{
     };
 
     fillPullRequests = () => {
+        this.currentButton = this._all;
         this.showSettings = false;
-        this.pullRequests = this.allPullRequests;
+        this.pullRequests.forEach(pr => {
+            pr.isVisible = true;
+        })
     };
 
     fillToApprovePullRequests = () => {
+        this.currentButton = this._toApprove;
         this.showSettings = false;
-        this.pullRequests = this.toApprovePullRequests;
+        const toApprove = this.toApprovePullRequests.map(pr => pr.pullRequestId);
+        this.pullRequests.forEach(pr => {
+            pr.isVisible = toApprove.includes(pr.pullRequestId);
+        })
     };
 
     withCurrentMemberVote = async(prs) => {
@@ -67,13 +79,17 @@ class PullRequestController{
     });
 
     fillMinePullRequests = () => {
+        this.currentButton = this._mine;
         this.showSettings = false;
-        this.pullRequests = this.minePullRequests;
+        const mines = this.minePullRequests.map(pr => pr.pullRequestId);
+        this.pullRequests.forEach(pr => {
+            pr.isVisible = mines.includes(pr.pullRequestId);
+        })
     };
 
-    isMinePullRequests = () => this.pullRequests === this.minePullRequests;
-    isToApprovePullRequests = () => this.pullRequests === this.toApprovePullRequests;
-    isAllPullRequests = () => this.pullRequests === this.allPullRequests;
+    isMinePullRequests = () => this.currentButton === this._mine;
+    isToApprovePullRequests = () => this.currentButton === this._toApprove;
+    isAllPullRequests = () => this.currentButton === this._all;
     redirect = (pr) => {
         var href = `${pr.repository.remoteUrl.replace(/(:\/\/)([^/]*@)/, "$1")}/pullrequest/${pr.pullRequestId}`;
         chrome.tabs.create({url: href, active: false});
@@ -114,7 +130,7 @@ class PullRequestController{
 
     getPullRequests = async() => {
         const {all, toApprove, mine} = await this.vstsService.getPullRequests();
-        this.allPullRequests = await this.withCurrentMemberVote(all);
+        this.pullRequests = await this.withCurrentMemberVote(all);
         this.toApprovePullRequests = await this.withCurrentMemberVote(toApprove);
         this.minePullRequests = await this.withCurrentMemberVote(mine);
     };

@@ -6,8 +6,8 @@
                     data-ng-click="$ctrl.fillMinePullRequests();">Mine ({{$ctrl.minePullRequests.length}})</button>
                 <button data-ng-show="$ctrl.toApprovePullRequests.length > 0" data-ng-class="{ selected: $ctrl.isToApprovePullRequests() }"
                     data-ng-click="$ctrl.fillToApprovePullRequests();">To Approve ({{$ctrl.toApprovePullRequests.length}})</button>
-                <button data-ng-show="$ctrl.allPullRequests.length > 0" data-ng-class="{ selected: $ctrl.isAllPullRequests()}"
-                    data-ng-click="$ctrl.fillPullRequests();">All ({{$ctrl.allPullRequests.length}})</button>
+                <button data-ng-show="$ctrl.pullRequests.length > 0" data-ng-class="{ selected: $ctrl.isAllPullRequests()}"
+                    data-ng-click="$ctrl.fillPullRequests();">All ({{$ctrl.pullRequests.length}})</button>
             </div>
             <div class="list-buttons__button">
                 <button data-ng-click="$ctrl.toggleSettings();" class="settings-button"></button>
@@ -16,12 +16,12 @@
         </div>
     </div>
     <div>
-        <div class="pullRequest" data-ng-hide="$ctrl.showSettings" data-ng-class="$ctrl.reviewClass(pr)" data-ng-repeat="pr in $ctrl.pullRequests | orderBy:$ctrl.valueOfDate">
+        <div class="pullRequest" data-ng-hide="$ctrl.showSettings || !pr.isVisible" data-ng-class="$ctrl.reviewClass(pr)" data-ng-repeat="pr in $ctrl.pullRequests | orderBy:$ctrl.valueOfDate">
             <div class="actions">
                 <!-- <img data-ng-show="$ctrl.isMinePullRequests()" class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="$ctrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/> -->
             </div>
             <div class="pullRequest-details" data-ng-click="$ctrl.redirect(pr);">
-                <img class="memberIcon" alt="user" data-fallback-src="/member/member-default.png" data-ng-src="{{pr.createdBy.imageUrl}}" title="{{pr.createdBy.displayName}}"/>
+                <pull-request-creator data-creator="::pr.createdBy"></pull-request-creator>
                 <div class="details">
                     <div class="details-content">
                         <span class="repository" ng-bind="::pr.repository.name">:</span>
