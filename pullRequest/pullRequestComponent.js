@@ -1,7 +1,10 @@
 import {getCurrentMember} from "../member/memberService.js";
 import {removeCurrentDomain} from "../settings/settingsService.js";
+import {removeCurrentMember, getGraphAvatar} from "../member/memberService.js";
 import {removeOAuthToken} from "../oauth/index.js";
+
 import {mainModule} from "../index.js";
+import "./pullRequest-reviewers/pullRequestReviewersComponent.js";
 
 mainModule.directive('fallbackSrc', function () {
     var fallbackSrc = {
@@ -107,17 +110,7 @@ class PullRequestController{
     valueOfDate = ({creationDate}) => moment(creationDate).valueOf();
     isReviewerToDisplay = (reviewer) => reviewer.isRequired || reviewer.vote > 0;
 
-    // toggleAutoComplete = ($event, pr) => {
-    //     $event.stopPropagation();
-    //     this.vstsService.toggleAutoComplete(pr).then(function(refreshPr) {
-    //         pr.autoCompleteSetBy = refreshPr.autoCompleteSetBy;
-    //     });
-    // };
-
-    getImageWithTodayStr = (imageUrl) => {
-        const today = new Date().toLocaleDateString("en-US");
-        return `${imageUrl}${imageUrl.includes("?") ? "&" : "?"}todayTimestamp=${encodeURIComponent(today)}`;
-    };
+    getImageWithTodayStr = async({id}) => `data:image/png;base64,${await getGraphAvatar({id})}`;
 
     getPullRequests = async() => {
         const {all, toApprove, mine} = await this.vstsService.getPullRequests();
@@ -129,6 +122,7 @@ class PullRequestController{
     logout = () => {
         removeCurrentDomain();
         removeOAuthToken();
+        removeCurrentMember();
         window.location.reload();
     };
 }

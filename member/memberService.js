@@ -1,38 +1,51 @@
 import oauthFetch from "../oauth/oauthFetch.js";
 import {getUrl, getDomainName} from "../settings/settingsService.js";
+import {getDescriptor} from "../graphs/graphs.service.js";
+import defer from "../defer.js";
 
 const params = {
     "api-version":"5.1-preview"
 };
 
 const getGraphMember = async({id}) => {
-    const {value} = await oauthFetch({
-        "url": `https://vssps.dev.azure.com/axafrance/_apis/graph/descriptors/${id}`,
-        params
-    });
+    const descriptor = await getDescriptor(id);
 
     return await oauthFetch({
-        "url": `https://vssps.dev.azure.com/axafrance/_apis/graph/users/${value}`,
+        "url": `https://vssps.dev.azure.com/axafrance/_apis/graph/users/${descriptor}`,
         params
     });
 };
 
+export const getGraphAvatar = async({id}) => {
+    const descriptor = await getDescriptor(id);
+
+    return (await oauthFetch({
+        "url": `https://vssps.dev.azure.com/axafrance/_apis/graph/Subjects/${descriptor}/avatars`,
+        params
+    })).value;
+}
+
 const getGraphMemberEmail = async member => (await getGraphMember(member)).mailAddress;
 
+let member = null;
 export const getCurrentMember = async() => {
-    const member = await oauthFetch({
-        "url": `https://vssps.dev.azure.com/${await getDomainName()}/_apis/profile/profiles/me`,
-        "params": {
-            ...params,
-            "details": true
-        }
-    });
-    try {
-        member.emailAddress = await getGraphMemberEmail(member);
-    } catch {}
+    if (!member) {
+        member = defer();
+        const currentMember = await oauthFetch({
+            "url": `https://vssps.dev.azure.com/${await getDomainName()}/_apis/profile/profiles/me`,
+            "params": {
+                ...params,
+                "details": true
+            }
+        });
+        try {
+            currentMember.emailAddress = await getGraphMemberEmail(currentMember);
+        } catch {}
 
-    member.teams = await getMemberTeams();
-    return member;
+        currentMember.teams = await getMemberTeams();
+        member.resolve(currentMember);
+    }
+    return member.promise;
 };
 
 const getMemberTeams = async() => (await oauthFetch({
@@ -42,3 +55,7 @@ const getMemberTeams = async() => (await oauthFetch({
         "$mine": true
     }
 })).value;
+
+export const removeCurrentMember = () => {
+    member = null;
+}

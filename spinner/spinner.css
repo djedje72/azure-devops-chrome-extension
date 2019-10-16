@@ -1,5 +1,5 @@
 .spinner {
-  margin: 0 auto;
+  margin: 8px auto 0 auto;
   width: 50px;
   height: 40px;
   text-align: center;
@@ -11,7 +11,7 @@
   height: 100%;
   width: 6px;
   display: inline-block;
-  
+
   animation: sk-stretchdelay 1.2s infinite ease-in-out;
 }
 
@@ -32,9 +32,9 @@
 }
 
 @keyframes sk-stretchdelay {
-  0%, 40%, 100% { 
+  0%, 40%, 100% {
     transform: scaleY(0.4);
-  }  20% { 
+  }  20% {
     transform: scaleY(1.0);
   }
 }

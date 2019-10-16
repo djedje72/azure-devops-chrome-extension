@@ -33,13 +33,7 @@
                     </div>
                     <span data-ng-bind="::pr.title"></span>
                     <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} --&gt; {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
-                    <div class="reviewer-container">
-                        <div
-                            data-ng-repeat="reviewer in ::pr.reviewers | filter:$ctrl.isReviewerToDisplay | orderBy: '+reviewer.vote'"
-                        >
-                            <img class="reviewer__image" data-ng-class="{'reviewer__image--voted': reviewer.vote > 0}" title="{{::reviewer.displayName}}" data-ng-src="{{::$ctrl.getImageWithTodayStr(reviewer.imageUrl)}}" data-fallback-src="/member/member-default.png" />
-                        </div>
-                    </div>
+                    <pull-request-reviewers data-reviewers="::pr.reviewers"></pull-request-reviewers>
                     <div class="durationInfo" data-ng-bind="::$ctrl.durationToDisplay(pr)"></div>
                 </div>
                 <span data-ng-if="::pr.comments.length" class="comments"><span data-ng-bind="::pr.comments.length"></span><div class="comments__image"></div></span>
