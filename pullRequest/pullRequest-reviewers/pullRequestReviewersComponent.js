@@ -10,8 +10,12 @@ class PullRequestReviewersController{
 
     $onInit = async() => this.$timeout(async() => {
         await Promise.all(this.reviewers.map(async reviewer => {
-            reviewer.image = `data:image/png;base64,${await getGraphAvatar(reviewer)}`;
+            reviewer.image = await getGraphAvatar(reviewer);
         }));
+    });
+
+    style = ({image}) => image && ({
+        "background-image": `url("data:image/png;base64,${image}")`
     });
 }
 

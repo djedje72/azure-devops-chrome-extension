@@ -39,7 +39,14 @@ const _processCurrentNotification = (fn, notificationName) => {
     return result;
 }
 export const mainModule = angular.module('vstsChrome', ['angularCSS']);
-mainModule.config(( $compileProvider ) => {
+mainModule.config(($compileProvider, $cssProvider) => {
+    angular.extend($cssProvider.defaults, {
+      container: 'head',
+      method: 'append',
+      persist: true,
+      preload: true,
+      bustCache: false
+    });
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):|data:image\//);
 }).run((vstsService) => {
     vstsService.isInitialize().then(async() => {
