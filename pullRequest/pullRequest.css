@@ -64,11 +64,6 @@ button[disabled]:hover {
   width: 100%;
 }
 
-.pullRequest .memberIcon {
-  margin-right: 5px;
-  width: 50px;
-}
-
 .pullRequest .details .branchesInfo, .pullRequest .durationInfo {
   font-size: 9px;
   color: #888888;
@@ -114,17 +109,6 @@ button[disabled]:hover {
   display: flex;
   flex-direction: row;
   margin-top: 5px;
-}
-
-.reviewer__image {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-left: 3px;
-}
-
-.reviewer__image--voted {
-  display: none;
 }
 
 .pullRequest .comments__image {
@@ -268,4 +252,13 @@ button[disabled]:hover {
 }
 .button--red:hover {
   background-color: lightcoral;
+}
+
+.memberIcon {
+  margin-right: 5px;
+  width: 50px;
+  height: 50px;
+  background-image: url("/member/member-default.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }

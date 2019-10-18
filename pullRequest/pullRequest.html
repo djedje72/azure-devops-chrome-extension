@@ -16,7 +16,7 @@
         </div>
     </div>
     <div>
-        <div class="pullRequest" data-ng-hide="$ctrl.showSettings || !pr.isVisible" data-ng-class="$ctrl.reviewClass(pr)" data-ng-repeat="pr in $ctrl.pullRequests | orderBy:$ctrl.valueOfDate">
+        <div class="pullRequest" data-ng-if="!$ctrl.showSettings && pr.isVisible" data-ng-class="$ctrl.reviewClass(pr)" data-ng-repeat="pr in $ctrl.pullRequests | orderBy:$ctrl.valueOfDate">
             <div class="actions">
                 <!-- <img data-ng-show="$ctrl.isMinePullRequests()" class="auto-complete" title="Build auto-complete" data-ng-class="{ 'disabled': !pr.autoCompleteSetBy }" data-ng-click="$ctrl.toggleAutoComplete($event, pr);" src="/img/auto-complete.png"/> -->
             </div>

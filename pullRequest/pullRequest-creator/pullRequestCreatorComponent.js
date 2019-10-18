@@ -9,7 +9,11 @@ class PullRequestCreatorController{
     }
 
     $onInit = async() => this.$timeout(async() => {
-        this.creator.image = `data:image/png;base64,${await getGraphAvatar(this.creator)}`;
+        this.creator.image = await getGraphAvatar(this.creator);
+    });
+
+    style = () => this.creator.image && ({
+        "background-image": `url("data:image/png;base64,${this.creator.image}")`
     });
 }
 
