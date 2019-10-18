@@ -23,6 +23,12 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
 
     let message;
     switch(newVersion) {
+        case "2.2.1": {
+            message = [
+                "Handle avatar without azure devops cookie"
+            ];
+            break;
+        }
         case "2.1.2": {
             message = [
                 "Handle people with multiple email addresses"
