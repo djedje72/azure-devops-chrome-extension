@@ -1,3 +1,9 @@
+const enableNotification = () => {
+    const settings = JSON.parse(localStorage.getItem("settings")) || {};
+    settings.enableNotifications = true;
+    localStorage.setItem("settings", JSON.stringify(settings));
+};
+
 chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) => {
     let manifest = chrome.runtime.getManifest();
     const newVersion = manifest.version;
@@ -7,22 +13,27 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
         title: `${newVersion} UPDATE`
     };
 
-    if (reason === "update") {
-        migrateToDevAzureDomain();
-    }
-
-    switch(previousVersion) {
-        case "1.3.2":
-        case "1.4.1": {
-            const settings = JSON.parse(localStorage.getItem("settings")) || {};
-            settings.enableNotifications = true;
-            localStorage.setItem("settings", JSON.stringify(settings));
+    switch (reason) {
+        case "install": {
+            enableNotification();
             break;
         }
+        case "update": {
+            migrateToDevAzureDomain();
+            break;
+        }
+        default: break;
     }
 
     let message;
     switch(newVersion) {
+        case "2.2.2": {
+            enableNotification();
+            message = [
+                "Default enable notifications. You can disable them in the settings."
+            ]
+            break;
+        }
         case "2.2.1": {
             message = [
                 "Handle avatar without azure devops cookie"
