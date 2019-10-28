@@ -1,42 +1,71 @@
-(function() {
-    angular.module('vstsChrome').component("settings", {
-        controller: SettingsController,
-        controllerAs: "settingsCtrl",
-        templateUrl: "settings/settings.html",
-        css: "settings/settings.css"
-    });
+import {removeCurrentDomain} from "./settingsService.js";
+import {mainModule} from "../index.js";
 
-    SettingsController.$inject=['vstsService', 'settingsService'];
-    function SettingsController(vstsService, settingsService) {
-        var settingsCtrl = this;
-        settingsCtrl.hasError = false;
-
-        settingsCtrl.canValidate = function() {
-            return settingsCtrl.vstsName && settingsCtrl.mail && settingsCtrl.accessKey;
-        };
-
-        settingsCtrl.loading = false;
-
-        settingsCtrl.changeCredentials = function() {
-            settingsCtrl.loading = true;
-            vstsService.setCredentials({
-                vstsName: settingsCtrl.vstsName,
-                mail: settingsCtrl.mail,
-                accessKey: settingsCtrl.accessKey,
-            }).then(function(){
-                settingsCtrl.isInitialize = true;
-                settingsCtrl.hasError = false;
-            }, function() {
-                settingsCtrl.hasError = true;
-            }).finally(function() {
-                settingsCtrl.loading = false;
-            });
-        }
-
-        settingsCtrl.isInitialize = true;
-
-        vstsService.isLoginInitialize().catch(function() {
-            settingsCtrl.isInitialize = false;
-        });
+class SettingsController{
+    static $inject=['vstsService', '$rootScope'];
+    constructor(vstsService, $rootScope) {
+        this.vstsService = vstsService;
+        this.$rootScope = $rootScope;
     }
-})();
+
+    hasError = false;
+    isInitialize = true;
+
+    $onInit = async() => {
+        try {
+            await this.vstsService.isLoginInitialize();
+            this.setInitialized();
+        } catch(e) {
+            removeCurrentDomain();
+            this.setInitialized(true);
+            this.isInitialize = false;
+            this.$rootScope.$digest();
+        }
+    };
+
+    _keys = {
+        "enter": 13
+    };
+    keyPress = event => {
+        switch (event.which) {
+            case this._keys.enter: {
+                this.canValidate() && this.changeCredentials();
+                break;
+            }
+            default: break;
+        }
+    };
+
+    canValidate = () => this.name;
+
+    changeCredentials = async() => {
+        await this.vstsService.setCredentials({
+            name: this.name,
+        });
+        try {
+            await this.vstsService.getProjects();
+            this.hasError = false;
+            this.setInitialized();
+        } catch (e) {
+            this.hasError = true;
+        }
+        this.$rootScope.$digest();
+    }
+
+    setInitialized = (shouldInit) => {
+        this.initialized({shouldInit});
+        if (!shouldInit) {
+            this.isInitialize = true;
+        }
+    }
+}
+
+mainModule.component("settings", {
+    controller: SettingsController,
+    bindings: {
+        "initialized": "&",
+        "inProgress": "&"
+    },
+    templateUrl: "settings/settings.html",
+    css: "settings/settings.css"
+});

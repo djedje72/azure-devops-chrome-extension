@@ -1,0 +1,9 @@
+<div class="reviewer-container">
+    <div
+        data-ng-repeat="reviewer in ::$ctrl.reviewers | filter:$ctrl.isReviewerToDisplay | orderBy: '+reviewer.vote'"
+        class="reviewer__image"
+        data-ng-style="::$ctrl.style(reviewer)"
+        data-ng-class="{'reviewer__image--voted': reviewer.vote > 0}"
+        title="{{::reviewer.displayName}}"
+    ></div>
+</div>

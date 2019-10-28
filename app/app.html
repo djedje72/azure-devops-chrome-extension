@@ -1,0 +1,5 @@
+<div class="waiting" data-ng-if="$ctrl.isLoading()">
+    <spinner></spinner>
+</div>
+<settings data-initialized="$ctrl.settingsInitialized(shouldInit)"></settings>
+<pull-request data-ng-if="$ctrl.settingsOk" data-initialized="$ctrl.prInitialized()"></pull-request>

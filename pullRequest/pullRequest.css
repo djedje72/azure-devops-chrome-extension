@@ -1,5 +1,6 @@
-.waiting {
-    width: 100%;
+pull-request {
+  display: block;
+  margin: 8px;
 }
 
 button {
@@ -36,72 +37,55 @@ button[disabled]:hover {
 }
 
 .pullRequest {
-  margin: 2px 0px;
+  padding: 4px 0px;
   border-bottom: 1px solid #cccccc;
-  padding: 3px 0;
-  height: 33px;
-  width: 585px;
+  display: flex;
+  align-items: center;
+}
+
+.pullRequest:nth-child(even) {
+  background-color: #eeeeee;
 }
 
 .pullRequest:hover {
-  background-color: #eeeeee;
+  background-color: #cccccc;
   cursor: pointer;
 }
 
 .pullRequest .details {
-  height: 33px;
-  line-height: 20px;
-  overflow: hidden;
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .pullRequest .pullRequest-details {
-  display: inline-block;
-  width: 555px;
-  height: 33px;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
-.pullRequest .details .memberIcon {
-  width:30px;
-  float: left;
-  margin-right: 5px;
-}
-
-.pullRequest .details .branchesInfo {
-  position: inherit;
-  bottom: 8px;
-  line-height: 0;
+.pullRequest .details .branchesInfo, .pullRequest .durationInfo {
   font-size: 9px;
-  left: 45px;
-  color: #555555;
+  color: #888888;
 }
 
 .pullRequest .repository {
   text-transform: uppercase;
   font-weight: bold;
+  font-size: 13px;
 }
 
 .pullRequest .actions {
-  display: inline-block;
-}
-
-.pullRequest .actions .auto-complete {
-  height: 25px;
-  margin-top: 3px;
-}
-
-.pullRequest .actions .auto-complete.disabled{
-  opacity: 0.1;
+  display: flex;
 }
 
 .pullRequest .state {
-  float: right;
   width: 20px;
   height: 20px;
   background-size: 20px 20px;
   background-repeat: no-repeat;
-  margin-top: 5px;
-  margin-right: 5px;
+  background-position-x: center;
+  padding: 0 10px;
 }
 
 .pullRequest .state.state-success {
@@ -116,16 +100,72 @@ button[disabled]:hover {
   background-image: url("/img/policy_warning.png");
 }
 
+.comments {
+  display: flex;
+  margin-top: 5px;
+}
+
+.reviewer-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.pullRequest .comments__image {
+  background: url("/pullRequest/comments.png");
+  background-size: 16px 16px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-left: 3px;
+}
+
+.card {
+  display: none;
+  align-items: center;
+  font-weight: bold;
+  background-color: inherit;
+  padding: 2px 5px;
+  margin-left: 5px;
+  height: 23px;
+}
+
+.draft--visible {
+  display: flex;
+  color: #ffffff;
+  background-color: rgba(16, 110, 190, 1);
+}
+
+.fast--visible {
+  display: flex;
+  color: #333333;
+  background-color: rgba(248,168,0,1);
+}
+
+.auto-complete {
+  display: inline-block;
+  height: 23px;
+  width: 26px;
+  background-image: url("/img/auto-complete.png");
+}
+
+.details-content {
+  display: flex;
+  align-items: center;
+}
+
 .menu-buttons {
   display: table;
   background-color: #F3F3F3;
   width: 100%;
   height: 45px;
   margin-bottom: 5px;
+  position: sticky;
+  top: 0;
 }
 
 .menu-buttons button {
-  font-family: "-apple-system",BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Helvetica,Ubuntu,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-family: "-apple-system", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: #333;
 }
 
@@ -133,18 +173,35 @@ button[disabled]:hover {
   color: #0073bf;
   border-bottom: 2px solid #0073bf;
 }
+
 .menu-buttons button:focus {
-  outline:none;
+  outline: none;
 }
 
 .menu-buttons button:hover {
-    outline: none;
-    background-color: #d0d2d3;
+  outline: none;
+  background-color: #d0d2d3;
 }
 
 .menu-buttons button {
   background-color: inherit;
   height: 45px;
+}
+
+.menu-buttons .list-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu-buttons .settings-button {
+  margin: 5px;
+  height: 35px;
+  width: 35px;
+  background: url("/pullRequest/pr-settings.png");
+  background-size: 35px 35px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .review-rejected {
@@ -153,4 +210,55 @@ button[disabled]:hover {
 
 .review-waiting {
   background-color: #FFFF99;
+}
+
+.pr-settings {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pr-settings input[type=checkbox] {
+  float: left;
+}
+
+.list-buttons__button {
+  display: flex;
+}
+
+.pr-settings-notifications {
+  display: inline-block;
+}
+
+.project-settings {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.filter-button {
+  margin: 5px;
+  height: 35px;
+  width: 35px;
+  background: url("/pullRequest/filter.png");
+  background-size: 35px 35px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.button--red {
+  background-color: red;
+}
+.button--red:hover {
+  background-color: lightcoral;
+}
+
+.memberIcon {
+  margin-right: 5px;
+  width: 50px;
+  height: 50px;
+  background-image: url("/member/member-default.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }

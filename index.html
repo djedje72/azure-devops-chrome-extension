@@ -1,27 +1,19 @@
+<!DOCTYPE html>
 <html style="min-width:600px;">
   <head>
+    <base href="chrome">
     <title>VSTS Extension</title>
-
+    <script type="text/javascript" src="scripts/moment.min.js"></script>
     <script type="text/javascript" src="scripts/angular/angular.min.js"></script>
     <script type="text/javascript" src="scripts/angular/angular-css.min.js"></script>
     <script type="text/javascript" src="scripts/angular/angular-aria.min.js"></script>
     <script type="text/javascript" src="scripts/angular/angular-animate.min.js"></script>
     <script type="text/javascript" src="scripts/angular/angular-material.min.js"></script>
-    <script type="text/javascript" src="scripts/main.js"></script>
-    
-    <script type="text/javascript" src="pullRequest/pullRequestComponent.js"></script>
-    <script type="text/javascript" src="member/memberComponent.js"></script>
-    <script type="text/javascript" src="spinner/spinnerComponent.js"></script>
-    <script type="text/javascript" src="settings/settingsComponent.js"></script>
-
-    <script type="text/javascript" src="vsts/vstsService.js"></script>
-    <script type="text/javascript" src="member/memberService.js"></script>
-    <script type="text/javascript" src="settings/settingsService.js"></script>
+    <script type="module" src="index.js"></script>
   </head>
 
   <body data-ng-app="vstsChrome" data-ng-csp>
-    <settings></settings>
-    <pull-request></pull-request>
+    <app></app>
   </body>
 
 </html>
