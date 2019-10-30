@@ -27,6 +27,12 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
 
     let message;
     switch(newVersion) {
+        case "2.3.0": {
+            message = [
+                "Use new Azure DevOps icons"
+            ]
+            break;
+        }
         case "2.2.2": {
             enableNotification();
             message = [

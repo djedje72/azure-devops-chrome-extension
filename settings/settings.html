@@ -5,7 +5,7 @@
         <input type="text" data-ng-keypress="$ctrl.keyPress($event)" name="name" data-ng-model="$ctrl.name" placeholder="my domain"/>
     </div>
     <button data-ng-disabled="!$ctrl.canValidate()" type="button" data-ng-click="$ctrl.changeCredentials();">
-        <span>Valider</span>
+        <span>Login</span>
     </button>
     <span class="error" data-ng-show="$ctrl.hasError">Bad domain URL</span>
 </div>
