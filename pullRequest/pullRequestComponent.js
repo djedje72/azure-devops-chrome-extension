@@ -6,6 +6,9 @@ import {removeOAuthToken} from "../oauth/index.js";
 import {mainModule} from "../index.js";
 import "./pullRequest-reviewers/pullRequestReviewersComponent.js";
 import "./pullRequest-creator/pullRequestCreatorComponent.js";
+import "./pullRequest.css";
+import template from "./pullRequest.html";
+
 
 mainModule.directive('fallbackSrc', function () {
     var fallbackSrc = {
@@ -148,6 +151,5 @@ mainModule.component("pullRequest", {
     bindings: {
         "initialized": "&"
     },
-    templateUrl: "pullRequest/pullRequest.html",
-    css: "pullRequest/pullRequest.css"
+    template
 });

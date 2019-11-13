@@ -1,0 +1,396 @@
+.settings {
+    margin: 0 10px;
+}
+
+.settings > div {
+    margin: 5px 0;
+}
+
+.settings .title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.settings input {
+    width: 250px;
+}
+
+.settings .error {
+    color: red;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.settings button {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    background: #004692;
+    padding: 8px 20px 10px 20px;
+    text-decoration: none;
+    border: none;
+    height: 43px;
+}
+
+.settings button .spinner {
+    height: inherit;
+}
+
+.settings button:hover {
+    background: #3cb0fd;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.settings button[disabled] {
+    background: #cccccc;
+}
+
+.settings button[disabled]:hover {
+    background: #cccccc;
+    cursor: default;
+}
+
+.reviewer__image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 3px;
+    background-image: url("/member/member-default.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.reviewer__image--voted {
+    display: none;
+}
+.memberIcon {
+    margin-right: 5px;
+    width: 50px;
+    height: 50px;
+    background-image: url("/member/member-default.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+pull-request {
+  display: block;
+  margin: 8px;
+}
+
+button {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  background: #004692;
+  padding: 8px 20px 10px 20px;
+  text-decoration: none;
+  border: none;
+  height: 43px;
+}
+
+button .spinner {
+  height: inherit;
+}
+
+button:hover {
+  background: #3cb0fd;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button[disabled] {
+  background: #cccccc;
+}
+
+button[disabled]:hover {
+  background: #cccccc;
+  cursor: default;
+}
+
+.pullRequest {
+  padding: 4px 0px;
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  align-items: center;
+}
+
+.pullRequest:nth-child(even) {
+  background-color: #eeeeee;
+}
+
+.pullRequest:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+
+.pullRequest .details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.pullRequest .pullRequest-details {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.pullRequest .details .branchesInfo, .pullRequest .durationInfo {
+  font-size: 9px;
+  color: #888888;
+}
+
+.pullRequest .repository {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.pullRequest .actions {
+  display: flex;
+}
+
+.pullRequest .state {
+  width: 20px;
+  height: 20px;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  padding: 0 10px;
+}
+
+.pullRequest .state.state-success {
+  background-image: url("/img/policy_ok.png");
+}
+
+.pullRequest .state.state-error {
+  background-image: url("/img/policy_ko.png");
+}
+
+.pullRequest .state.state-warning {
+  background-image: url("/img/policy_warning.png");
+}
+
+.comments {
+  display: flex;
+  margin-top: 5px;
+}
+
+.reviewer-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.pullRequest .comments__image {
+  background: url("/pullRequest/comments.png");
+  background-size: 16px 16px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-left: 3px;
+}
+
+.card {
+  display: none;
+  align-items: center;
+  font-weight: bold;
+  background-color: inherit;
+  padding: 2px 5px;
+  margin-left: 5px;
+  height: 23px;
+}
+
+.draft--visible {
+  display: flex;
+  color: #ffffff;
+  background-color: rgba(16, 110, 190, 1);
+}
+
+.fast--visible {
+  display: flex;
+  color: #333333;
+  background-color: rgba(248,168,0,1);
+}
+
+.auto-complete {
+  display: inline-block;
+  height: 23px;
+  width: 26px;
+  background-image: url("/img/auto-complete.png");
+}
+
+.details-content {
+  display: flex;
+  align-items: center;
+}
+
+.menu-buttons {
+  display: table;
+  background-color: #F3F3F3;
+  width: 100%;
+  height: 45px;
+  margin-bottom: 5px;
+  position: sticky;
+  top: 0;
+}
+
+.menu-buttons button {
+  font-family: "-apple-system", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #333;
+}
+
+.menu-buttons button.selected {
+  color: #0073bf;
+  border-bottom: 2px solid #0073bf;
+}
+
+.menu-buttons button:focus {
+  outline: none;
+}
+
+.menu-buttons button:hover {
+  outline: none;
+  background-color: #d0d2d3;
+}
+
+.menu-buttons button {
+  background-color: inherit;
+  height: 45px;
+}
+
+.menu-buttons .list-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu-buttons .settings-button {
+  margin: 5px;
+  height: 35px;
+  width: 35px;
+  background: url("/pullRequest/pr-settings.png");
+  background-size: 35px 35px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.review-rejected {
+  background-color: #FFDDDD;
+}
+
+.review-waiting {
+  background-color: #FFFF99;
+}
+
+.pr-settings {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pr-settings input[type=checkbox] {
+  float: left;
+}
+
+.list-buttons__button {
+  display: flex;
+}
+
+.pr-settings-notifications {
+  display: inline-block;
+}
+
+.project-settings {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.filter-button {
+  margin: 5px;
+  height: 35px;
+  width: 35px;
+  background: url("/pullRequest/filter.png");
+  background-size: 35px 35px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.button--red {
+  background-color: red;
+}
+.button--red:hover {
+  background-color: lightcoral;
+}
+
+.memberIcon {
+  margin-right: 5px;
+  width: 50px;
+  height: 50px;
+  background-image: url("/member/member-default.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+body {
+    margin: 0;
+}
+
+member {
+    font-size: 0;
+}
+
+.currentMember {
+    height: 45px;
+}
+
+.spinner {
+  margin: 8px auto 0 auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.spinner > div {
+  background-color: #333;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  animation-delay: -0.8s;
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+  }  20% {
+    transform: scaleY(1.0);
+  }
+}
+
+
+/*# sourceMappingURL=main.css.map*/

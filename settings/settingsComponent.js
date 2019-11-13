@@ -1,5 +1,7 @@
 import {removeCurrentDomain} from "./settingsService.js";
 import {mainModule} from "../index.js";
+import "./settings.css";
+import template from "./settings.html";
 
 class SettingsController{
     static $inject=['vstsService', '$rootScope'];
@@ -66,6 +68,5 @@ mainModule.component("settings", {
         "initialized": "&",
         "inProgress": "&"
     },
-    templateUrl: "settings/settings.html",
-    css: "settings/settings.css"
+    template
 });

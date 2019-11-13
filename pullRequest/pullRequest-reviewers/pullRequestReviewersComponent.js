@@ -1,6 +1,8 @@
 import {getGraphAvatar} from "../../member/memberService.js";
 
 import {mainModule} from "../../index.js";
+import template from "./pullRequestReviewers.html";
+import "./pullRequestReviewers.css";
 
 class PullRequestReviewersController{
     static $inject=["$timeout"];
@@ -24,6 +26,5 @@ mainModule.component("pullRequestReviewers", {
     bindings: {
         "reviewers": "<"
     },
-    templateUrl: "pullRequest/pullRequest-reviewers/pullRequestReviewers.html",
-    css: "pullRequest/pullRequest-reviewers/pullRequestReviewers.css"
+    template
 });

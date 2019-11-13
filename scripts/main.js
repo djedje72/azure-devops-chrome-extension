@@ -38,15 +38,8 @@ const _processCurrentNotification = (fn, notificationName) => {
     localStorage.setItem("currentNotifications", JSON.stringify(Array.from(currentNotificationsStorage)));
     return result;
 }
-export const mainModule = angular.module('vstsChrome', ['angularCSS']);
-mainModule.config(($compileProvider, $cssProvider) => {
-    angular.extend($cssProvider.defaults, {
-      container: 'head',
-      method: 'append',
-      persist: true,
-      preload: true,
-      bustCache: false
-    });
+export const mainModule = angular.module('vstsChrome', []);
+mainModule.config(($compileProvider) => {
     $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):|data:image\//);
 }).run((vstsService) => {
     vstsService.isInitialize().then(async() => {

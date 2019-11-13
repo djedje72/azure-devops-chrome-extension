@@ -1,6 +1,8 @@
 import {getGraphAvatar} from "../../member/memberService.js";
 
 import {mainModule} from "../../index.js";
+import template from "./pullRequestCreator.html";
+import "./pullRequestCreator.css";
 
 class PullRequestCreatorController{
     static $inject=["$timeout"];
@@ -22,6 +24,5 @@ mainModule.component("pullRequestCreator", {
     bindings: {
         "creator": "<"
     },
-    templateUrl: "pullRequest/pullRequest-creator/pullRequestCreator.html",
-    css: "pullRequest/pullRequest-creator/pullRequestCreator.css"
+    template
 });
