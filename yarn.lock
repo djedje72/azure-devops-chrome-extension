@@ -698,6 +698,11 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@fortawesome/fontawesome-free@5.11.2":
+  version "5.11.2"
+  resolved "https://afa-nrepo.azure-paas.intraxa/repository/npmjs-group/@fortawesome/fontawesome-free/-/fontawesome-free-5.11.2.tgz#8644bc25b19475779a7b7c1fc104bc0a794f4465"
+  integrity sha512-XiUPoS79r1G7PcpnNtq85TJ7inJWe0v+b5oZJZKb0pGHNIV6+UiNeQWiFGmuQ0aj7GEhnD/v9iqxIsjuRKtEnQ==
+
 "@types/anymatch@*":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@types/anymatch/-/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
@@ -958,6 +963,11 @@ ajv@^6.1.0, ajv@^6.10.2:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
+
+angular-material@1.1.20:
+  version "1.1.20"
+  resolved "https://registry.yarnpkg.com/angular-material/-/angular-material-1.1.20.tgz#138def4a4f3982fddfa7788c9775e663f12cba85"
+  integrity sha512-R2jILX9g7AVvEZbIMqEp8mkjlH/iSrDG150pCSzL7+6PHdi4dYuyXNRtYlpYKe+72Q4fIV4YBYSxepNob3hU9A==
 
 angular@1.7.8:
   version "1.7.8"
