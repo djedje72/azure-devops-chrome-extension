@@ -3,7 +3,9 @@
   "version": "2.3.0",
   "description": "vsts chrome extension",
   "scripts": {
-    "webpack": "webpack --watch"
+    "start": "webpack --watch --progress",
+    "build": "webpack && yarn zip",
+    "zip": "node ./zip"
   },
   "keywords": [
     "azure",
@@ -29,7 +31,7 @@
     "angular-material": "1.1.20",
     "babel-loader": "8.0.6",
     "babel-plugin-angularjs-annotate": "0.10.0",
-    "clean-webpack-plugin": "3.0.0",
+    "clean-webpack-plugin": "2.0.1",
     "copy-webpack-plugin": "5.0.5",
     "cross-env": "6.0.3",
     "css-loader": "3.2.0",
@@ -41,6 +43,7 @@
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.9.0",
-    "webpack-merge": "4.2.2"
+    "webpack-merge": "4.2.2",
+    "zip-dir": "1.0.2"
   }
 }

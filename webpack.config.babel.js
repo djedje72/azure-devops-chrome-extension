@@ -2,7 +2,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
-import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import CleanWebpackPlugin from "clean-webpack-plugin";
 
 const indexEntryChunks = ["assets", "main"];
 const backgroundEntryChunks = ["assets", "install", "main"];

@@ -278,18 +278,7 @@ button[disabled]:hover {
 	background-color: lightcoral;
 }
 .pullRequest.autocomplete-active {
-	border: 2px solid #f8a800;
-}
-
-.memberIcon {
-	margin-right: 10px;
-	margin-left: 10px;
-	width: 45px;
-	height: 45px;
-	background-image: url('./member-default.png');
-	background-repeat: no-repeat;
-	background-size: 100%;
-	border-radius: 50%;
+	border: 2px solid #f8a800 !important;
 }
 
 .prtitle {

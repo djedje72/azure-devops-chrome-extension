@@ -1,8 +1,9 @@
 .memberIcon {
-    margin-right: 5px;
     width: 50px;
     height: 50px;
     background-image: url("../member-default.png");
     background-repeat: no-repeat;
     background-size: 100%;
+    border-radius: 50%;
+    margin: 0 10px;
 }
