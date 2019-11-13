@@ -1,6 +1,9 @@
 import "../settings/settingsComponent.js";
 import "../pullRequest/pullRequestComponent.js";
 import {mainModule} from "../index.js";
+import "./app.css";
+import template from "./app.html";
+
 class AppController{
     constructor($rootScope) {
         this.$rootScope = $rootScope;
@@ -26,6 +29,5 @@ class AppController{
 
 mainModule.component("app", {
     controller: AppController,
-    templateUrl: "app/app.html",
-    css: "app/app.css"
+    template
 });

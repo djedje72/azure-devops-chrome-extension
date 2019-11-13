@@ -1,5 +1,7 @@
 import {getCurrentMember} from "./memberService.js";
 import {mainModule} from "../index.js";
+import "./member.css";
+import template from "./member.html";
 
 class MemberController {
     static $inject = ['$rootScope'];
@@ -19,6 +21,5 @@ mainModule.component("member", {
     },
     controller: MemberController,
     controllerAs: "memberCtrl",
-    templateUrl: "member/member.html",
-    css: "member/member.css"
+    template
 });
