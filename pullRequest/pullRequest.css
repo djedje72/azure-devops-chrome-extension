@@ -1,10 +1,5 @@
-body {
-	margin: -8px !important;
-}
-
 pull-request {
 	display: block;
-	margin: 8px;
 }
 
 button {
@@ -25,7 +20,7 @@ button .spinner {
 	height: inherit;
 }
 
-button:hover {
+button:not(.selected):hover {
 	background: #3cb0fd;
 	text-decoration: none;
 	cursor: pointer;
@@ -41,15 +36,13 @@ button[disabled]:hover {
 }
 
 .pullRequest {
-	padding: 4px 0px;
 	border-top: 1px solid #8da9aa;
 	display: flex;
 	align-items: center;
-	min-height: 93px;
+	height: 95px;
 }
-
-.pullRequest:nth-child(even) {
-	/* background-color: #eeeeee; */
+.pullRequest:first-child {
+	margin-top: 0;
 }
 
 .pullRequest:hover {
@@ -60,23 +53,23 @@ button[disabled]:hover {
 .pullRequest .details {
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+    margin-left: 5px;
 }
 
 .pullRequest .pullRequest-details {
 	display: flex;
 	align-items: center;
 	width: 100%;
+	height: 100%;
 }
 
 .pullRequest .details .branchesInfo,
 .pullRequest .durationInfo {
-	font-size: 9px;
+	font-size: 10px;
 	color: #8da9aa;
 }
 
 .pullRequest .repository {
-	/* text-transform: uppercase; */
 	font-weight: bold;
 	font-size: 15px;
 	color: #1e3e50;
@@ -133,35 +126,52 @@ button[disabled]:hover {
 .details {
 	width: 600px !important;
 }
+.card-container {
+	height: 20px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
 .card {
 	display: none;
-	align-items: center;
+    text-align: center;
 	font-weight: bold;
 	background-color: inherit;
-	padding: 2px 3px;
-	margin-right: 5px;
-	height: 15px;
-	/* border: 1px solid #0078D4; */
+    padding: 2px 0;
+    margin-right: 5px;
+    width: 100%;
 }
 
 .draft--visible {
-	display: flex;
-	color: #0078d4;
-	/* background-color: rgba(16, 110, 190, 1); */
-	border: 1px solid #0078d4;
+	display: inline;
+}
+.pullRequest:nth-child(odd).draft-active {
+	/* border-color: #0078d499; */
+}
+.draft-active {
+	/* border: 2px solid #0078d4; */
+}
+.pullRequest:nth-child(odd) .draft {
+	/* background-color: #0078d499; */
+}
+.draft{
+	background-color: #0078d4;
+	color: #fff;
 }
 
 .fast--visible {
 	display: flex;
+    justify-content: center;
 	color: #333333;
 	background-color: rgba(248, 168, 0, 1);
 }
 
 .auto-complete {
-	display: inline-block;
-	height: 23px;
-	width: 26px;
-	background-image: url('/img/auto-complete.png');
+	display: block;
+    width: 20px;
+    background-image: url(/img/auto-complete.png);
+    background-size: 20px;
+    background-repeat: no-repeat;
 }
 
 .details-content {
@@ -177,6 +187,7 @@ button[disabled]:hover {
 	position: sticky;
 	top: 0;
 	background-color: #fff;
+	border-bottom: 1px solid #8da9aa;
 }
 
 .menu-buttons button {
@@ -195,9 +206,10 @@ button[disabled]:hover {
 	outline: none;
 }
 
-.menu-buttons button:hover {
+.menu-buttons button:not(.selected):hover {
 	outline: none;
 	background-color: #dff2ff;
+	color: #0078d4;
 }
 
 .menu-buttons button {
@@ -219,8 +231,9 @@ button[disabled]:hover {
 .menu-buttons .settings-button {
 	/* margin: 5px;
     height: 35px;*/
-	width: 45px;
+	/* width: 45px; */
 	color: #0e0d19;
+    padding: 8px 10px 10px 10px;
 	/* background: url("/pullRequest/pr-settings.png"); */
 	/* background-size: 35px 35px;
   background-repeat: no-repeat;
@@ -247,6 +260,7 @@ button[disabled]:hover {
 
 .list-buttons__button {
 	display: flex;
+	align-items: center;
 }
 
 .pr-settings-notifications {
@@ -276,8 +290,8 @@ button[disabled]:hover {
 .button--red:hover {
 	background-color: lightcoral;
 }
-.autocomplete-active {
-	border: 3px solid #f8a800;
+.pullRequest.autocomplete-active {
+	border: 2px solid #f8a800;
 }
 
 .memberIcon {
@@ -292,7 +306,7 @@ button[disabled]:hover {
 }
 
 .prtitle {
-	color: #6695a3;
+	color: #3b575f;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -314,6 +328,9 @@ button[disabled]:hover {
 }
 .creator {
 	width: 70px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 .prstate {
 	width: 35px;
@@ -344,4 +361,29 @@ button[disabled]:hover {
 
 .icons-status {
 	font-size: 1.5em;
+}
+
+.fa-comments {
+	font-size: 15px;
+    margin-left: 3px;
+}
+
+.fa-sun,
+.fa-moon
+{
+	cursor: pointer;
+    font-size: 25px;
+}
+.fa-sun {
+	color: #ffe000;
+}
+.app:not(.dark) .fa-sun {
+	display: none;
+}
+
+.fa-moon {
+    color: #0e0d19;
+}
+.app.dark .fa-moon {
+	display: none;
 }

@@ -79,10 +79,16 @@ class PullRequestController {
 		return prs;
 	};
 
-	reviewClass = ({ currentMemberVote, autoCompleteSetBy }) => ({
+	toggleMode = () => {
+		const { darkMode } = this.getSettings();
+		this.storeSetting("darkMode", !darkMode);
+	};
+
+	reviewClass = ({ currentMemberVote, autoCompleteSetBy, isDraft }) => ({
 		'review-rejected': currentMemberVote === -10,
 		'review-waiting': currentMemberVote === -5,
 		'autocomplete-active': autoCompleteSetBy,
+		'draft-active': isDraft
 	});
 
 	fillMinePullRequests = () => {

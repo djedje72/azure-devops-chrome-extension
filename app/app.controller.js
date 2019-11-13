@@ -11,6 +11,8 @@ class AppController{
 
     $onInit = () => {
     };
+	_getSettings = () => JSON.parse(localStorage.getItem('settings')) || {};
+    isDarkMode = () => this._getSettings().darkMode;
 
     settingsInitialized = (shouldInit) => {
         this.shouldInitSettings = shouldInit;
