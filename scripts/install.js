@@ -12,8 +12,8 @@ const defaultDarkMode = () => {
     localStorage.setItem("settings", JSON.stringify(settings));
 };
 
-chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) => {
-    let manifest = chrome.runtime.getManifest();
+browser.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) => {
+    let manifest = browser.runtime.getManifest();
     const newVersion = manifest.version;
     const notificationBody = {
         iconUrl: manifest.icons["128"],
@@ -102,7 +102,7 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
     }
 
     if (message) {
-        chrome.notifications.create({
+        browser.notifications.create({
             ...notificationBody,
             "message": message.join("\n")
         });

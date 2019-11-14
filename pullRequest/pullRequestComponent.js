@@ -105,7 +105,7 @@ class PullRequestController {
 	isAllPullRequests = () => this.currentButton === this._all;
 	redirect = pr => {
 		var href = `${pr.repository.remoteUrl.replace(/(:\/\/)([^/]*@)/, '$1')}/pullrequest/${pr.pullRequestId}`;
-		chrome.tabs.create({ url: href, active: false });
+		browser.tabs.create({ url: href, active: false });
 	};
 
 	policiesDetails = policies => {

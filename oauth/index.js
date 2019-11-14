@@ -1,7 +1,12 @@
-import config from "./oauth.config.js";
 import defer from "../defer.js";
+import { detect } from "detect-browser";
+import chromeOauth from "./oauth.chrome.config";
+import firefoxOauth from "./oauth.firefox.config";
+const detectedBrowser = detect();
+const isChrome = detectedBrowser && detectedBrowser.name === "chrome";
+const config = isChrome ? chromeOauth : firefoxOauth;
 
-const redirectUri = `https://${chrome.runtime.id}.chromiumapp.org/token`;
+const redirectUri = browser.identity.getRedirectURL("token");
 
 let initFlowDeffered = null;
 const initFlow = async() => {
@@ -9,15 +14,15 @@ const initFlow = async() => {
         return initFlowDeffered.promise;
     }
     initFlowDeffered = defer();
-    const url = `https://app.vssps.visualstudio.com/oauth2/authorize
-        ?client_id=${config.clientId}
-        &response_type=Assertion
-        &state=token
-        &scope=${config.scopes.join(" ")}
-        &redirect_uri=${redirectUri}`;
+    const url = `https://app.vssps.visualstudio.com/oauth2/authorize\
+?client_id=${config.clientId}\
+&response_type=Assertion\
+&state=token\
+&scope=${config.scopes.join(" ")}\
+&redirect_uri=${redirectUri}`;
 
     const webAuthFlow = async(interactive) => new Promise((resolve, reject) => {
-        chrome.identity.launchWebAuthFlow({
+        browser.identity.launchWebAuthFlow({
             url,
             interactive
         }, (url) => {

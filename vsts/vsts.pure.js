@@ -187,10 +187,10 @@ async function getMinePullRequests(prs) {
 function setReminder(toApprovePullRequests) {
     let nbToApprovePullRequests = toApprovePullRequests.length;
     if(nbToApprovePullRequests > 0) {
-        chrome.browserAction.setBadgeText({text: nbToApprovePullRequests.toString()});
-        chrome.browserAction.setBadgeBackgroundColor({color: "#FF9999"});
+        browser.browserAction.setBadgeText({text: nbToApprovePullRequests.toString()});
+        browser.browserAction.setBadgeBackgroundColor({color: "#FF9999"});
     } else {
-        chrome.browserAction.setBadgeText({text: ""});
+        browser.browserAction.setBadgeText({text: ""});
     };
 }
 

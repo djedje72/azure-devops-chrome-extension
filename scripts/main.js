@@ -1,7 +1,7 @@
 import {getCurrentMember} from "../member/memberService.js";
 
-if (!chrome.alarms) {
-    chrome.alarms = {
+if (!browser.alarms) {
+    browser.alarms = {
         "create": () => {},
         "onAlarm": {
             "addListener": () => {}
@@ -14,14 +14,14 @@ if (!chrome.alarms) {
         }
     };
 }
-if (!chrome.browserAction) {
-    chrome.browserAction = {
+if (!browser.browserAction) {
+    browser.browserAction = {
         "setBadgeText": () => {},
         "setBadgeBackgroundColor": () => {}
     };
 }
-if (!chrome.notifications) {
-    chrome.notifications = {
+if (!browser.notifications) {
+    browser.notifications = {
         "onClicked": {
             "addListener": () => {}
         },
@@ -44,9 +44,9 @@ mainModule.config(($compileProvider) => {
 }).run((vstsService) => {
     vstsService.isInitialize().then(async() => {
         await getCurrentMember();
-        chrome.alarms.create("refresh", {"when": Date.now(), "periodInMinutes": 2});
+        browser.alarms.create("refresh", {"when": Date.now(), "periodInMinutes": 2});
 
-        chrome.alarms.create("resetBranches", {"delayInMinutes": 1, "periodInMinutes": 60});
+        browser.alarms.create("resetBranches", {"delayInMinutes": 1, "periodInMinutes": 60});
 
         const branches = {};
         const branchPrefix = "refs/heads/";
@@ -57,13 +57,13 @@ mainModule.config(($compileProvider) => {
             const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
             return `${repositoryId}|${sourceBranch}|${targetBranch}`;
         };
-        chrome.alarms.onAlarm.addListener(async function(alarm) {
+        browser.alarms.onAlarm.addListener(async function(alarm) {
             if(alarm.name === "refresh") {
                 if(await getCurrentMember()) {
                     const {enableNotifications} = JSON.parse(localStorage.getItem("settings")) || {};
                     if (enableNotifications) {
                         vstsService.getSuggestionForUser().then((suggestions) => suggestions.filter((s)=> s)).then((suggestions) => {
-                            let manifest = chrome.runtime.getManifest();
+                            let manifest = browser.runtime.getManifest();
                             const notificationBody = {
                                 iconUrl: manifest.icons["128"],
                                 type: 'basic',
@@ -104,7 +104,7 @@ mainModule.config(($compileProvider) => {
                                                 `${sourceRepositoryName.toUpperCase()}\n${sourceBranch} -> ${targetBranch}`
                                         });
                                         if (addCurrentNotification(getNotificationName(suggestion))) {
-                                            chrome.notifications.create(getNotificationName(suggestion), options, (id) => {
+                                            browser.notifications.create(getNotificationName(suggestion), options, (id) => {
                                                 branches[id] = suggestion;
                                             });
                                         }
@@ -127,25 +127,25 @@ mainModule.config(($compileProvider) => {
                     }
                 }
             } else if (alarm.name === "resetBranches") {
-                chrome.notifications.getAll((currentNotifications) => {
+                browser.notifications.getAll((currentNotifications) => {
                     Object.keys(branches).filter((branch) => !currentNotifications[branch]).forEach((key) => delete branches[key]);
                 });
             }
         });
 
-        chrome.notifications.onClicked.addListener((clickId) => {
+        browser.notifications.onClicked.addListener((clickId) => {
             let suggestion = branches[clickId];
             if(suggestion) {
                 const sourceBranch = suggestion.properties.sourceBranch.replace(branchPrefix, "");
                 const targetBranch = suggestion.properties.targetBranch.replace(branchPrefix, "");
                 const notificationName = getNotificationName(suggestion);
                 if (deleteCurrentNotification(notificationName)) {
-                    chrome.tabs.create({url: `${suggestion.remoteUrl}/pullrequestcreate?sourceRef=${sourceBranch}&targetRef=${targetBranch}`, active: false}, () => chrome.notifications.clear(clickId));
+                    browser.tabs.create({url: `${suggestion.remoteUrl}/pullrequestcreate?sourceRef=${sourceBranch}&targetRef=${targetBranch}`, active: false}, () => browser.notifications.clear(clickId));
                 }
             }
         });
 
-        chrome.notifications.onClosed.addListener((clickId, byUser) => {
+        browser.notifications.onClosed.addListener((clickId, byUser) => {
             if (branches[clickId] && byUser) {
                 let notificationStr = localStorage.getItem("notification");
                 let notification;
