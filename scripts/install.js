@@ -4,6 +4,14 @@ const enableNotification = () => {
     localStorage.setItem("settings", JSON.stringify(settings));
 };
 
+const defaultDarkMode = () => {
+    const settings = JSON.parse(localStorage.getItem("settings")) || {};
+    if (settings.darkMode === undefined) {
+        settings.darkMode = true;
+    }
+    localStorage.setItem("settings", JSON.stringify(settings));
+};
+
 chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) => {
     let manifest = chrome.runtime.getManifest();
     const newVersion = manifest.version;
@@ -12,6 +20,8 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
         type: 'basic',
         title: `${newVersion} UPDATE`
     };
+
+    defaultDarkMode();
 
     switch (reason) {
         case "install": {
@@ -27,6 +37,13 @@ chrome.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =>
 
     let message;
     switch(newVersion) {
+        case "2.4.0": {
+            message = [
+                "- New design by @geoiris",
+                "- New dark mode"
+            ]
+            break;
+        }
         case "2.3.0": {
             message = [
                 "Use new Azure DevOps icons"
