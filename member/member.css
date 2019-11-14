@@ -3,5 +3,7 @@ member {
 }
 
 .currentMember {
-    height: 45px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 2px;
 }
