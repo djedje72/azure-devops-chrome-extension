@@ -22,7 +22,7 @@ export default {
     },
     "output": {
         path: path.resolve(root, "dist"),
-        filename: "[name].js"
+        filename: "[name].[contenthash].js"
     },
     "module": {
         "rules": [
@@ -73,7 +73,7 @@ export default {
             "chunksSortMode": (a, b) => backgroundEntryChunks.indexOf(a.names[0]) - backgroundEntryChunks.indexOf(b.names[0]),
         }),
         new MiniCssExtractPlugin({
-            "filename": "[name].css"
+            "filename": "[name].[contenthash].css"
         }),
         new CopyPlugin([
             { from: "manifest.json", to: "manifest.json" },
