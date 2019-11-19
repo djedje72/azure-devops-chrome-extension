@@ -15,6 +15,15 @@ class PullRequestController{
 		this.$rootScope.$digest();
 	};
 
+	_repo = faker.lorem.word();
+	getRepo = pr => this._repo;//	pr.title;
+
+	_title = faker.lorem.sentence();
+	getTitle = () => this._title;
+
+	_from = faker.lorem.word();
+	getBranchMerge = () => `feature/${this._from} to ${this.pullRequest.targetRefName.replace('refs/heads/', '')}`;
+
 	reviewClass = () => ({
 		'review-rejected': this.pullRequest.currentMemberVote === -10,
 		'review-waiting': this.pullRequest.currentMemberVote === -5,

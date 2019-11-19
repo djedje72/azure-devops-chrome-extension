@@ -6,7 +6,7 @@ const detectedBrowser = detect();
 const isChrome = detectedBrowser && detectedBrowser.name === "chrome";
 const config = isChrome ? chromeOauth : firefoxOauth;
 
-const redirectUri = browser.identity.getRedirectURL("token");
+const redirectUri = ""//browser.identity.getRedirectURL("token");
 
 let initFlowDeffered = null;
 const initFlow = async() => {

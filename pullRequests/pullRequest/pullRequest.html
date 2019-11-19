@@ -13,13 +13,12 @@
             <pull-request-creator data-creator="::$ctrl.pullRequest.createdBy"></pull-request-creator>
         </div>
         <div class="details">
-            <span class="prtitle" data-ng-bind="::$ctrl.pullRequest.title"></span>
-            <div class="branchesInfo">{{::$ctrl.pullRequest.sourceRefName.replace('refs/heads/', '')}} to
-                {{::$ctrl.pullRequest.targetRefName.replace('refs/heads/', '')}}</div>
+            <span class="prtitle" data-ng-bind="::$ctrl.getTitle()"></span>
+            <div class="branchesInfo">{{::$ctrl.getBranchMerge()}}</div>
             <pull-request-reviewers data-reviewers="::$ctrl.pullRequest.reviewers"></pull-request-reviewers>
             <div class="details-content">
                 <i class="fab fa-git-alt"></i>
-                <span class="repository" ng-bind="::$ctrl.pullRequest.repository.name">:</span>
+                <span class="repository" ng-bind="::$ctrl.getRepo()">:</span>
                 <span class="durationInfo" data-ng-bind="::$ctrl.durationToDisplay()"></span>
             </div>
         </div>

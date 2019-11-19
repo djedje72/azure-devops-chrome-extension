@@ -18,8 +18,11 @@ class PullRequestReviewersController{
 
 	isReviewerToDisplay = reviewer => reviewer.isRequired || reviewer.vote > 0;
 
+    _image = faker.internet.avatar();
     style = ({image}) => image && ({
-        "background-image": `url("data:image/png;base64,${image}")`
+        // "background-image": `url("data:image/png;base64,${image}")`
+        "background-image": `url(${this._image})`,
+        "background-size": "30px 30px"
     });
 }
 

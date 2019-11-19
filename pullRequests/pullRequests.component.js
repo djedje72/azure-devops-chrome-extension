@@ -114,14 +114,6 @@ class PullRequestsController {
 		removeCurrentMember();
 		window.location.reload();
 	};
-
-	// limit = 6;
-	// loadMore = (last, inview) => {
-	// 	console.log(last,inview);
-	// 	if (last && inview) {
-	// 		this.limit += 3;
-	// 	}
-	// };
 }
 
 mainModule.component("pullRequests", {
