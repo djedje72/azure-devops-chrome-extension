@@ -37,11 +37,16 @@ browser.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =
 
     let message;
     switch(newVersion) {
+        case "2.5.0": {
+            message = [
+                "- Firefox compatibility"
+            ]
+        }
         case "2.4.0": {
             message = [
                 "- New design by @geoiris",
                 "- New dark mode"
-            ]
+            ];
             break;
         }
         case "2.3.0": {
