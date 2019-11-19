@@ -42,21 +42,22 @@
                     <pull-request-creator data-creator="::pr.createdBy"></pull-request-creator>
                 </div>
                 <div class="details">
-                    <div class="details-content">
-                        <span class="repository" ng-bind="::pr.repository.name">:</span>
-                        <div class="durationInfo" data-ng-bind="::$ctrl.durationToDisplay(pr)"></div>
-                    </div>
                     <span class="prtitle" data-ng-bind="::pr.title"></span>
                     <div class="branchesInfo">{{::pr.sourceRefName.replace('refs/heads/', '')}} to
                         {{::pr.targetRefName.replace('refs/heads/', '')}}</div>
                     <pull-request-reviewers data-reviewers="::pr.reviewers"></pull-request-reviewers>
+                    <div class="details-content">
+                        <i class="fab fa-git-alt"></i>
+                        <span class="repository" ng-bind="::pr.repository.name">:</span>
+                        <span class="durationInfo" data-ng-bind="::$ctrl.durationToDisplay(pr)"></span>
+                    </div>
                 </div>
                 <div class="state-details">
                     <div data-ng-if="pr.evaluations.state !== 'none'" class="prstate state-{{pr.evaluations.state}}"
                         title="{{$ctrl.policiesDetails(pr.evaluations.policies)}}">
                         <i data-ng-if="pr.evaluations.state == 'warning'" class="fas fa-exclamation icons-status"></i>
                         <i data-ng-show="pr.evaluations.state == 'error'"
-                            class="fas fa-skull-crossbones icons-status"></i>
+                            class="fas fa-times icons-status"></i>
                         <i data-ng-show="pr.evaluations.state == 'success'" class="fas fa-check icons-status"></i>
                     </div>
                     <span data-ng-if="::pr.comments.length" class="comments"><span

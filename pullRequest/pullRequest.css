@@ -52,8 +52,11 @@ button[disabled]:hover {
 
 .pullRequest .details {
 	display: flex;
-	flex-direction: column;
+    flex-direction: column;
     margin-left: 5px;
+    flex-grow: 1;
+    justify-content: center;
+    height: 100%;
 }
 
 .pullRequest .pullRequest-details {
@@ -71,12 +74,13 @@ button[disabled]:hover {
 
 .pullRequest .repository {
 	font-weight: bold;
-	font-size: 15px;
+    font-size: 1.2em;
 	color: #1e3e50;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 60%;
+	margin-left: 5px;
 }
 
 .pullRequest .actions {
@@ -165,6 +169,7 @@ button[disabled]:hover {
 .details-content {
 	display: flex;
 	align-items: center;
+    margin-top: 2px;
 }
 
 .menu-buttons {
@@ -287,6 +292,8 @@ button[disabled]:hover {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 90%;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 
 .durationInfo {
@@ -324,9 +331,9 @@ button[disabled]:hover {
 }
 
 .prstate.state-warning {
-	border: 1px solid #c78e13;
+	border: 1px solid #FDB913;
 	color: #fff;
-	background-color: #c78e13;
+	background-color: #FDB913;
 }
 
 .prstate.state-error {
@@ -362,4 +369,9 @@ button[disabled]:hover {
 }
 .app.dark .fa-moon {
 	display: none;
+}
+
+.fa-git-alt {
+	font-size: 1.5em;
+	color: #f05133;
 }
