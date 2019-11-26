@@ -1,4 +1,4 @@
-import CleanWebpackPlugin from "clean-webpack-plugin";
+import {CleanWebpackPlugin} from "clean-webpack-plugin";
 import webpack from "webpack";
 import merge from "webpack-merge";
 import webpackCommon from "./webpack.common.config";

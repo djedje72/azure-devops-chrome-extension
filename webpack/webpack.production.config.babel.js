@@ -1,4 +1,4 @@
-import CleanWebpackPlugin from "clean-webpack-plugin";
+import {CleanWebpackPlugin} from "clean-webpack-plugin";
 import merge from "webpack-merge";
 import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
