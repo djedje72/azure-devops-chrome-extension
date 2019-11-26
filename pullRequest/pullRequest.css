@@ -137,15 +137,6 @@ button[disabled]:hover {
 .draft--visible {
 	display: inline;
 }
-.pullRequest:nth-child(odd).draft-active {
-	/* border-color: #0078d499; */
-}
-.draft-active {
-	/* border: 2px solid #0078d4; */
-}
-.pullRequest:nth-child(odd) .draft {
-	/* background-color: #0078d499; */
-}
 .draft{
 	background-color: #0078d4;
 	color: #fff;
@@ -284,6 +275,7 @@ button[disabled]:hover {
 }
 .pullRequest.autocomplete-active {
 	border: 2px solid #f8a800 !important;
+	margin-top: 1px;
 }
 
 .prtitle {
@@ -358,7 +350,7 @@ button[disabled]:hover {
     font-size: 25px;
 }
 .fa-sun {
-	color: #ffe000;
+    color: #ffffff;
 }
 .app:not(.dark) .fa-sun {
 	display: none;

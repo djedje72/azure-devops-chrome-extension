@@ -16,6 +16,8 @@ class PullRequestReviewersController{
         }));
     });
 
+	isReviewerToDisplay = reviewer => reviewer.isRequired || reviewer.vote > 0;
+
     style = ({image}) => image && ({
         "background-image": `url("data:image/png;base64,${image}")`
     });

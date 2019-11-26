@@ -137,7 +137,6 @@ class PullRequestController {
 	getSettings = () => JSON.parse(localStorage.getItem('settings')) || {};
 	durationToDisplay = ({ creationDate }) => moment(creationDate).fromNow();
 	valueOfDate = ({ creationDate }) => moment(creationDate).valueOf();
-	isReviewerToDisplay = reviewer => reviewer.isRequired || reviewer.vote > 0;
 
 	getImageWithTodayStr = async ({ id }) => `data:image/png;base64,${await getGraphAvatar({ id })}`;
 
