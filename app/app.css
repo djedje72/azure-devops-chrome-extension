@@ -5,6 +5,10 @@ body {
     min-width: 600px;
 }
 
+.app {
+    transition: all 0.5s ease;
+}
+
 .dark,
 .dark .menu-buttons {
     color: white;

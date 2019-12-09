@@ -20,7 +20,6 @@ export default merge(webpackCommon, {
     "plugins": [
         new CleanWebpackPlugin({
             "cleanAfterEveryBuildPatterns": ["!manifest.json", "!img/**"]
-        }),
-        new webpack.NamedModulesPlugin()
+        })
     ]
 });

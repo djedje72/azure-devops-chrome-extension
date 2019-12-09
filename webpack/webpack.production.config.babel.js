@@ -3,10 +3,12 @@ import merge from "webpack-merge";
 import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import SpeedMeasurePlugin from "speed-measure-webpack-plugin";
 
 import webpackCommon from "./webpack.common.config";
+const smp = new SpeedMeasurePlugin();
 
-export default merge(webpackCommon, {
+export default smp.wrap(merge(webpackCommon, {
     "mode": "production",
     "module": {
         "rules": [
@@ -22,14 +24,11 @@ export default merge(webpackCommon, {
     "optimization": {
         "minimizer": [
             new TerserPlugin({
-                "cache": true,
-                "parallel": true,
-                "sourceMap": true,
+                cache: true,
+                parallel: true,
                 "terserOptions": {
-                    "minimize": true,
-                    "compress": {
-                        "warnings": true
-                    }
+                    ecma: 8,
+                    safari10: true
                 }
             })
         ]
@@ -41,4 +40,4 @@ export default merge(webpackCommon, {
         }),
         new OptimizeCssAssetsPlugin()
     ]
-});
+}));

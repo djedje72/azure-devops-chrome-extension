@@ -1,6 +1,6 @@
 import oauthFetch from "../oauth/oauthFetch.js";
 import {getUrl, getDomainUrl, setCurrentDomain, getCurrentDomain} from "../settings/settingsService.js";
-import {getCurrentMember} from "../member/memberService.js";
+import {getCurrentMember, clearAvatarCache} from "../member/memberService.js";
 import defer from "../defer.js";
 
 export const initialize = defer();
@@ -91,7 +91,7 @@ function processPolicies(fullPr) {
     });
 }
 
-const getFullPullRequest = async(pr) => {
+export const getFullPullRequest = async(pr) => {
     const fullPr = await oauthFetch({
         method: "GET",
         url: pr.url
@@ -130,22 +130,31 @@ function getPolicyResult(pr) {
     });
 }
 
-export const getPullRequests = () => {
-    return getPullRequestsList().then(function(pullRequests) {
-        let promises = [];
-        let fullPullRequests = [];
-        pullRequests.forEach((pr) => {
-            promises.push(getFullPullRequest(pr).then((fullPr) => {
-                //getVisits(fullPr).then(({newCommentsCount}) => console.log(newCommentsCount));
-                fullPullRequests.push(fullPr);
-            }));
-        });
-        return Promise.all(promises).then(async() => ({
-            "all": fullPullRequests,
-            "toApprove": await getToApprovePullRequests(fullPullRequests),
-            "mine": await getMinePullRequests(fullPullRequests)
-        }));
-    });
+// export const getPullRequests = () => {
+//     return getPullRequestsList().then(function(pullRequests) {
+//         let promises = [];
+//         let fullPullRequests = [];
+//         pullRequests.forEach((pr) => {
+//             promises.push(getFullPullRequest(pr).then((fullPr) => {
+//                 //getVisits(fullPr).then(({newCommentsCount}) => console.log(newCommentsCount));
+//                 fullPullRequests.push(fullPr);
+//             }));
+//         });
+//         return Promise.all(promises).then(async() => ({
+//             "all": fullPullRequests,
+//             "toApprove": await getToApprovePullRequests(fullPullRequests),
+//             "mine": await getMinePullRequests(fullPullRequests)
+//         }));
+//     });
+// };
+
+export const getPullRequests = async() => {
+    const pullRequests = await getPullRequestsList();
+    return {
+        "all": pullRequests,
+        "toApprove": await getToApprovePullRequests(pullRequests),
+        "mine": await getMinePullRequests(pullRequests)
+    };
 };
 
 export const setCredentials = async(credentials) => {
@@ -307,6 +316,7 @@ function getAllSuggestions() {
 }
 
 export const init = async() => {
+    clearAvatarCache();
     const domainToUse = getCurrentDomain();
     if (domainToUse) {
         checkLogin().then(() => {

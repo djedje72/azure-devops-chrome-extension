@@ -5,7 +5,7 @@ module.exports = {
         "@babel/plugin-proposal-class-properties"
     ],
     "presets": [
-        ["@babel/preset-env"]
+        ["@babel/preset-modules"]
     ],
     "ignore": [/node_modules/]
 };
