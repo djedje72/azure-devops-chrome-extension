@@ -4,24 +4,14 @@ import {removeCurrentMember, getGraphAvatar} from "../member/memberService.js";
 import {removeOAuthToken} from "../oauth/index.js";
 
 import {mainModule} from "../index.js";
-import "./pullRequest-reviewers/pullRequestReviewersComponent.js";
-import "./pullRequest-creator/pullRequestCreatorComponent.js";
-import "./pullRequest.css";
-import template from "./pullRequest.html";
+import "./pullRequest-reviewers/pullRequestReviewersComponent";
+import "./pullRequest-creator/pullRequestCreatorComponent";
+import "./pullRequest";
 
+import "./pullRequests.css";
+import template from "./pullRequests.html";
 
-mainModule.directive('fallbackSrc', function () {
-    var fallbackSrc = {
-        link: function postLink(scope, iElement, iAttrs) {
-        iElement.bind('error', function() {
-            angular.element(this).attr("src", iAttrs.fallbackSrc);
-        });
-        }
-    }
-    return fallbackSrc;
-});
-
-class PullRequestController {
+class PullRequestsController {
 	static $inject = ['vstsService', '$rootScope'];
 	constructor(vstsService, $rootScope) {
 		this.vstsService = vstsService;
@@ -38,8 +28,8 @@ class PullRequestController {
 		this.vstsService
 			.isInitialize()
 			.then(() => this.getPullRequests())
-			.then(() => this.fillToApprovePullRequests())
 			.finally(() => {
+				this.fillToApprovePullRequests();
 				this.isInitialized = true;
 				this.initialized();
 				this.$rootScope.$digest();
@@ -57,9 +47,16 @@ class PullRequestController {
 	fillToApprovePullRequests = () => {
 		this.currentButton = this._toApprove;
 		this.showSettings = false;
-		const toApprove = this.toApprovePullRequests.map(pr => pr.pullRequestId);
 		this.pullRequests.forEach(pr => {
-			pr.isVisible = toApprove.includes(pr.pullRequestId);
+			pr.isVisible = this.toApprovePullRequests.includes(pr.pullRequestId);
+		});
+	};
+
+	fillMinePullRequests = () => {
+		this.currentButton = this._mine;
+		this.showSettings = false;
+		this.pullRequests.forEach(pr => {
+			pr.isVisible = this.minePullRequests.includes(pr.pullRequestId);
 		});
 	};
 
@@ -84,44 +81,9 @@ class PullRequestController {
 		this.storeSetting("darkMode", !darkMode);
 	};
 
-	reviewClass = ({ currentMemberVote, autoCompleteSetBy, isDraft }) => ({
-		'review-rejected': currentMemberVote === -10,
-		'review-waiting': currentMemberVote === -5,
-		'autocomplete-active': autoCompleteSetBy,
-		'draft-active': isDraft
-	});
-
-	fillMinePullRequests = () => {
-		this.currentButton = this._mine;
-		this.showSettings = false;
-		const mines = this.minePullRequests.map(pr => pr.pullRequestId);
-		this.pullRequests.forEach(pr => {
-			pr.isVisible = mines.includes(pr.pullRequestId);
-		});
-	};
-
 	isMinePullRequests = () => this.currentButton === this._mine;
 	isToApprovePullRequests = () => this.currentButton === this._toApprove;
 	isAllPullRequests = () => this.currentButton === this._all;
-	redirect = pr => {
-		var href = `${pr.repository.remoteUrl.replace(/(:\/\/)([^/]*@)/, '$1')}/pullrequest/${pr.pullRequestId}`;
-		browser.tabs.create({ url: href, active: false });
-	};
-
-	policiesDetails = policies => {
-		let result = '';
-		if (policies) {
-			Object.keys(policies).forEach(policyKey => {
-				if (policies.hasOwnProperty(policyKey)) {
-					const policy = policies[policyKey];
-					if (!policy) {
-						result += `${policyKey} -> ERROR \n`;
-					}
-				}
-			});
-		}
-		return result;
-	};
 
 	toggleSettings = () => {
 		this.showSettings = !this.showSettings;
@@ -135,16 +97,15 @@ class PullRequestController {
 		localStorage.setItem('settings', JSON.stringify(settings));
 	};
 	getSettings = () => JSON.parse(localStorage.getItem('settings')) || {};
-	durationToDisplay = ({ creationDate }) => moment(creationDate).fromNow();
-	valueOfDate = ({ creationDate }) => moment(creationDate).valueOf();
 
 	getImageWithTodayStr = async ({ id }) => `data:image/png;base64,${await getGraphAvatar({ id })}`;
 
 	getPullRequests = async () => {
 		const { all, toApprove, mine } = await this.vstsService.getPullRequests();
 		this.pullRequests = await this.withCurrentMemberVote(all);
-		this.toApprovePullRequests = await this.withCurrentMemberVote(toApprove);
-		this.minePullRequests = await this.withCurrentMemberVote(mine);
+		this.pullRequests.sort((pr1, pr2) => moment(pr1.creationDate).diff(pr2.creationDate));
+		this.toApprovePullRequests = toApprove.map(pr => pr.pullRequestId);
+		this.minePullRequests = mine.map(pr => pr.pullRequestId);
 	};
 
 	logout = () => {
@@ -153,10 +114,18 @@ class PullRequestController {
 		removeCurrentMember();
 		window.location.reload();
 	};
+
+	// limit = 6;
+	// loadMore = (last, inview) => {
+	// 	console.log(last,inview);
+	// 	if (last && inview) {
+	// 		this.limit += 3;
+	// 	}
+	// };
 }
 
-mainModule.component("pullRequest", {
-    controller: PullRequestController,
+mainModule.component("pullRequests", {
+    controller: PullRequestsController,
     bindings: {
         "initialized": "&"
     },

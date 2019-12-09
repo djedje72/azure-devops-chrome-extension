@@ -1,13 +1,13 @@
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
+import webpack from "webpack";
 
 const indexEntryChunks = ["assets", "main"];
 const backgroundEntryChunks = ["assets", "install", "main"];
 const root = path.resolve(__dirname, "..");
 export default {
     "mode": "production",
-    "devtool": "source-map",
     "resolve": {
         "alias": {
             "member": `${root}/member`
@@ -65,6 +65,7 @@ export default {
         new CopyPlugin([
             { from: "manifest.json", to: "manifest.json" },
             { from: "img/icon/**.*" },
-        ])
+        ]),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     ]
 };

@@ -1,6 +1,6 @@
 import {
     init,
-    getPullRequests, setCredentials, getProjects,
+    getPullRequests, setCredentials, getProjects, getFullPullRequest,
     getSuggestionForUser, isInitialize, isLoginInitialize
 } from "./vsts.pure.js";
 import {mainModule} from "../index.js";
@@ -22,6 +22,8 @@ class VstsService {
     isLoginInitialize = isLoginInitialize;
 
     getSuggestionForUser = getSuggestionForUser;
+
+    getFullPullRequest = getFullPullRequest;
 }
 
 mainModule.service("vstsService", VstsService);

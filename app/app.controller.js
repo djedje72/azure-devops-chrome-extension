@@ -1,5 +1,5 @@
 import "../settings/settingsComponent.js";
-import "../pullRequest/pullRequestComponent.js";
+import "../pullRequests/pullRequests.component.js";
 import {mainModule} from "../index.js";
 import "./app.css";
 import template from "./app.html";
