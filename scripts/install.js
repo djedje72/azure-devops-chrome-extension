@@ -37,10 +37,17 @@ browser.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =
 
     let message;
     switch(newVersion) {
+        case "2.5.2": {
+            message = [
+                "- Big performance improvment"
+            ]
+            break;
+        }
         case "2.5.0": {
             message = [
                 "- Firefox compatibility"
             ]
+            break;
         }
         case "2.4.0": {
             message = [
