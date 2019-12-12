@@ -1,6 +1,7 @@
 import {mainModule} from "../../index.js";
 import template from "./pullRequest.html";
 import "./pullRequest.css";
+import {getDomainUrl} from "settings/settingsService.js";
 
 class PullRequestController{
 	static $inject = ["vstsService", "$rootScope"];
@@ -9,11 +10,9 @@ class PullRequestController{
 		this.$rootScope = $rootScope;
     }
 
-	isInitialized;
     $onInit = async() => {
 		this.pullRequest = await this.vstsService.getFullPullRequest(this.pullRequest);
 		this.$rootScope.$digest();
-		this.isInitialized = true;
 	};
 
 	reviewClass = () => ({
@@ -25,9 +24,19 @@ class PullRequestController{
 
 	durationToDisplay = () => moment(this.pullRequest.creationDate).fromNow();
 
-	redirect = () => {
-		var href = `${this.pullRequest.repository.remoteUrl.replace(/(:\/\/)([^/]*@)/, '$1')}/pullrequest/${this.pullRequest.pullRequestId}`;
-		browser.tabs.create({ url: href, active: false });
+	_redirectUri = async() => {
+		try {
+			const { pullRequestId, repository } = this.pullRequest;
+			const {
+				"name": repoName,
+				"project": {"name": projectName}
+			} = repository;
+			return `${await getDomainUrl()}/${projectName}/_git/${repoName}/pullRequest/${pullRequestId}`;
+		} catch {}
+	}
+
+	redirect = async() => {
+		browser.tabs.create({ url: await this._redirectUri(), active: false });
     };
 
     policiesDetails = () => {
