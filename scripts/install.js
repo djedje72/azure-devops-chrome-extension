@@ -37,9 +37,10 @@ browser.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =
 
     let message;
     switch(newVersion) {
-        case "2.5.2": {
+        case "2.5.3": {
             message = [
-                "- Big performance improvment"
+                "- Big performance improvment",
+                "- Fix link problem"
             ]
             break;
         }
