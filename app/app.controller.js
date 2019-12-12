@@ -1,4 +1,4 @@
-import "../settings/settingsComponent.js";
+import "settings/settingsComponent.js";
 import "../pullRequests/pullRequests.component.js";
 import {mainModule} from "../index.js";
 import "./app.css";
