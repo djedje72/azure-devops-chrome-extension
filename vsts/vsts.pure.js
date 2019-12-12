@@ -1,5 +1,5 @@
 import oauthFetch from "../oauth/oauthFetch.js";
-import {getUrl, getDomainUrl, setCurrentDomain, getCurrentDomain} from "../settings/settingsService.js";
+import {getUrl, getDomainUrl, setCurrentDomain, getCurrentDomain} from "settings/settingsService";
 import {getCurrentMember, clearAvatarCache} from "../member/memberService.js";
 import defer from "../defer.js";
 

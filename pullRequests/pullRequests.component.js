@@ -1,5 +1,5 @@
 import {getCurrentMember} from "../member/memberService.js";
-import {removeCurrentDomain} from "../settings/settingsService.js";
+import {removeCurrentDomain} from "settings/settingsService.js";
 import {removeCurrentMember, getGraphAvatar} from "../member/memberService.js";
 import {removeOAuthToken} from "../oauth/index.js";
 

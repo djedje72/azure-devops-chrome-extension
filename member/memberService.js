@@ -1,5 +1,5 @@
 import oauthFetch from "../oauth/oauthFetch.js";
-import {getUrl, getDomainName} from "../settings/settingsService.js";
+import {getUrl, getDomainName} from "settings/settingsService.js";
 import {getDescriptor} from "../graphs/graphs.service.js";
 import defer from "../defer.js";
 import {getAsyncItem, addAsyncItem} from "../storage/asyncStorage";

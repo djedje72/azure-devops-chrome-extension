@@ -10,7 +10,8 @@ export default {
     "mode": "production",
     "resolve": {
         "alias": {
-            "member": `${root}/member`
+            "member": `${root}/member`,
+            "settings": `${root}/settings`
         }
     },
     "entry": {
