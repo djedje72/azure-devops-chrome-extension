@@ -1,6 +1,5 @@
 node_modules/
 .vscode/
-vsts.zip
-extension*.zip
+*.zip
 
 dist/

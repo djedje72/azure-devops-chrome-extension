@@ -8,9 +8,10 @@
     "build:gecko": "cross-env BROWSER=gecko yarn _build",
     "build:chrome": "cross-env BROWSER=chrome yarn _build",
     "_build": "yarn webpack:production && yarn zip",
-    "build": "yarn build:chrome && yarn build:gecko",
+    "build": "yarn build:chrome && yarn build:gecko && yarn zip:source",
     "webpack:production": "cross-env NODE_ENV=production webpack --progress",
-    "zip": "node ./zip"
+    "zip": "node ./zip",
+    "zip:source": "node ./zip-source"
   },
   "keywords": [
     "azure",
