@@ -1,35 +1,6 @@
-import {getCurrentMember} from "../member/memberService.js";
+import {mainModule} from "./index";
+import {getCurrentMember} from "./member/memberService.js";
 
-if (!browser.alarms) {
-    browser.alarms = {
-        "create": () => {},
-        "onAlarm": {
-            "addListener": () => {}
-        },
-        "onClicked": {
-            "addListener": () => {}
-        },
-        "onDeleted": {
-            "addListener": () => {}
-        }
-    };
-}
-if (!browser.browserAction) {
-    browser.browserAction = {
-        "setBadgeText": () => {},
-        "setBadgeBackgroundColor": () => {}
-    };
-}
-if (!browser.notifications) {
-    browser.notifications = {
-        "onClicked": {
-            "addListener": () => {}
-        },
-        "onClosed": {
-            "addListener": () => {}
-        }
-    }
-}
 const addCurrentNotification = (...args) => _processCurrentNotification("add", ...args);
 const deleteCurrentNotification = (...args) => _processCurrentNotification("delete", ...args);
 const _processCurrentNotification = (fn, notificationName) => {
@@ -37,14 +8,11 @@ const _processCurrentNotification = (fn, notificationName) => {
     const result = currentNotificationsStorage[fn](notificationName);
     localStorage.setItem("currentNotifications", JSON.stringify(Array.from(currentNotificationsStorage)));
     return result;
-}
-export const mainModule = angular.module('vstsChrome', []);
-mainModule.config(($compileProvider) => {
-    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):|data:image\//);
-}).run((vstsService) => {
+};
+mainModule.run((vstsService) => {
     vstsService.isInitialize().then(async() => {
         await getCurrentMember();
-        browser.alarms.create("refresh", {"when": Date.now(), "periodInMinutes": 2});
+        browser.alarms.create("refresh", {"when": Date.now()+1000, "periodInMinutes": 1});
 
         browser.alarms.create("resetBranches", {"delayInMinutes": 1, "periodInMinutes": 60});
 

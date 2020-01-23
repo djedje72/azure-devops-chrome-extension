@@ -13,6 +13,7 @@ export default smp.wrap(merge(webpackCommon, {
     "module": {
         "rules": [
             {
+
                 "test": /\.css$/,
                 "use": [
                     MiniCssExtractPlugin.loader,

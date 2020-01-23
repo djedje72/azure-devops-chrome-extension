@@ -134,16 +134,6 @@ button[disabled]:hover {
 	flex-direction: column;
 }
 
-.filter-button {
-	margin: 5px;
-	height: 35px;
-	width: 35px;
-	background: url('./filter.png');
-	background-size: 35px 35px;
-	background-repeat: no-repeat;
-	background-position: center;
-}
-
 .button--red {
 	background-color: red;
 }

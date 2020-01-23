@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "webpack-dev-server",
     "start": "webpack --watch --progress",
-    "build": "yarn webpack:production && yarn zip",
+    "build:gecko": "cross-env BROWSER=gecko yarn _build",
+    "build:chrome": "cross-env BROWSER=chrome yarn _build",
+    "_build": "yarn webpack:production && yarn zip",
+    "build": "yarn build:chrome && yarn build:gecko",
     "webpack:production": "cross-env NODE_ENV=production webpack --progress",
     "zip": "node ./zip"
   },
@@ -20,7 +23,9 @@
   ],
   "author": "Rémi Fruteau de Laclos",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "4.17.15"
+  },
   "devDependencies": {
     "@babel/core": "7.7.4",
     "@babel/plugin-proposal-class-properties": "7.7.4",
@@ -30,9 +35,11 @@
     "@babel/register": "7.7.4",
     "@babel/runtime": "7.7.4",
     "@fortawesome/fontawesome-free": "5.11.2",
+    "@material/select": "4.0.0",
     "angular": "1.7.9",
     "babel-loader": "8.0.6",
     "babel-plugin-angularjs-annotate": "0.10.0",
+    "babel-plugin-lodash": "3.3.4",
     "clean-webpack-plugin": "3.0.0",
     "copy-webpack-plugin": "5.0.5",
     "cross-env": "6.0.3",
@@ -43,7 +50,9 @@
     "html-webpack-plugin": "3.2.0",
     "mini-css-extract-plugin": "0.8.0",
     "moment": "2.24.0",
+    "node-sass": "4.13.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
+    "sass-loader": "8.0.2",
     "speed-measure-webpack-plugin": "1.3.1",
     "style-loader": "1.0.0",
     "terser-webpack-plugin": "2.2.1",

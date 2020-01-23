@@ -8,11 +8,16 @@ class PullRequestController{
     constructor(vstsService, $rootScope) {
 		this.vstsService = vstsService;
 		this.$rootScope = $rootScope;
-    }
+	}
 
-    $onInit = async() => {
-		this.pullRequest = await this.vstsService.getFullPullRequest(this.pullRequest);
-		this.$rootScope.$digest();
+	_isInitialized = false;
+
+	$onChanges = async({isVisible}) => {
+		if(!this._isInitialized && isVisible.currentValue) {
+			this._isInitialized = true;
+			this.pullRequest = await this.vstsService.getFullPullRequest(this.pullRequest);
+			this.$rootScope.$digest();
+		}
 	};
 
 	reviewClass = () => ({
@@ -59,7 +64,8 @@ class PullRequestController{
 mainModule.component("pullRequest", {
     controller: PullRequestController,
     bindings: {
-        "pullRequest": "<"
+		"pullRequest": "<",
+		"isVisible": "<"
     },
     template
 });

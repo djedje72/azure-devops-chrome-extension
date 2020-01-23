@@ -25,10 +25,12 @@
         </div>
     </div>
     <div data-ng-show="!$ctrl.showSettings">
+        <filter></filter>
         <pull-request
             data-ng-show="pr.isVisible"
             data-ng-repeat="pr in $ctrl.pullRequests track by pr.pullRequestId"
             data-pull-request="::pr"
+            data-is-visible="pr.isVisible"
         ></pull-request>
     </div>
     <div class="pr-settings" data-ng-show="$ctrl.showSettings">

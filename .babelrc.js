@@ -1,5 +1,6 @@
 module.exports = {
     "plugins": [
+        "babel-plugin-lodash",
         "angularjs-annotate",
         "@babel/transform-runtime",
         "@babel/plugin-proposal-class-properties"

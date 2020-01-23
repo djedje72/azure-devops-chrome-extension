@@ -7,6 +7,7 @@ import {mainModule} from "../index.js";
 import "./pullRequest-reviewers/pullRequestReviewersComponent";
 import "./pullRequest-creator/pullRequestCreatorComponent";
 import "./pullRequest";
+import "../filter/filter.component.js";
 
 import "./pullRequests.css";
 import template from "./pullRequests.html";
