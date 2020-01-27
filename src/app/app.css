@@ -9,6 +9,10 @@ body {
     transition: all 0.5s ease;
 }
 
+i {
+    color: #0e0d19;
+}
+
 .dark,
 .dark .menu-buttons {
     color: white;
@@ -33,7 +37,8 @@ body {
 .dark .fa-comments,
 .dark .fa-bars,
 .dark .menu-buttons button:hover,
-.dark .comments
+.dark .comments,
+.dark i
 {
     color: #e0e0e0;
 }

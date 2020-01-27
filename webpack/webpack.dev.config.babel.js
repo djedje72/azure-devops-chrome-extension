@@ -1,6 +1,7 @@
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import merge from "webpack-merge";
 import webpackCommon from "./webpack.common.config";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 export default merge(webpackCommon, {
     "devtool": "cheap-module-eval-source-map",
@@ -8,8 +9,8 @@ export default merge(webpackCommon, {
     "module": {
         "rules": [
             {
-                "test": /\.css$/,
-                "use": ["style-loader", "css-loader"]
+                test: /\.(sa|sc|c)ss$/,
+                "use": ["style-loader", "css-loader", "sass-loader"]
             }
         ]
     },

@@ -7,3 +7,11 @@ export const getDomainUrl = async() => getCurrentDomain().domainUrl;
 export const getDomainName = async() => getCurrentDomain().name;
 
 export const removeCurrentDomain = () => void localStorage.removeItem("domain");
+
+export const storeSetting = (key, value) => {
+    const settings = getSettings();
+    settings[key] = value;
+    localStorage.setItem('settings', JSON.stringify(settings));
+};
+
+export const getSettings = () => JSON.parse(localStorage.getItem('settings')) || {};

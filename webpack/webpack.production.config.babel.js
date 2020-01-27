@@ -1,4 +1,4 @@
-import {CleanWebpackPlugin} from "clean-webpack-plugin";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import merge from "webpack-merge";
 import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
@@ -13,12 +13,17 @@ export default smp.wrap(merge(webpackCommon, {
     "module": {
         "rules": [
             {
-
-                "test": /\.css$/,
-                "use": [
-                    MiniCssExtractPlugin.loader,
-                    "css-loader"
-                ]
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                  {
+                    loader: MiniCssExtractPlugin.loader,
+                    options: {
+                      hmr: false,
+                    },
+                  },
+                  'css-loader',
+                  'sass-loader',
+                ],
             }
         ]
     },

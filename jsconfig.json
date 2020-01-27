@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "baseUrl": "src/",
+        "paths": {
+            "member/*": ["member/*"],
+            "settings/*": ["settings/*"],
+            "index": ["index.js"]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

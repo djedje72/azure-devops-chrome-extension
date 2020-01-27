@@ -3,16 +3,15 @@ import "../pullRequests/pullRequests.component.js";
 import {mainModule} from "../index.js";
 import "./app.css";
 import template from "./app.html";
+import {getSettings} from "settings/settingsService.js";
 
 class AppController{
     constructor($rootScope) {
         this.$rootScope = $rootScope;
     }
 
-    $onInit = () => {
-    };
-	_getSettings = () => JSON.parse(localStorage.getItem('settings')) || {};
-    isDarkMode = () => this._getSettings().darkMode;
+    $onInit = () => {};
+    isDarkMode = () => getSettings().darkMode;
 
     settingsInitialized = (shouldInit) => {
         this.shouldInitSettings = shouldInit;

@@ -2,7 +2,7 @@ import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
 import webpack from "webpack";
-import {Buffer} from "buffer";
+import { Buffer } from "buffer";
 import _ from "lodash";
 
 const indexEntryChunks = ["assets", "main"];
@@ -13,6 +13,7 @@ export default {
     "mode": "production",
     "resolve": {
         "alias": {
+            "index": `${src}/index`,
             "member": `${src}/member`,
             "settings": `${src}/settings`
         }
@@ -28,16 +29,13 @@ export default {
         filename: "[name].[contenthash].js"
     },
     "module": {
-        "rules": [
-            {
+        "rules": [{
                 "test": /\.js$/,
                 "exclude": [path.resolve(root, "node_modules")],
-                "use": [
-                    {
-                        "loader": "babel-loader",
-                        "options": {"cacheDirectory": true}
-                    }
-                ]
+                "use": [{
+                    "loader": "babel-loader",
+                    "options": { "cacheDirectory": true }
+                }]
             },
             {
                 "test": /\.html$/,
@@ -67,12 +65,11 @@ export default {
             "chunks": backgroundEntryChunks,
             "chunksSortMode": (a, b) => backgroundEntryChunks.indexOf(a.names[0]) - backgroundEntryChunks.indexOf(b.names[0]),
         }),
-        new CopyPlugin([
-            {
+        new CopyPlugin([{
                 from: "manifest.json",
                 to: "manifest.json",
-                transform : (manifestBuffer) => {
-                    if(process.env.BROWSER === "gecko") {
+                transform: (manifestBuffer) => {
+                    if (process.env.BROWSER === "gecko") {
                         const manifest = JSON.parse(manifestBuffer.toString());
                         const geckoManifest = _.merge({}, manifest, require(`${root}/manifest.gecko.json`));
                         return Buffer.from(JSON.stringify(geckoManifest));

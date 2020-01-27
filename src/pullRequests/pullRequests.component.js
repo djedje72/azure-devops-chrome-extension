@@ -2,6 +2,7 @@ import {getCurrentMember} from "../member/memberService.js";
 import {removeCurrentDomain} from "settings/settingsService.js";
 import {removeCurrentMember, getGraphAvatar} from "../member/memberService.js";
 import {removeOAuthToken} from "../oauth/index.js";
+import {getSettings, storeSetting} from "settings/settingsService.js";
 
 import {mainModule} from "../index.js";
 import "./pullRequest-reviewers/pullRequestReviewersComponent";
@@ -21,10 +22,12 @@ class PullRequestsController {
 	_mine = 'mine';
 	_toApprove = 'toApprove';
 	_all = 'all';
+	displayMode;
 
 	$onInit = () => {
+		this.displayMode = this.displayModes.pullRequests;
 		this.currentButton = this._toApprove;
-		const { enableNotifications } = this.getSettings();
+		const { enableNotifications } = getSettings();
 		this.enableNotifications = enableNotifications;
 		this.vstsService
 			.isInitialize()
@@ -39,7 +42,7 @@ class PullRequestsController {
 
 	fillPullRequests = () => {
 		this.currentButton = this._all;
-		this.showSettings = false;
+		this.togglePullRequests();
 		this.pullRequests.forEach(pr => {
 			pr.isVisible = true;
 		});
@@ -47,7 +50,7 @@ class PullRequestsController {
 
 	fillToApprovePullRequests = () => {
 		this.currentButton = this._toApprove;
-		this.showSettings = false;
+		this.togglePullRequests();
 		this.pullRequests.forEach(pr => {
 			pr.isVisible = this.toApprovePullRequests.includes(pr.pullRequestId);
 		});
@@ -55,7 +58,7 @@ class PullRequestsController {
 
 	fillMinePullRequests = () => {
 		this.currentButton = this._mine;
-		this.showSettings = false;
+		this.togglePullRequests();
 		this.pullRequests.forEach(pr => {
 			pr.isVisible = this.minePullRequests.includes(pr.pullRequestId);
 		});
@@ -77,27 +80,29 @@ class PullRequestsController {
 		return prs;
 	};
 
-	toggleMode = () => {
-		const { darkMode } = this.getSettings();
-		this.storeSetting("darkMode", !darkMode);
+	displayModes = {
+		"pullRequests": "pullRequests",
+		"filters": "filters",
+		"settings": "settings"
+	};
+
+	togglePullRequests = () => {
+		this.displayMode = this.displayModes.pullRequests;
+	};
+	toggleFilters = () => {
+		this.displayMode = this.displayModes.filters;
+	};
+	toggleSettings = () => {
+		this.displayMode = this.displayModes.settings;
 	};
 
 	isMinePullRequests = () => this.currentButton === this._mine;
 	isToApprovePullRequests = () => this.currentButton === this._toApprove;
 	isAllPullRequests = () => this.currentButton === this._all;
 
-	toggleSettings = () => {
-		this.showSettings = !this.showSettings;
-	};
 	toggleNotifications = () => {
-		this.storeSetting('enableNotifications', this.enableNotifications);
+		storeSetting('enableNotifications', this.enableNotifications);
 	};
-	storeSetting = (key, value) => {
-		const settings = this.getSettings();
-		settings[key] = value;
-		localStorage.setItem('settings', JSON.stringify(settings));
-	};
-	getSettings = () => JSON.parse(localStorage.getItem('settings')) || {};
 
 	getImageWithTodayStr = async ({ id }) => `data:image/png;base64,${await getGraphAvatar({ id })}`;
 
