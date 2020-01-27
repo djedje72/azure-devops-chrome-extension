@@ -37,6 +37,12 @@ browser.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =
 
     let message;
     switch(newVersion) {
+        case "2.5.5": {
+            message = [
+                "- new night mode toggle"
+            ];
+            break;
+        }
         case "2.5.4": {
             message = [
                 "- new icon",

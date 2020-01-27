@@ -4,7 +4,7 @@
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "name": "Azure DevOps Pull Requests",
     "description": "Azure DevOps - Manage pull requests in multiple repositories",
-    "version": "2.5.4",
+    "version": "2.5.5",
     "icons": {
         "16": "img/icon/azureDevops_16px.png",
         "32": "img/icon/azureDevops_32px.png",
