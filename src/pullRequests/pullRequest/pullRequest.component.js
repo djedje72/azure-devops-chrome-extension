@@ -1,3 +1,4 @@
+import {getCurrentMember} from "member/memberService.js";
 import {mainModule} from "../../index.js";
 import template from "./pullRequest.html";
 import "./pullRequest.css";
@@ -16,7 +17,20 @@ class PullRequestController{
 		if(!this._isInitialized && isVisible.currentValue) {
 			this._isInitialized = true;
 			this.pullRequest = await this.vstsService.getFullPullRequest(this.pullRequest);
+			await this.withCurrentMemberVote(this.pullRequest);
 			this.$rootScope.$digest();
+		}
+	};
+
+	withCurrentMemberVote = async pr => {
+		const currentMember = await getCurrentMember();
+		if (currentMember) {
+			const currentMemberReviews = pr.reviewers.filter(
+				reviewer => reviewer.uniqueName === currentMember.emailAddress
+			);
+			if (currentMemberReviews.length > 0) {
+				pr.currentMemberVote = currentMemberReviews[0].vote;
+			}
 		}
 	};
 

@@ -1,4 +1,3 @@
-import {getCurrentMember} from "../member/memberService.js";
 import {removeCurrentDomain} from "settings/settingsService.js";
 import {removeCurrentMember, getGraphAvatar} from "../member/memberService.js";
 import {removeOAuthToken} from "../oauth/index.js";
@@ -64,22 +63,6 @@ class PullRequestsController {
 		});
 	};
 
-	withCurrentMemberVote = async prs => {
-		const currentMember = await getCurrentMember();
-		if (currentMember) {
-			return prs.map(pr => {
-				const currentMemberReviews = pr.reviewers.filter(
-					reviewer => reviewer.uniqueName === currentMember.emailAddress
-				);
-				if (currentMemberReviews.length > 0) {
-					pr.currentMemberVote = currentMemberReviews[0].vote;
-				}
-				return pr;
-			});
-		}
-		return prs;
-	};
-
 	displayModes = {
 		"pullRequests": "pullRequests",
 		"filters": "filters",
@@ -108,7 +91,7 @@ class PullRequestsController {
 
 	getPullRequests = async () => {
 		const { all, toApprove, mine } = await this.vstsService.getPullRequests();
-		this.pullRequests = await this.withCurrentMemberVote(all);
+		this.pullRequests = all;
 		this.pullRequests.sort((pr1, pr2) => moment(pr1.creationDate).diff(pr2.creationDate));
 		this.toApprovePullRequests = toApprove.map(pr => pr.pullRequestId);
 		this.minePullRequests = mine.map(pr => pr.pullRequestId);
