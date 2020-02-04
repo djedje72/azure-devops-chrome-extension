@@ -1,0 +1,31 @@
+<h1>Enabled Projects<span class="filterProject-beta">beta</span></h1>
+<div class="filterProject-controls">
+    <input type="text" class="filterProject-search" data-ng-model="searchText" placeholder="Filter projects..."/>
+    <div class="filterProject-all">
+        <input
+            type="checkbox"
+            id="checkbox-all"
+            class="filterProject-all-input"
+            data-ng-model="$ctrl.allChecked"
+            data-ng-change="$ctrl.toggleAll();"
+        />
+        <label class="filterProject-all-label" for="checkbox-all">Check all</label>
+    </div>
+</div>
+<div class="filterProject-list">
+    <div class="filterProject-card" data-ng-repeat="project in $ctrl.projects | filter:searchText">
+        <div>
+            <input
+                type="checkbox"
+                id="checkbox-{{::project.id}}"
+                class="filterProject-card-input"
+                data-ng-model="project.isChecked"
+                data-ng-change="$ctrl.checked(project);"
+            />
+        </div>
+        <label class="filterProject-card-description" for="checkbox-{{::project.id}}">
+            <div class="filterProject-name" data-ng-bind="::project.name"></div>
+            <div class="filterProject-description" data-ng-bind="::project.description"></div>
+        </label>
+    </div>
+</div>

@@ -74,3 +74,13 @@ i {
 .dark .review-rejected {
     background-color: #FF000028;
 }
+
+.dark {
+    .filterProject-card {
+        background-color: #3E3E3E;
+        border-bottom: 1px solid #555555;
+        &:first-child {
+            border-top: 1px solid #555555;
+        }
+    }
+}

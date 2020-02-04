@@ -43,6 +43,6 @@
     </div>
 
     <div class="pr-filter" data-ng-show="$ctrl.displayMode === $ctrl.displayModes.filters">
-        Coming soon...
+        <filter-project data-on-change="$ctrl.getPullRequests()"></filter-project>
     </div>
 </div>

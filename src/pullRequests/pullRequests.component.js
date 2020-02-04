@@ -7,7 +7,7 @@ import {mainModule} from "../index.js";
 import "./pullRequest-reviewers/pullRequestReviewersComponent";
 import "./pullRequest-creator/pullRequestCreatorComponent";
 import "./pullRequest";
-import "../filter/filter.component.js";
+import "../filter";
 
 import "./pullRequests.css";
 import template from "./pullRequests.html";
@@ -90,11 +90,23 @@ class PullRequestsController {
 	getImageWithTodayStr = async ({ id }) => `data:image/png;base64,${await getGraphAvatar({ id })}`;
 
 	getPullRequests = async () => {
-		const { all, toApprove, mine } = await this.vstsService.getPullRequests();
+        const {disabledProjects} = getSettings();
+		const pullRequests = await this.vstsService.getPullRequests();
+		const { all, toApprove, mine } = Object.fromEntries(
+			Object
+				.entries(pullRequests)
+				.map(([name, value]) => [
+					name,
+					value.filter(({"repository": {project}}) => !(disabledProjects || []).includes(project.id))
+				])
+		);
+
 		this.pullRequests = all;
 		this.pullRequests.sort((pr1, pr2) => moment(pr1.creationDate).diff(pr2.creationDate));
 		this.toApprovePullRequests = toApprove.map(pr => pr.pullRequestId);
 		this.minePullRequests = mine.map(pr => pr.pullRequestId);
+
+		this.$rootScope.$digest();
 	};
 
 	logout = () => {

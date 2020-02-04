@@ -67,12 +67,6 @@ button[disabled]:hover {
 	border-bottom: 1px solid #8da9aa;
 }
 
-.menu-buttons button {
-	font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Ubuntu, Arial,
-		sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-	color: #333;
-}
-
 .menu-buttons button.selected {
 	color: #fff;
 	background-color: #0078d4;
@@ -90,7 +84,7 @@ button[disabled]:hover {
 
 .menu-buttons button {
 	background-color: inherit;
-	height: 45px;
+	height: 46px;
 	color: #0078d4;
 }
 
@@ -169,4 +163,8 @@ button[disabled]:hover {
 
 .menu-buttons .settings-darkMode {
 	padding: 0;
+}
+
+.pr-filter {
+	padding: 0 15px;
 }

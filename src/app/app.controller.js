@@ -1,7 +1,7 @@
 import "settings/settingsComponent.js";
 import "../pullRequests/pullRequests.component.js";
 import {mainModule} from "../index.js";
-import "./app.css";
+import "./app.scss";
 import template from "./app.html";
 import {getSettings} from "settings/settingsService.js";
 
