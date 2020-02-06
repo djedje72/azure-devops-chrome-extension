@@ -11,6 +11,7 @@
     align-items: center;
     border-bottom: 1px solid #DDDDDD;
     cursor: pointer;
+    padding-left: 10px;
 }
 
 .filterProject-card:hover {
@@ -20,8 +21,11 @@
 .filterProject-controls {
     display: flex;
     align-items: center;
-    margin: 20px 10px 20px 0;
     justify-content: space-between;
+}
+
+.filterProject-title {
+    margin-top: 0;
 }
 
 .filterProject-card-description {
@@ -36,8 +40,6 @@
 
 .filterProject-card-input {
     cursor: inherit;
-    height: 65px;
-    width: 30px;
 }
 
 .filterProject-beta {
@@ -63,6 +65,18 @@
 .filterProject-search {
     height: 30px;
     width: 50%;
+    padding-left: 10px;
+}
+
+.filterProject-list {
+    padding: 0 15px 15px 15px;
+}
+
+.filterProject__header {
+    padding: 15px;
+    position: sticky;
+    top:45px;
+    background-color: #ffffff;
 }
 
 .filterProject-all {
@@ -78,5 +92,8 @@
         width: 30px;
         height: 30px;
     }
+}
 
+.filterProject__checkbox {
+    font-size: 30px;
 }

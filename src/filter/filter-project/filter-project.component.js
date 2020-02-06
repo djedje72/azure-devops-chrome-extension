@@ -11,6 +11,8 @@ class FilterProjectController{
 
     _settingField = "disabledProjects";
 
+    isDarkMode = () => getSettings().darkMode;
+
     $onInit = async() => {
         this.projects = (await this.getProjects())
             .map(({name, description, id}) => ({name, description, id}))
@@ -30,6 +32,7 @@ class FilterProjectController{
     getProjects = async() => await this.vstsService.getProjects();
 
     checked = (project) => {
+        project.isChecked = !project.isChecked;
         const {[this._settingField]: disabledProjects} = getSettings();
         const uniqueDisabledProjects = new Set(disabledProjects);
         if (project.isChecked) {
@@ -41,12 +44,18 @@ class FilterProjectController{
         this.allChecked = project.isChecked && this.areAllChecked();
     };
 
+    getCheckboxClass = (isChecked) => [
+        this.isDarkMode() ? "fas" : "far",
+        `fa${isChecked ? "-check": ""}-square`
+    ];
+
     storeSetting = (...args) => {
         storeSetting(...args);
         this.onChange({});
     };
 
     toggleAll = () => {
+        this.allChecked = !this.allChecked;
         this.projects.forEach(project => {
             project.isChecked = this.allChecked;
         })
