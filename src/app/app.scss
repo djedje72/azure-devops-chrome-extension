@@ -85,3 +85,12 @@ i {
         }
     }
 }
+
+.dark .content-area{
+    &::-webkit-scrollbar-thumb {
+        background: #888888;
+    }
+    &::-webkit-scrollbar {
+        background: #222222;
+    }
+}

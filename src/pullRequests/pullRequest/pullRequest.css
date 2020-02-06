@@ -142,6 +142,11 @@
 	justify-content: center;
 	align-items: center;
 }
+
+.prstate i.icons-status {
+	color:white;
+}
+
 .prstate.state-success {
 	border: 1px solid #38a758;
 	color: #fff;

@@ -165,15 +165,15 @@ button[disabled]:hover {
 
 .content-area {
 	overflow-y: auto;
-    height: 100%;
-}
-/* .content-area::-webkit-scrollbar-thumb {
-    background: #555;
+    height: 555px;
 }
 .content-area::-webkit-scrollbar {
-    width: 10px;
-    background: #888;
-} */
+    width: 12px;
+    background: #DDDDDD;
+}
+.content-area::-webkit-scrollbar-thumb {
+    background: #999999;
+}
 .main {
     height: 600px;
     overflow: hidden;
