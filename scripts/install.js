@@ -1,3 +1,5 @@
+import changelog from "./changelog";
+
 const enableNotification = () => {
     const settings = JSON.parse(localStorage.getItem("settings")) || {};
     settings.enableNotifications = true;
@@ -35,103 +37,7 @@ browser.runtime.onInstalled.addListener(({previousVersion, reason, ...others}) =
         default: break;
     }
 
-    let message;
-    switch(newVersion) {
-        case "2.6.0": {
-            message = [
-                "- [BETA] new projects filtering page"
-            ];
-            break;
-        }
-        case "2.5.5": {
-            message = [
-                "- new night mode toggle"
-            ];
-            break;
-        }
-        case "2.5.4": {
-            message = [
-                "- new icon",
-                "- performance improvement"
-            ];
-            break;
-        }
-        case "2.5.3": {
-            message = [
-                "- Big performance improvement",
-                "- Fix link problem"
-            ];
-            break;
-        }
-        case "2.5.0": {
-            message = [
-                "- Firefox compatibility"
-            ];
-            break;
-        }
-        case "2.4.0": {
-            message = [
-                "- New design by @geoiris",
-                "- New dark mode"
-            ];
-            break;
-        }
-        case "2.3.0": {
-            message = [
-                "Use new Azure DevOps icons"
-            ]
-            break;
-        }
-        case "2.2.2": {
-            enableNotification();
-            message = [
-                "Default enable notifications. You can disable them in the settings."
-            ]
-            break;
-        }
-        case "2.2.1": {
-            message = [
-                "Handle avatar without azure devops cookie"
-            ];
-            break;
-        }
-        case "2.1.2": {
-            message = [
-                "Handle people with multiple email addresses"
-            ];
-            break;
-        }
-        case "2.1.1": {
-            message = [
-                "Use domain profile instead of global profile"
-            ];
-            break;
-        }
-        case "2.1.0": {
-            message = [
-                "Add fast card for auto-complete"
-            ];
-            break;
-        }
-        case "2.0.0": {
-            message = [
-                "Use OAuth2 flow instead of Basic Auth"
-            ];
-            break;
-        }
-        case "1.10.0": {
-            message = [
-                "- Sort PullRequests by creation date descending",
-                "- Add PullRequest duration"
-            ];
-            break;
-        }
-        case "1.4.3": {
-            message = ["- Fix 404 issues"];
-            break;
-        }
-        default: break;
-    }
+    const message = changelog[newVersion];
 
     if (message) {
         browser.notifications.create({

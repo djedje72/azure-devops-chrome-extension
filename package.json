@@ -1,6 +1,6 @@
 {
   "name": "azure_devops_pullrequests",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Azure devops chrome extension",
   "scripts": {
     "dev": "webpack-dev-server",

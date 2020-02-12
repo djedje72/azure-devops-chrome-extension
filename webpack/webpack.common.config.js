@@ -10,24 +10,13 @@ const backgroundEntryChunks = ["assets", "install", "background"];
 const root = path.resolve(__dirname, "..");
 const src = path.resolve(__dirname, "../src");
 export default {
-    "mode": "production",
-    "resolve": {
-        "alias": {
-            "index": `${src}/index`,
-            "member": `${src}/member`,
-            "settings": `${src}/settings`
-        }
-    },
     "entry": {
         "main": path.resolve(src, "index"),
         "background": path.resolve(src, "background"),
         "install": path.resolve(root, "scripts/install"),
         "assets": path.resolve(src, "assets")
     },
-    "output": {
-        path: path.resolve(root, "dist"),
-        filename: "[name].[contenthash].js"
-    },
+    "mode": "production",
     "module": {
         "rules": [{
                 "test": /\.js$/,
@@ -49,6 +38,10 @@ export default {
                 "loader": "file-loader"
             }
         ]
+    },
+    "output": {
+        path: path.resolve(root, "dist"),
+        filename: "[name].[contenthash].js"
     },
     "plugins": [
         new HtmlWebpackPlugin({
@@ -80,5 +73,12 @@ export default {
             { from: "img/icon/**.*" },
         ]),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    ]
+    ],
+    "resolve": {
+        "alias": {
+            "index": `${src}/index`,
+            "member": `${src}/member`,
+            "settings": `${src}/settings`
+        }
+    }
 };

@@ -1,0 +1,55 @@
+{
+    "2.6.1": [
+        "- improve style",
+        "- fix some performances issues"
+    ],
+    "2.6.0": [
+        "- [BETA] new projects filtering page"
+    ],
+    "2.5.5": [
+        "- new night mode toggle"
+    ],
+    "2.5.4": [
+        "- new icon",
+        "- performance improvement"
+    ],
+    "2.5.3": [
+        "- Big performance improvement",
+        "- Fix link problem"
+    ],
+    "2.5.0": [
+        "- Firefox compatibility"
+    ],
+    "2.4.0": [
+        "- New design by @geoiris",
+        "- New dark mode"
+    ],
+    "2.3.0": [
+        "Use new Azure DevOps icons"
+    ],
+    "2.2.2": [
+        "Default enable notifications. You can disable them in the settings."
+    ],
+    "2.2.1": [
+        "Handle avatar without azure devops cookie"
+    ],
+    "2.1.2": [
+        "Handle people with multiple email addresses"
+    ],
+    "2.1.1": [
+        "Use domain profile instead of global profile"
+    ],
+    "2.1.0": [
+        "Add fast card for auto-complete"
+    ],
+    "2.0.0": [
+        "Use OAuth2 flow instead of Basic Auth"
+    ],
+    "1.10.0": [
+        "- Sort PullRequests by creation date descending",
+        "- Add PullRequest duration"
+    ],
+    "1.4.3": [
+        "- Fix 404 issues"
+    ]
+}
