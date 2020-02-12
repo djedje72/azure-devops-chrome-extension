@@ -83,7 +83,9 @@
     display: inline-flex;
     align-items: center;
     font-weight: bold;
+    cursor: pointer;
     &-label {
+        cursor: inherit;
         font-size: 16px;
         font-weight: bold;
         padding-left: 20px;
