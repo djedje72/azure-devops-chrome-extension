@@ -1,5 +1,5 @@
 import oauthFetch from "../oauth/oauthFetch.js";
-import {getUrl, getDomainUrl, setCurrentDomain, getCurrentDomain} from "settings/settingsService";
+import {getUrl, getSettings, getDomainUrl, setCurrentDomain, getCurrentDomain} from "settings/settingsService";
 import {getCurrentMember, clearAvatarCache} from "../member/memberService.js";
 import defer from "../defer.js";
 
@@ -172,17 +172,17 @@ export const setCredentials = async(credentials) => {
 };
 
 async function getPullRequestsList() {
-    return oauthFetch({
+    const {value} = await oauthFetch({
         method: "GET",
         url: (await getUrl()) + "/git/pullRequests",
         "params": {
             "$top": 250
         }
-    }).then(
-        (httpPullRequests) => httpPullRequests.value
-    ).then(
-        (httpPullRequests) => httpPullRequests.filter(({creationDate}) => moment(creationDate).isAfter(moment().subtract(3, 'months')))
-    );
+    });
+    const {disabledProjects} = getSettings();
+    return value
+        .filter(({"repository": {project}}) => !(disabledProjects || []).includes(project.id))
+        .filter(({creationDate}) => moment(creationDate).isAfter(moment().subtract(3, 'months')));
 }
 
 async function getMinePullRequests(prs) {
@@ -206,7 +206,10 @@ function setReminder(toApprovePullRequests) {
 export const getProjects = async() => {
     const {value} = await oauthFetch({
         method: "GET",
-        url: (await getUrl()) + "/projects"
+        url: (await getUrl()) + "/projects",
+        "params": {
+            "$top": 250
+        }
     });
     return value;
 };

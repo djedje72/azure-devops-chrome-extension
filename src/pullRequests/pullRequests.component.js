@@ -90,16 +90,7 @@ class PullRequestsController {
 	getImageWithTodayStr = async ({ id }) => `data:image/png;base64,${await getGraphAvatar({ id })}`;
 
 	getPullRequests = async () => {
-        const {disabledProjects} = getSettings();
-		const pullRequests = await this.vstsService.getPullRequests();
-		const { all, toApprove, mine } = Object.fromEntries(
-			Object
-				.entries(pullRequests)
-				.map(([name, value]) => [
-					name,
-					value.filter(({"repository": {project}}) => !(disabledProjects || []).includes(project.id))
-				])
-		);
+		const {all, toApprove, mine} = await this.vstsService.getPullRequests();
 
 		this.pullRequests = all;
 		this.pullRequests.sort((pr1, pr2) => moment(pr1.creationDate).diff(pr2.creationDate));
