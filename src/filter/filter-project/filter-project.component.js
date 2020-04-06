@@ -16,9 +16,9 @@ class FilterProjectController{
     $onInit = async() => {
         this.projects = (await this.getProjects())
             .map(({name, description, id}) => ({name, description, id}))
-            .map((project) => ({...project, isChecked: this.isChecked(project.id)}))
-            .sort((a,b) => a.name.localeCompare(b.name));
+            .map((project) => ({...project, isChecked: this.isChecked(project.id)}));
 
+        this.sortProjects();
         this.allChecked = this.areAllChecked();
     };
 
@@ -27,7 +27,18 @@ class FilterProjectController{
     isChecked = (projectId) => {
         const {[this._settingField]: disabledProjects} = getSettings();
         return !(disabledProjects || []).includes(projectId);
-    }
+    };
+
+    sortProjects = () => this.projects.sort((a,b) => {
+        let result;
+        if (a.isChecked === b.isChecked) {
+            return a.name.localeCompare(b.name);
+        }
+        if (a.isChecked) {
+            return -1;
+        }
+        return 1;
+    });
 
     getProjects = async() => await this.vstsService.getProjects();
 
@@ -40,6 +51,7 @@ class FilterProjectController{
         } else {
             uniqueDisabledProjects.add(project.id);
         }
+        this.sortProjects();
         this.storeSetting(this._settingField, [...uniqueDisabledProjects]);
         this.allChecked = project.isChecked && this.areAllChecked();
     };

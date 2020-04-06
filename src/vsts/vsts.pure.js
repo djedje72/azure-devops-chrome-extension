@@ -262,10 +262,12 @@ export const getSuggestionForUser = () => {
 };
 
 async function getRepositories() {
+    const {disabledProjects} = getSettings();
     return oauthFetch({
         method: "GET",
         url: (await getUrl()) + "/git/repositories",
-    }).then((httpRepositories) => httpRepositories.value);
+    })
+    .then(({value}) => value.filter(({project}) => !(disabledProjects || []).includes(project.id)));
 }
 
 // let resetGUID = "00000000-0000-0000-0000-000000000000";
