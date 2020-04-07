@@ -176,7 +176,7 @@ async function getPullRequestsList() {
         method: "GET",
         url: (await getUrl()) + "/git/pullRequests",
         "params": {
-            "$top": 250
+            "$top": 1000
         }
     });
     const {disabledProjects} = getSettings();
@@ -208,7 +208,7 @@ export const getProjects = async() => {
         method: "GET",
         url: (await getUrl()) + "/projects",
         "params": {
-            "$top": 250
+            "$top": 1000
         }
     });
     return value;
