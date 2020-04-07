@@ -1,4 +1,7 @@
 {
+    "2.6.3": [
+        "- retrieve more PRs and projects"
+    ],
     "2.6.1": [
         "- improve style",
         "- fix some performances issues"
