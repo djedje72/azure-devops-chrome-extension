@@ -1,4 +1,8 @@
 {
+    "2.7.0": [
+        "- add support for Personnal Access Token",
+        "- improve some style"
+    ],
     "2.6.3": [
         "- retrieve more PRs and projects"
     ],
