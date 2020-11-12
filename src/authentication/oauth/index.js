@@ -1,4 +1,4 @@
-import defer from "../defer.js";
+import defer from "../../defer";
 import { detect } from "detect-browser";
 import chromeOauth from "./oauth.chrome.config";
 import firefoxOauth from "./oauth.firefox.config";

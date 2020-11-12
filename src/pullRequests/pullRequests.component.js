@@ -1,6 +1,6 @@
 import {removeCurrentDomain} from "settings/settingsService.js";
 import {removeCurrentMember, getGraphAvatar} from "../member/memberService.js";
-import {removeOAuthToken} from "../oauth/index.js";
+import * as auth from "../authentication/index";
 import {getSettings, storeSetting} from "settings/settingsService.js";
 
 import {mainModule} from "../index.js";
@@ -102,7 +102,7 @@ class PullRequestsController {
 
 	logout = () => {
 		removeCurrentDomain();
-		removeOAuthToken();
+		auth.logout();
 		removeCurrentMember();
 		window.location.reload();
 	};
