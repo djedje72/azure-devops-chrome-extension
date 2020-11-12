@@ -28,10 +28,7 @@ export default {
             },
             {
                 "test": /\.html$/,
-                "loader": "html-loader",
-                "options": {
-                    "interpolate": true
-                }
+                "loader": "html-loader"
             },
             {
                 "test": /\.(gif|png|svg|woff|woff2|eot|ttf)$/,
@@ -41,7 +38,8 @@ export default {
     },
     "output": {
         path: path.resolve(root, "dist"),
-        filename: "[name].[contenthash].js"
+        filename: "[name].[contenthash].js",
+        publicPath: "/"
     },
     "plugins": [
         new HtmlWebpackPlugin({
@@ -49,29 +47,34 @@ export default {
             "filename": "index.html",
             "template": path.resolve(src, "index.html"),
             "chunks": indexEntryChunks,
-            "chunksSortMode": (a, b) => indexEntryChunks.indexOf(a.names[0]) - indexEntryChunks.indexOf(b.names[0]),
+            "chunksSortMode": "manual"
         }),
         new HtmlWebpackPlugin({
             "inject": "head",
             "filename": "background.html",
             "template": path.resolve(src, "background.html"),
             "chunks": backgroundEntryChunks,
-            "chunksSortMode": (a, b) => backgroundEntryChunks.indexOf(a.names[0]) - backgroundEntryChunks.indexOf(b.names[0]),
+            "chunksSortMode": "manual"
         }),
-        new CopyPlugin([{
-                from: "manifest.json",
-                to: "manifest.json",
-                transform: (manifestBuffer) => {
-                    if (process.env.BROWSER === "gecko") {
-                        const manifest = JSON.parse(manifestBuffer.toString());
-                        const geckoManifest = _.merge({}, manifest, require(`${root}/manifest.gecko.json`));
-                        return Buffer.from(JSON.stringify(geckoManifest));
+        new CopyPlugin({
+            "patterns": [
+                {
+                    from: "manifest.json",
+                    to: "manifest.json",
+                    transform: (manifestBuffer) => {
+                        if (process.env.BROWSER === "gecko") {
+                            const manifest = JSON.parse(manifestBuffer.toString());
+                            const geckoManifest = _.merge({}, manifest, require(`${root}/manifest.gecko.json`));
+                            return Buffer.from(JSON.stringify(geckoManifest));
+                        }
+                        return manifestBuffer;
                     }
-                    return manifestBuffer;
-                }
-            },
-            { from: "img/icon/**.*" },
-        ]),
+                },
+                {
+                    from: "img/icon/**.*"
+                },
+            ]
+        }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     ],
     "resolve": {
