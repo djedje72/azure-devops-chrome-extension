@@ -4,7 +4,7 @@ import webpackCommon from "./webpack.common.config";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 export default merge(webpackCommon, {
-    "devtool": "cheap-module-eval-source-map",
+    "devtool": "eval-cheap-module-source-map",
     "mode": "development",
     "module": {
         "rules": [
@@ -15,7 +15,7 @@ export default merge(webpackCommon, {
         ]
     },
     "optimization": {
-        "namedModules": true
+        moduleIds: "named"
     },
     "plugins": [
         new CleanWebpackPlugin({

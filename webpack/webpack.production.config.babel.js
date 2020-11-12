@@ -6,37 +6,28 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import SpeedMeasurePlugin from "speed-measure-webpack-plugin";
 
 import webpackCommon from "./webpack.common.config";
-const smp = new SpeedMeasurePlugin();
 
-export default smp.wrap(merge(webpackCommon, {
+// doesn't work with Webpack 5 : https://github.com/stephencookdev/speed-measure-webpack-plugin/issues/150
+// const smp = new SpeedMeasurePlugin();
+// export default smp.wrap(merge(webpackCommon, {
+export default merge(webpackCommon, {
     "mode": "production",
     "module": {
         "rules": [
             {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
-                  {
-                    loader: MiniCssExtractPlugin.loader,
-                    options: {
-                      hmr: false,
-                    },
-                  },
-                  'css-loader',
-                  'sass-loader',
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'sass-loader',
                 ],
             }
         ]
     },
     "optimization": {
+        "minimizer": true,
         "minimizer": [
-            new TerserPlugin({
-                cache: true,
-                parallel: true,
-                "terserOptions": {
-                    ecma: 8,
-                    safari10: true
-                }
-            })
+            new TerserPlugin()
         ]
     },
     "plugins": [
@@ -46,4 +37,4 @@ export default smp.wrap(merge(webpackCommon, {
         }),
         new OptimizeCssAssetsPlugin()
     ]
-}));
+});
