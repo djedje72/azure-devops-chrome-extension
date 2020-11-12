@@ -1,4 +1,4 @@
-import oauthFetch from "../oauth/oauthFetch.js";
+import {authFetch} from "../authentication/index";
 import {getUrl, getSettings, getDomainUrl, setCurrentDomain, getCurrentDomain} from "settings/settingsService";
 import {getCurrentMember, clearAvatarCache} from "../member/memberService.js";
 import defer from "../defer.js";
@@ -41,7 +41,7 @@ const getToApprovePullRequests = async(pullRequests) => {
 };
 
 const getActiveComments = async({url}) => {
-    const {value} = await oauthFetch({
+    const {value} = await authFetch({
         method: "GET",
         url: `${url}/threads`
     });
@@ -92,7 +92,7 @@ function processPolicies(fullPr) {
 }
 
 export const getFullPullRequest = async(pr) => {
-    const fullPr = await oauthFetch({
+    const fullPr = await authFetch({
         method: "GET",
         url: pr.url
     });
@@ -111,7 +111,7 @@ function getPolicyResultByCRId(pr) {
 }
 
 async function getPolicies(pr, field) {
-    return oauthFetch({
+    return authFetch({
         method:"GET",
         url: `${await getDomainUrl()}/${pr.repository.project.id}/_apis/policy/evaluations`,
         params: {
@@ -157,14 +157,14 @@ export const getPullRequests = async() => {
     };
 };
 
-export const setCredentials = async(credentials) => {
-    if(credentials.name) {
-        const domainToUse = {
-            name: credentials.name,
-            url: `https://dev.azure.com/${credentials.name}/_apis`,
-            domainUrl: `https://dev.azure.com/${credentials.name}`
-        };
-        setCurrentDomain(domainToUse);
+export const setCredentials = async({name, pat}) => {
+    if(name) {
+        setCurrentDomain({
+            name,
+            pat,
+            url: `https://dev.azure.com/${name}/_apis`,
+            domainUrl: `https://dev.azure.com/${name}`
+        });
         initialize.resolve("init ok");
     } else {
         return Promise.reject("missing arguments");
@@ -172,7 +172,7 @@ export const setCredentials = async(credentials) => {
 };
 
 async function getPullRequestsList() {
-    const {value} = await oauthFetch({
+    const {value} = await authFetch({
         method: "GET",
         url: (await getUrl()) + "/git/pullRequests",
         "params": {
@@ -204,7 +204,7 @@ function setReminder(toApprovePullRequests) {
 }
 
 export const getProjects = async() => {
-    const {value} = await oauthFetch({
+    const {value} = await authFetch({
         method: "GET",
         url: (await getUrl()) + "/projects",
         "params": {
@@ -215,7 +215,7 @@ export const getProjects = async() => {
 };
 
 async function getVisits(pr, field) {
-    return oauthFetch({
+    return authFetch({
         method:"POST",
         url: `${await getDomainUrl()}/_apis/visits/artifactStatsBatch`,
         params: {
@@ -240,7 +240,7 @@ export const getSuggestionForUser = () => {
             if(currentMember) {
                 suggestions.filter((suggestion) => suggestion.suggestion.length > 0).forEach((suggestion) => {
                     suggestion.suggestion.filter((sug) => sug.type === "pullRequest").forEach((sug) => {
-                        let promise = oauthFetch({
+                        let promise = authFetch({
                             method: "GET",
                             url: `${suggestion.repository.url}/commits?branch=${sug.properties.sourceBranch.replace('refs/heads/', '')}&$top=1`
                         }).then(({value}) => {
@@ -263,7 +263,7 @@ export const getSuggestionForUser = () => {
 
 async function getRepositories() {
     const {disabledProjects} = getSettings();
-    return oauthFetch({
+    return authFetch({
         method: "GET",
         url: (await getUrl()) + "/git/repositories",
     })
@@ -282,7 +282,7 @@ async function getRepositories() {
 //                 "id": refreshPr.autoCompleteSetBy !== undefined ? resetGUID : currentMember.id
 //             }
 //         };
-//         return oauthFetch({
+//         return authFetch({
 //             "method": "PATCH",
 //             "url": pr.url,
 //             "params": {
@@ -307,7 +307,7 @@ function getAllSuggestions() {
     return getRepositories().then((respositories) => {
         let promises = [];
         respositories.forEach((repository) => {
-            let promise = oauthFetch({
+            let promise = authFetch({
                 method: "GET",
                 url: repository.url + "/suggestions"
             }).then(({value}) => ({
