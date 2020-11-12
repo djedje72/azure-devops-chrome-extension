@@ -1,6 +1,6 @@
 import {removeCurrentDomain} from "./settingsService.js";
 import {mainModule} from "../index.js";
-import "./settings.css";
+import "./settings.scss";
 import template from "./settings.html";
 
 class SettingsController{
@@ -12,6 +12,7 @@ class SettingsController{
 
     hasError = false;
     isInitialize = true;
+    isLoading = false;
 
     $onInit = async() => {
         try {
@@ -38,18 +39,24 @@ class SettingsController{
         }
     };
 
-    canValidate = () => this.name;
+    canValidate = () => this.name && (!this.usePat || this.pat);
 
     changeCredentials = async() => {
         await this.vstsService.setCredentials({
             name: this.name,
+            pat: this.pat,
         });
         try {
+            this.isLoading = true;
+            this.hasError = false;
+            this.$rootScope.$digest();
             await this.vstsService.getProjects();
             this.hasError = false;
             this.setInitialized();
         } catch (e) {
             this.hasError = true;
+        } finally {
+            this.isLoading = false;
         }
         this.$rootScope.$digest();
     }
@@ -58,6 +65,13 @@ class SettingsController{
         this.initialized({shouldInit});
         if (!shouldInit) {
             this.isInitialize = true;
+        }
+    }
+
+    usePatValue = () => !!this.pat;
+    usePatChange = () => {
+        if (!this.usePat) {
+            this.pat = undefined;
         }
     }
 }

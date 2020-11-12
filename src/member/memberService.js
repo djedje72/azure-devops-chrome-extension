@@ -1,4 +1,4 @@
-import oauthFetch from "../oauth/oauthFetch.js";
+import {authFetch} from "../authentication/index";
 import {getUrl, getDomainName} from "settings/settingsService.js";
 import {getDescriptor} from "../graphs/graphs.service.js";
 import defer from "../defer.js";
@@ -12,7 +12,7 @@ const params = {
 const getGraphMember = async({id}) => {
     const descriptor = await getDescriptor(id);
 
-    return await oauthFetch({
+    return await authFetch({
         "url": `https://vssps.dev.azure.com/axafrance/_apis/graph/users/${descriptor}`,
         params
     });
@@ -35,7 +35,7 @@ export const getGraphAvatar = async({id}) => {
     }
     const descriptor = await getDescriptor(id);
 
-    const {value} = await oauthFetch({
+    const {value} = await authFetch({
         "url": `https://vssps.dev.azure.com/axafrance/_apis/graph/Subjects/${descriptor}/avatars`,
         params
     });
@@ -49,7 +49,7 @@ let member = null;
 export const getCurrentMember = async() => {
     if (!member) {
         member = defer();
-        const currentMember = await oauthFetch({
+        const currentMember = await authFetch({
             "url": `https://vssps.dev.azure.com/${await getDomainName()}/_apis/profile/profiles/me`,
             "params": {
                 ...params,
@@ -66,7 +66,7 @@ export const getCurrentMember = async() => {
     return member.promise;
 };
 
-const getMemberTeams = async() => (await oauthFetch({
+const getMemberTeams = async() => (await authFetch({
     "url": `${await getUrl()}/teams`,
     "params": {
         ...params,
