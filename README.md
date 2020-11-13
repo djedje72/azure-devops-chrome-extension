@@ -1,5 +1,7 @@
 # Azure-devops-chrome-extension
-[Install from Chrome WebStore](https://chrome.google.com/webstore/detail/vsts-pull-requests/pbjkodijnlbkbbkjmhgemlpigeaoaken)
+[Chrome](https://chrome.google.com/webstore/detail/vsts-pull-requests/pbjkodijnlbkbbkjmhgemlpigeaoaken)
+[Firefox](https://addons.mozilla.org/fr/firefox/addon/azure-devops-pull-requests)
+
 
 With this extension you can see, for an Azure DevOps domain (previously VSTS) :
 
