@@ -1,0 +1,42 @@
+<div class="pullRequest"
+    data-ng-class="$ctrl.reviewClass()"
+>
+    <div class="pullRequest-details" data-ng-click="$ctrl.redirect();">
+        <div class="creator">
+            <div class="card-container">
+                <span class="card draft" data-ng-class='::{"draft--visible" : $ctrl.pullRequest.isDraft}'>DRAFT</span>
+                <span class="card fast" data-ng-class='::{"fast--visible" : $ctrl.pullRequest.autoCompleteSetBy}'>
+                    <span class="auto-complete"></span>
+                    <span>AUTO</span>
+                </span>
+            </div>
+            <pull-request-creator data-creator="::$ctrl.pullRequest.createdBy"></pull-request-creator>
+        </div>
+        <div class="details">
+            <span class="prtitle" data-ng-bind="::$ctrl.pullRequest.title"></span>
+            <div class="branchesInfo">{{::$ctrl.pullRequest.sourceRefName.replace('refs/heads/', '')}} to
+                {{::$ctrl.pullRequest.targetRefName.replace('refs/heads/', '')}}</div>
+            <pull-request-reviewers data-reviewers="::$ctrl.pullRequest.reviewers"></pull-request-reviewers>
+            <div class="details-content">
+                <i class="fab fa-git-alt"></i>
+                <span class="repository" ng-bind="::$ctrl.pullRequest.repository.name">:</span>
+                <span class="durationInfo" data-ng-bind="::$ctrl.durationToDisplay()"></span>
+            </div>
+        </div>
+        <div
+            class="state-details"
+        >
+            <div data-ng-if="$ctrl.pullRequest.evaluations.state !== 'none'" class="prstate state-{{$ctrl.pullRequest.evaluations.state}}"
+                title="{{$ctrl.policiesDetails()}}">
+                <i data-ng-if="$ctrl.pullRequest.evaluations.state == 'warning'" class="fas fa-exclamation icons-status"></i>
+                <i data-ng-if="$ctrl.pullRequest.evaluations.state == 'error'"
+                    class="fas fa-times icons-status"></i>
+                <i data-ng-if="$ctrl.pullRequest.evaluations.state == 'success'" class="fas fa-check icons-status"></i>
+            </div>
+            <span data-ng-if="::$ctrl.pullRequest.comments.length" class="comments"><span
+                    data-ng-bind="::$ctrl.pullRequest.comments.length"></span>
+                <i class="far fa-comments"></i>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+member {
+    font-size: 0;
+}
+
+.currentMember {
+    height: 40px;
+    border-radius: 50%;
+    margin: 2px;
+}

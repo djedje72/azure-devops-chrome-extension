@@ -1,0 +1,30 @@
+<div data-ng-if="!$ctrl.isInitialize" class="settings">
+    <div class="titleLine">
+        <div class="title">Domain Azure DevOps</div><ui-dark-mode></ui-dark-mode>
+    </div>
+    <div class="waiting" data-ng-if="$ctrl.isLoading">
+        <spinner></spinner>
+    </div>
+    <div data-ng-if="!$ctrl.isLoading">
+        <div>
+            <span>http(s)://dev.azure.com/</span>
+            <input type="text" data-ng-keypress="$ctrl.keyPress($event)" name="name" data-ng-model="$ctrl.name" placeholder="my domain"/>
+            <div class="patLine">
+                <div class="patDescription">
+                    <label for="usePat">Use personnal access token instead of OAuth ?</label>
+                    <input
+                        id="usePat"
+                        name="usePat"
+                        type="checkbox"
+                        data-ng-model="::$ctrl.usePat"
+                        data-ng-change="::$ctrl.usePatChange()"
+                    />
+                </div>
+                <input class="patField" name="pat" data-ng-if="$ctrl.usePat" type="password" data-ng-model="$ctrl.pat" placeholder="your personnal access token"/>
+            </div>
+        </div>
+
+        <button data-ng-disabled="!$ctrl.canValidate()" type="button" data-ng-click="$ctrl.changeCredentials();">Login</button>
+    </div>
+    <span class="error" data-ng-show="$ctrl.hasError">Authentication Error !</span>
+</div>

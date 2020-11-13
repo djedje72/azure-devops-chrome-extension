@@ -1,0 +1,70 @@
+.settings {
+    padding: 10px;
+    .titleLine {
+        display: flex;
+        justify-content: space-between;
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #004692;
+        }
+    }
+
+    .patLine {
+        display: flex;
+        flex-direction: column;
+        margin: 10px 0;
+        .patDescription {
+            display: flex;
+            align-items: center;
+            label {
+                font-style: italic;
+            }
+            input {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    input[name=name] {
+        width: 250px;
+    }
+
+    .error {
+        color: red;
+        font-size: 20px;
+    }
+
+    button {
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0px;
+        font-family: Arial;
+        color: #ffffff;
+        font-size: 20px;
+        background: #004692;
+        padding: 8px 20px 10px 20px;
+        text-decoration: none;
+        border: none;
+        height: 43px;
+        width: 100%;
+        .spinner {
+            height: inherit;
+        }
+        &:hover {
+            background: #3cb0fd;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        [disabled] {
+            background: #cccccc;
+        }
+        [disabled]:hover {
+            background: #cccccc;
+            cursor: default;
+        }
+
+    }
+}

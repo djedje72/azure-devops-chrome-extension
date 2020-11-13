@@ -1,0 +1,7 @@
+<div class="app" data-ng-class="{'dark': $ctrl.isDarkMode()}">
+    <div class="waiting" data-ng-if="$ctrl.isLoading()">
+        <spinner></spinner>
+    </div>
+    <settings data-initialized="$ctrl.settingsInitialized(shouldInit)"></settings>
+    <pull-requests data-ng-if="$ctrl.settingsOk" data-initialized="$ctrl.prInitialized()"></pull-requests>
+</div>

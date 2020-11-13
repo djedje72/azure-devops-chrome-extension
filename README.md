@@ -1,11 +1,19 @@
-# vsts-chrome-extension
-[Install from Chrome WebStore](https://chrome.google.com/webstore/detail/vsts-pull-requests/pbjkodijnlbkbbkjmhgemlpigeaoaken)
+# Azure-devops-chrome-extension
+[Chrome](https://chrome.google.com/webstore/detail/vsts-pull-requests/pbjkodijnlbkbbkjmhgemlpigeaoaken)
 
-With this extension you can see :
+[Firefox](https://addons.mozilla.org/fr/firefox/addon/azure-devops-pull-requests)
 
-- All active pull requests for a Visual Studio Team Services domain (VSTS)
-- All pull requests created by an user for a Visual Studio Team Services domain (VSTS)
-- All pull requests assigned to an user for a Visual Studio Team Services domain (VSTS)
 
-You can switch between VSTS members with top right icon.
-You can put your VSTS domain, mail and password at the first opening.
+With this extension you can see, for an Azure DevOps domain (previously VSTS) :
+
+- All active pull requests 
+- All pull requests created by an user
+- All pull requests assigned to an user
+
+You must put your AzureDevOps domain at beginning to log in.
+
+# Donate
+
+If this extension help you reduce time to develop, you can give me a cup of coffee :) 
+
+[![paypal](https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=remi.fruteau%40gmail.com&currency_code=EUR&source=url)

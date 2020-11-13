@@ -1,0 +1,101 @@
+.fa-filter {
+    font-size: 18px;
+}
+
+.filterProject-card:first-child {
+    border-top: 1px solid #DDDDDD;
+}
+
+.filterProject-card {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #DDDDDD;
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+.filterProject-card:hover {
+    background-color: #E7E7E7;
+}
+
+.filterProject-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filterProject-title {
+    margin-top: 0;
+}
+
+.filterProject-card-description {
+    display: flex;
+    flex-grow: 1;
+    cursor: inherit;
+    height: 65px;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 20px;
+}
+
+.filterProject-card-input {
+    cursor: inherit;
+}
+
+.filterProject-beta {
+    font-size: 10px;
+    display: inline-block;
+    vertical-align: super;
+    margin-left: 4px;
+    text-transform: uppercase;
+}
+
+.filterProject-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.filterProject-description {
+    width: 650px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filterProject-search {
+    height: 30px;
+    width: 50%;
+    padding-left: 10px;
+}
+
+.filterProject-list {
+    padding: 0 15px 15px 15px;
+}
+
+.filterProject__header {
+    padding: 15px;
+    position: sticky;
+    top:0;
+    background-color: #ffffff;
+}
+
+.filterProject-all {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    &-label {
+        cursor: inherit;
+        font-size: 16px;
+        font-weight: bold;
+        padding-left: 20px;
+    }
+    &-input {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.filterProject__checkbox {
+    font-size: 30px;
+}

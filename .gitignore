@@ -1,4 +1,5 @@
 node_modules/
 .vscode/
-vsts.zip
-Chrome extension.zip
+*.zip
+
+dist/
