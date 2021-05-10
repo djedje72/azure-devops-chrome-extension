@@ -26,7 +26,7 @@
   "author": "Rémi Fruteau de Laclos <remi.fruteau@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "lodash": "4.17.20"
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "@babel/core": "7.12.3",
