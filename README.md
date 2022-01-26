@@ -10,7 +10,14 @@ With this extension you can see, for an Azure DevOps domain (previously VSTS) :
 - All pull requests created by an user
 - All pull requests assigned to an user
 
-You must put your AzureDevOps domain at beginning to log in.
+You must put your AzureDevOps domain at beginning to log in or provide a [Personal Access Token](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) (PAT) with the following scopes (you need to click _Show all scopes_ when creating the PAT to see them):
+
+```
+Code (Read)
+Graph (Read)
+Identity (Read)
+Project and Team (Read)
+```
 
 # Donate
 
